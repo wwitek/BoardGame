@@ -12,9 +12,10 @@ namespace BoardGame.Domain.Entities
         public GameState State { get; private set; }
         public IPlayer CurrentPlayer => Players.GetCurrentItem;
 
-        public Game(GameType type, CircularQueue<IPlayer> players)
+        public Game(GameType type, IBoard board, CircularQueue<IPlayer> players)
         {
             Type = type;
+            Board = board;
             Players = players;
             State = GameState.New;
         }

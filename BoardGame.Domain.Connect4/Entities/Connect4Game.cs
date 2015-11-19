@@ -7,8 +7,8 @@ namespace BoardGame.Domain.Connect4.Entities
 {
     public class Connect4Game : Game
     {
-        public Connect4Game(GameType type, CircularQueue<IPlayer> players)
-            : base(type, players)
+        public Connect4Game(GameType type, IBoard board, CircularQueue<IPlayer> players)
+            : base(type, board, players)
         {
         }
     }

@@ -10,6 +10,6 @@ namespace BoardGame.Domain.Factories
 {
     public interface IGameFactory
     {
-        IGame CreateGame(GameType type);
+        IGame CreateGame(GameType type, IBoard board);
     }
 }

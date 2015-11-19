@@ -10,9 +10,10 @@ namespace BoardGame.API
         public IGame CurrentGame { get; set; }
         public IGameFactory GameFactory { get; set; }
 
-        public IGame CreateGame(GameType type)
+        public IGame CreateGame(IGameFactory gameFactory, GameType type, IBoard board)
         {
-            CurrentGame = GameFactory.CreateGame(type);
+            GameFactory = gameFactory;
+            CurrentGame = GameFactory.CreateGame(type, board);
             return CurrentGame;
         }
 

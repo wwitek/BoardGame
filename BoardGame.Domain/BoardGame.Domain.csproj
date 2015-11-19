@@ -47,9 +47,9 @@
     <Compile Include="Enums\PlayerType.cs" />
     <Compile Include="Factories\IGameFactory.cs" />
     <Compile Include="Factories\IPlayerFactory.cs" />
+    <Compile Include="Interfaces\IField.cs" />
     <Compile Include="Helpers\CircularQueue.cs" />
     <Compile Include="Interfaces\IBoard.cs" />
-    <Compile Include="Interfaces\IField.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IMove.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />

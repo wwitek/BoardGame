@@ -25,7 +25,7 @@ namespace BoardGame.Domain.Entities
 
         public void Reset()
         {
-            Fields = new Field[Height, Width];
+            Fields = new IField[Height, Width];
             for (int i = 0; i < Fields.GetLength(0); i++)
             {
                 for (int j = 0; j < Fields.GetLength(1); j++)
@@ -49,10 +49,10 @@ namespace BoardGame.Domain.Entities
                 if (Fields[i, column].PlayerId > 0) continue;
                 Fields[i, column].PlayerId = playerId;
 
-                IMove result = IsConnected(i, column, playerId);
+                IMove result = IsConnected(i, column, playerId, 4);
                 result.IsTie = (!result.IsConnected && IsBoardFull);
 
-                WinnerId = (result.IsConnected) ? playerId : 0;
+                WinnerId = result.IsConnected ? playerId : 0;
 
                 return result;
             }

@@ -7,16 +7,16 @@ namespace BoardGame.Domain.Connect4.Factories
 {
     public class PlayerFactory : IPlayerFactory
     {
-        public IPlayer CreatePlayer(PlayerType type)
+        public IPlayer CreatePlayer(PlayerType type, int id)
         {
             switch (type)
             {
                     case PlayerType.Bot:
-                        return new Bot();
+                        return new Bot(id);
                     case PlayerType.Human:
-                        return new Human();
+                        return new Human(id);
                     case PlayerType.OnlinePlayer:
-                        return new OnlinePlayer();
+                        return new OnlinePlayer(id);
             }
 
             return null;

@@ -96,7 +96,7 @@ namespace BoardGame.Client.Connect4.WinForms
         private void bSinglePlayer_Click(object sender, EventArgs e)
         {
             NewGame();
-            api.CreateGame(GameType.SinglePlayer);
+            //api.CreateGame(GameType.SinglePlayer);
         }
 
         private void NewGame()
@@ -109,7 +109,7 @@ namespace BoardGame.Client.Connect4.WinForms
         private void bTwoPlayers_Click(object sender, EventArgs e)
         {
             NewGame();
-            api.CreateGame(GameType.TwoPlayers);
+            //api.CreateGame(GameType.TwoPlayers);
         }
 
     }
