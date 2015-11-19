@@ -9,17 +9,25 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BoardGame.API;
 using BoardGame.Domain.Enums;
+using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
+using BoardGame.Infrastructure.DependecyResolution;
+using Ninject;
+using Ninject.Modules;
+using Ninject.Parameters;
 
 namespace BoardGame.Client.Connect4.WinForms
 {
     public partial class Form1 : Form
     {
         private GameAPI api = new GameAPI();
+        IKernel kernel = new StandardKernel();
 
         public Form1()
         {
             InitializeComponent();
+            
+            kernel.Load(new List<INinjectModule> { new GameModule() });
 
             this.tableLayoutPanel1.RowStyles.Clear();
             this.tableLayoutPanel1.ColumnStyles.Clear();
@@ -96,7 +104,8 @@ namespace BoardGame.Client.Connect4.WinForms
         private void bSinglePlayer_Click(object sender, EventArgs e)
         {
             NewGame();
-            //api.CreateGame(GameType.SinglePlayer);
+            IBoard board = kernel.Get<IBoard>( new ConstructorArgument("width", 7), new ConstructorArgument("height", 6));
+            api.CreateGame(kernel.Get<IGameFactory>(), GameType.SinglePlayer, board);
         }
 
         private void NewGame()
@@ -109,7 +118,8 @@ namespace BoardGame.Client.Connect4.WinForms
         private void bTwoPlayers_Click(object sender, EventArgs e)
         {
             NewGame();
-            //api.CreateGame(GameType.TwoPlayers);
+            IBoard board = kernel.Get<IBoard>(new ConstructorArgument("width", 7), new ConstructorArgument("height", 6));
+            api.CreateGame(kernel.Get<IGameFactory>(), GameType.TwoPlayers, board);
         }
 
     }
