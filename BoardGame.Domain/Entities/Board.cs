@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BoardGame.Domain.Interfaces;
+using BoardGame.Domain.Factories;
 
 namespace BoardGame.Domain.Entities
 {
@@ -12,13 +13,15 @@ namespace BoardGame.Domain.Entities
         public int Width { get; set; }
         public int Height { get; set; }
         public IField[,] Fields { get; set; }
+        public IFieldFactory FieldFactory { get; set; }
         public int WinnerId { get; set; }
-        public bool IsBoardFull => Fields.Cast<Field>().Take(7).Count(f => f.PlayerId.Equals(0)) == 0;
 
-        public Board(int width, int height)
+        public Board(int width, int height, IFieldFactory fieldFactory)
         {
             Width = width;
             Height = height;
+            FieldFactory = fieldFactory;
+
             WinnerId = 0;
             Reset();
         }
@@ -30,7 +33,7 @@ namespace BoardGame.Domain.Entities
             {
                 for (int j = 0; j < Fields.GetLength(1); j++)
                 {
-                    Fields[i, j] = new Field(i, j);
+                    Fields[i, j] = FieldFactory.Create(i, j);
                 }
             }
         }
@@ -50,8 +53,7 @@ namespace BoardGame.Domain.Entities
                 Fields[i, column].PlayerId = playerId;
 
                 IMove result = IsConnected(i, column, playerId, 4);
-                result.IsTie = (!result.IsConnected && IsBoardFull);
-
+                
                 WinnerId = result.IsConnected ? playerId : 0;
 
                 return result;
@@ -138,6 +140,8 @@ namespace BoardGame.Domain.Entities
                 if (Fields[row - i, column + i].PlayerId != playerId) break;
                 result.ConnectionAscendingDiagonal.Add(Fields[row - i, column + i]);
             }
+
+            result.IsTie = (!Fields.Cast<IField>().Take(7).Any(f => f.PlayerId == 0));
 
             return result;
         }

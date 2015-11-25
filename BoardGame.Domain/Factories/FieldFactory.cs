@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
+using BoardGame.Domain.Entities;
 
 namespace BoardGame.Domain.Factories
 {
-    public interface IGameFactory
+    public class FieldFactory : IFieldFactory
     {
-        IBoard Board { get; set; }
-        IGame Create(IEnumerable<IPlayer> players);
+        public IField Create(int row, int column)
+        {
+            return new Field(row, column);
+        }
     }
 }

@@ -7,20 +7,73 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BoardGame.API;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
+using BoardGame.Domain.Factories;
 
 namespace BoardGame.Client.Connect4.WinForms
 {
     public partial class Form1 : Form
     {
-        private GameAPI api = new GameAPI();
+        public IGame CurrentGame { get; set; }
 
-        public Form1()
+        private readonly IGameFactory GameFactory;
+        private readonly IPlayerFactory PlayerFactory;
+
+        public Form1(IGameFactory gameFactory = null, IPlayerFactory playerFactory = null)
         {
             InitializeComponent();
 
+            GameFactory = gameFactory;
+            PlayerFactory = playerFactory;
+
+            InitializeBoard();
+        }
+
+        private void tableLayoutPanel1_Click(object sender, EventArgs e)
+        {
+            if (GameFactory == null || PlayerFactory == null) return;
+
+            int clickedColumn = GetColumnIndex(
+                tableLayoutPanel1,
+                tableLayoutPanel1.PointToClient(Cursor.Position));
+            
+            if (CurrentGame.IsMoveValid(0, clickedColumn))
+            {
+                IMove result = CurrentGame.MakeMove(0, clickedColumn);
+                MakeMove(result);
+            }
+        }
+
+        private void bSinglePlayer_Click(object sender, EventArgs e)
+        {
+            if (GameFactory == null || PlayerFactory == null) return;
+
+            NewGame();
+
+            CurrentGame = GameFactory.Create(new List<IPlayer> {
+                PlayerFactory.Create(PlayerType.Human, 1),
+                PlayerFactory.Create(PlayerType.Bot, 2)
+            });
+        }
+
+        private void bTwoPlayers_Click(object sender, EventArgs e)
+        {
+            if (GameFactory == null || PlayerFactory == null) return;
+
+            NewGame();
+
+            CurrentGame = GameFactory.Create(new List<IPlayer> {
+                PlayerFactory.Create(PlayerType.Human, 1),
+                PlayerFactory.Create(PlayerType.Human, 2)
+            });
+        }
+
+ 
+        #region UI helpers
+
+        private void InitializeBoard()
+        {
             this.tableLayoutPanel1.RowStyles.Clear();
             this.tableLayoutPanel1.ColumnStyles.Clear();
             for (int i = 1; i <= this.tableLayoutPanel1.RowCount; i++)
@@ -32,8 +85,8 @@ namespace BoardGame.Client.Connect4.WinForms
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 1));
             }
         }
-
-        int GetColumnIndex(TableLayoutPanel tlp, Point point)
+        
+        private int GetColumnIndex(TableLayoutPanel tlp, Point point)
         {
             if (point.X > tlp.Width || point.Y > tlp.Height)
                 return -1;
@@ -52,22 +105,7 @@ namespace BoardGame.Client.Connect4.WinForms
             return col;
         }
 
-        private void tableLayoutPanel1_Click(object sender, EventArgs e)
-        {
-            int clickedColumn = GetColumnIndex(
-                tableLayoutPanel1,
-                tableLayoutPanel1.PointToClient(Cursor.Position));
-
-            IMove result = api.MakeMove(0, clickedColumn);
-
-            DoMove(result);
-            //if (result != null && result.FollowingBotResult != null)
-            //{
-            //    DoMove(result.FollowingBotResult);
-            //}
-        }
-
-        private void DoMove(IMove result)
+        private void MakeMove(IMove result)
         {
             if (result != null && result.Row >= 0)
             {
@@ -93,12 +131,6 @@ namespace BoardGame.Client.Connect4.WinForms
             }
         }
 
-        private void bSinglePlayer_Click(object sender, EventArgs e)
-        {
-            NewGame();
-            //api.CreateGame(GameType.SinglePlayer);
-        }
-
         private void NewGame()
         {
             tableLayoutPanel1.Controls.Clear();
@@ -106,11 +138,6 @@ namespace BoardGame.Client.Connect4.WinForms
             lPlayer2Score.Visible = true;
         }
 
-        private void bTwoPlayers_Click(object sender, EventArgs e)
-        {
-            NewGame();
-            //api.CreateGame(GameType.TwoPlayers);
-        }
-
+        #endregion
     }
 }

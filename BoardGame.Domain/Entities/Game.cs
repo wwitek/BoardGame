@@ -1,43 +1,40 @@
 ﻿using BoardGame.Domain.Enums;
-using BoardGame.Domain.Helpers;
 using BoardGame.Domain.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BoardGame.Domain.Entities
 {
     public class Game : IGame
     {
-        public IBoard Board { get; }
-        public GameType Type { get; }
-        public CircularQueue<IPlayer> Players { get; }
-        public GameState State { get; private set; }
-        public IPlayer CurrentPlayer => Players.GetCurrentItem;
+        private int currentPlayerIndex = 1;
 
-        public Game(GameType type, IBoard board, CircularQueue<IPlayer> players)
+        public IBoard Board { get; }
+        public List<IPlayer> Players { get; }
+
+        public Game(IBoard board, IEnumerable<IPlayer> players)
         {
-            Type = type;
             Board = board;
-            Players = players;
-            State = GameState.New;
+            Players = players.ToList();
         }
 
-        public IMove MakeMove(int row, int column, int playerId)
+        public bool IsMoveValid(int row, int column)
         {
-            if (!Board.IsMoveValid(row, column, playerId) || State == GameState.Finished) return null;
-
-            IMove result = Board.InsertChip(row, column, playerId);
-            if (result.IsConnected)
+            if (Players[currentPlayerIndex - 1].Type.Equals(PlayerType.Human))
             {
-                State = GameState.Finished;
-                return result;
+                return Board.IsMoveValid(row, column, currentPlayerIndex);
             }
 
-            Players.SetNextItem();
-            //if (!result.IsTie && !result.IsConnected && CurrentPlayer.Type.Equals(PlayerType.Bot))
-            //{
-            //    Bot bot = new Bot(Players.GetCurrentItem.Id, playerId, board);
-            //    result.FollowingBotResult = bot.Move();
-            //    if (result.Row >= 0) Players.SetNextItem();
-            //}
+            //if current player is Bot or Online player, your move is not allowed
+            return false;
+        }
+
+        public IMove MakeMove(int row, int column)
+        {
+            IMove result = Board.InsertChip(row, column, currentPlayerIndex);
+
+            // Set next player
+            if (!result.IsConnected) currentPlayerIndex = currentPlayerIndex == 1 ? 2 : 1;
 
             return result;
         }

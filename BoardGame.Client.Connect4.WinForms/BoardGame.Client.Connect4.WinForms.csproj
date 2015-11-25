@@ -80,17 +80,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BoardGame.API\BoardGame.API.csproj">
-      <Project>{f5435da8-14c5-4c30-9bd7-2b8976302640}</Project>
-      <Name>BoardGame.API</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BoardGame.Domain\BoardGame.Domain.csproj">
       <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
       <Name>BoardGame.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BoardGame.Infrastructure.DependecyResolution\BoardGame.Infrastructure.DependecyResolution.csproj">
-      <Project>{4999e6e9-e132-4a7a-b6fd-9089409c58ce}</Project>
-      <Name>BoardGame.Infrastructure.DependecyResolution</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

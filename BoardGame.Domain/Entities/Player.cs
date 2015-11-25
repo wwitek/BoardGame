@@ -9,9 +9,11 @@ namespace BoardGame.Domain.Entities
         public string Name { get; set; }
         public PlayerType Type { get; set; }
 
-        public Player(int id)
+        public Player(PlayerType type, int id)
         {
             Id = id;
+            Type = type;
         }
+
     }
 }
