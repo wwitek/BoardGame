@@ -1,4 +1,5 @@
-﻿using BoardGame.Domain.Entities;
+﻿using BoardGame.API;
+using BoardGame.Domain.Entities;
 using BoardGame.Domain.Factories;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,11 @@ namespace BoardGame.Client.Connect4.WinForms
             var board = new Board(7, 6, fieldFactory);
             var playerFactory = new PlayerFactory();
             var gameFactory = new GameFactory(board);
+            var gameAPI = new GameAPI(gameFactory, playerFactory);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(gameFactory, playerFactory));
+            Application.Run(new Form1(gameAPI));
         }
     }
 }
