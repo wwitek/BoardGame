@@ -15,8 +15,7 @@ namespace BoardGame.Client.Connect4.WinForms
 {
     public partial class Form1 : Form
     {
-        public IGame CurrentGame { get; set; }
-
+        private IGame CurrentGame { get; set; }
         private readonly IGameFactory GameFactory;
         private readonly IPlayerFactory PlayerFactory;
 
@@ -47,26 +46,12 @@ namespace BoardGame.Client.Connect4.WinForms
 
         private void bSinglePlayer_Click(object sender, EventArgs e)
         {
-            if (GameFactory == null || PlayerFactory == null) return;
-
-            NewGame();
-
-            CurrentGame = GameFactory.Create(new List<IPlayer> {
-                PlayerFactory.Create(PlayerType.Human, 1),
-                PlayerFactory.Create(PlayerType.Bot, 2)
-            });
+            NewGame(GameType.SinglePlayer);
         }
 
         private void bTwoPlayers_Click(object sender, EventArgs e)
         {
-            if (GameFactory == null || PlayerFactory == null) return;
-
-            NewGame();
-
-            CurrentGame = GameFactory.Create(new List<IPlayer> {
-                PlayerFactory.Create(PlayerType.Human, 1),
-                PlayerFactory.Create(PlayerType.Human, 2)
-            });
+            NewGame(GameType.TwoPlayers);
         }
 
  
@@ -131,8 +116,26 @@ namespace BoardGame.Client.Connect4.WinForms
             }
         }
 
-        private void NewGame()
+        private void NewGame(GameType type)
         {
+            if (GameFactory == null || PlayerFactory == null) return;
+
+            var players = new List<IPlayer> {
+                PlayerFactory.Create(PlayerType.Human, 1)
+            };
+
+            switch (type)
+            {
+                case GameType.SinglePlayer:
+                    players.Add(PlayerFactory.Create(PlayerType.Bot, 2));
+                    break;
+                case GameType.TwoPlayers:
+                    players.Add(PlayerFactory.Create(PlayerType.Human, 2));
+                    break;
+            }
+
+            CurrentGame = GameFactory.Create(players);
+
             tableLayoutPanel1.Controls.Clear();
             lPlayer1Score.Visible = true;
             lPlayer2Score.Visible = true;

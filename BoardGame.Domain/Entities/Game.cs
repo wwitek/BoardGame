@@ -15,6 +15,8 @@ namespace BoardGame.Domain.Entities
         public Game(IBoard board, IEnumerable<IPlayer> players)
         {
             Board = board;
+            Board.Reset();
+
             Players = players.ToList();
         }
 

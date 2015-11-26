@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Domain.Factories;
 
@@ -10,9 +7,10 @@ namespace BoardGame.Domain.Entities
 {
     public class Board : IBoard
     {
+        private IField[,] Fields;
+
         public int Width { get; set; }
         public int Height { get; set; }
-        public IField[,] Fields { get; set; }
         public IFieldFactory FieldFactory { get; set; }
         public int WinnerId { get; set; }
 
@@ -22,12 +20,13 @@ namespace BoardGame.Domain.Entities
             Height = height;
             FieldFactory = fieldFactory;
 
-            WinnerId = 0;
             Reset();
         }
 
         public void Reset()
         {
+            WinnerId = 0;
+
             Fields = new IField[Height, Width];
             for (int i = 0; i < Fields.GetLength(0); i++)
             {
@@ -40,7 +39,7 @@ namespace BoardGame.Domain.Entities
 
         public bool IsMoveValid(int row, int column, int playerId)
         {
-            return Fields.Cast<Field>().Take(7).ToList()[column].PlayerId == 0;
+            return Fields.Cast<Field>().Take(7).ToList()[column].PlayerId == 0 && WinnerId == 0;
         }
 
         public IMove InsertChip(int row, int column, int playerId)
@@ -52,7 +51,7 @@ namespace BoardGame.Domain.Entities
                 if (Fields[i, column].PlayerId > 0) continue;
                 Fields[i, column].PlayerId = playerId;
 
-                IMove result = IsConnected(i, column, playerId, 4);
+                IMove result = GetInsertResult(i, column, playerId, 4);
                 
                 WinnerId = result.IsConnected ? playerId : 0;
 
@@ -75,7 +74,7 @@ namespace BoardGame.Domain.Entities
             }
         }
 
-        public IMove IsConnected(int row, int column, int playerId, int needToWin = 0)
+        public IMove GetInsertResult(int row, int column, int playerId, int needToWin = 0)
         {
             IMove result = new Move(row, column, playerId, needToWin);
 
@@ -141,8 +140,7 @@ namespace BoardGame.Domain.Entities
                 result.ConnectionAscendingDiagonal.Add(Fields[row - i, column + i]);
             }
 
-            result.IsTie = (!Fields.Cast<IField>().Take(7).Any(f => f.PlayerId == 0));
-
+            result.IsTie = (!Fields.Cast<IField>().Take(7).Any(f => f.PlayerId == 0)) && !result.IsConnected;
             return result;
         }
 
