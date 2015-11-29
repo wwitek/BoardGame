@@ -1,7 +1,8 @@
-﻿using BoardGame.Domain.Enums;
+﻿using System;
+using System.Collections.Generic;
+using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Domain.Factories;
-using System.Collections.Generic;
 
 namespace BoardGame.API
 {
@@ -11,10 +12,20 @@ namespace BoardGame.API
         private readonly IGameFactory GameFactory;
         private readonly IPlayerFactory PlayerFactory;
 
+        public event EventHandler<MoveEventArgs> OnMoveReceived = null;
+
         public GameAPI(IGameFactory gameFactory = null, IPlayerFactory playerFactory = null)
         {
             GameFactory = gameFactory;
             PlayerFactory = playerFactory;
+        }
+
+        private void SendMove(IMove move)
+        {
+            if (OnMoveReceived != null)
+            {
+                OnMoveReceived(this, new MoveEventArgs { Move = move });
+            }
         }
 
         public void StartGame(GameType type)
@@ -38,14 +49,18 @@ namespace BoardGame.API
             CurrentGame = GameFactory.Create(players);
         }
 
-        public IMove NextMove(int clickedRow, int clickedColumn)
+        public void NextMove(int clickedRow, int clickedColumn)
         {
             if (CurrentGame.IsMoveValid(0, clickedColumn))
             {
-                return CurrentGame.MakeMove(0, clickedColumn);
-            }
+                SendMove(CurrentGame.MakeMove(0, clickedColumn));
 
-            return null;
+                if (CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
+                {
+                    // ToDo: Make Bot's move
+                    SendMove(CurrentGame.MakeMove(0, 1));
+                }
+            }
         }
     }
 }

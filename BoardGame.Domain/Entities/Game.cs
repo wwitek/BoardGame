@@ -11,6 +11,13 @@ namespace BoardGame.Domain.Entities
 
         public IBoard Board { get; }
         public List<IPlayer> Players { get; }
+        public IPlayer NextPlayer
+        {
+            get
+            {
+                return Players[currentPlayerIndex - 1];
+            }
+        }
 
         public Game(IBoard board, IEnumerable<IPlayer> players)
         {

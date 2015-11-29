@@ -1,11 +1,13 @@
-﻿using BoardGame.Domain.Enums;
-using BoardGame.Domain.Interfaces;
+﻿using System;
+using BoardGame.Domain.Enums;
 
 namespace BoardGame.API
 {
     public interface IGameAPI
     {
+        event EventHandler<MoveEventArgs> OnMoveReceived;
+
         void StartGame(GameType type);
-        IMove NextMove(int clickedRow, int clickedColumn);
+        void NextMove(int clickedRow, int clickedColumn);
     }
 }

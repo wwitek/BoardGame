@@ -7,6 +7,7 @@ namespace BoardGame.Domain.Interfaces
     {
         IBoard Board { get; }
         List<IPlayer> Players { get; }
+        IPlayer NextPlayer { get; }
 
         bool IsMoveValid(int row, int column);
         IMove MakeMove(int row, int column);

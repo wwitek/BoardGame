@@ -21,6 +21,7 @@ namespace BoardGame.Client.Connect4.WinForms
         public Form1(GameAPI gameAPI = null)
         {
             GameAPI = gameAPI;
+            GameAPI.OnMoveReceived += (s, e) => MakeMove(e.Move);
 
             InitializeComponent();
             InitializeBoard();
@@ -34,8 +35,7 @@ namespace BoardGame.Client.Connect4.WinForms
                 tableLayoutPanel1,
                 tableLayoutPanel1.PointToClient(Cursor.Position));
 
-            IMove result = GameAPI.NextMove(0, clickedColumn);
-            MakeMove(result);
+            GameAPI.NextMove(0, clickedColumn);
         }
 
         private void bSinglePlayer_Click(object sender, EventArgs e)
