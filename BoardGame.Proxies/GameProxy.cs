@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.ServiceModel;
 using BoardGame.Server.Contracts;
+using System.Threading.Tasks;
 
-namespace BoardGame.Server.Services
+namespace BoardGame.Proxies
 {
-    public class GameService : IGameService
+    public class GameProxy : ClientBase<IGameService>, IGameService
     {
         public int GetNextMove()
         {
-            return 5;
+            return Channel.GetNextMove();
         }
 
         public async Task<int> GetNextMoveAsync()
         {
-            return await Task.Factory.StartNew(() => 5);
+            return await Channel.GetNextMoveAsync();
         }
     }
 }
