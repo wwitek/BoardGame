@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Domain.Factories;
+using System.ServiceModel;
+using BoardGame.Proxies;
 
 namespace BoardGame.API
 {
@@ -58,6 +60,7 @@ namespace BoardGame.API
                 if (CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
                 {
                     // ToDo: Make Bot's move
+
                     SendMove(CurrentGame.MakeMove(0, 1));
                 }
             }

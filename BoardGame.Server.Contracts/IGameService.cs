@@ -14,6 +14,6 @@ namespace BoardGame.Server.Contracts
         int GetNextMove();
 
         [OperationContract]
-        Task<int> GetNextMoveAsync();
+        Task<int> GetNextMove2Async();
     }
 }

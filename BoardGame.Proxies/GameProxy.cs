@@ -15,9 +15,9 @@ namespace BoardGame.Proxies
             return Channel.GetNextMove();
         }
 
-        public async Task<int> GetNextMoveAsync()
+        public async Task<int> GetNextMove2Async()
         {
-            return await Channel.GetNextMoveAsync();
+            return await Channel.GetNextMove2Async();
         }
     }
 }

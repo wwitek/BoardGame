@@ -12,12 +12,13 @@ namespace BoardGame.Server.Services
     {
         public int GetNextMove()
         {
-            return 5;
+            return 1;
         }
 
-        public async Task<int> GetNextMoveAsync()
+        public async Task<int> GetNextMove2Async()
         {
-            return await Task.Factory.StartNew(() => 5);
+            await Task.Delay(2000);
+            return await Task.Factory.StartNew(() => 1);
         }
     }
 }
