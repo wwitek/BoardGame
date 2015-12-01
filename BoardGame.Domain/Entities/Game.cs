@@ -43,9 +43,16 @@ namespace BoardGame.Domain.Entities
             IMove result = Board.InsertChip(row, column, currentPlayerIndex);
 
             // Set next player
-            if (!result.IsConnected) currentPlayerIndex = currentPlayerIndex == 1 ? 2 : 1;
+            if (!result.IsConnected)
+                SetNextPlayer();
 
             return result;
+        }
+
+        // Private methods
+        private void SetNextPlayer()
+        {
+            currentPlayerIndex = currentPlayerIndex == 1 ? 2 : 1;
         }
     }
 }

@@ -48,7 +48,11 @@ namespace BoardGame.Client.Connect4.WinForms
             NewGame(GameType.TwoPlayers);
         }
 
- 
+        private void bOnline_Click(object sender, EventArgs e)
+        {
+            NewGame(GameType.Online);
+        }
+
         #region UI helpers
 
         private void InitializeBoard()
@@ -115,12 +119,20 @@ namespace BoardGame.Client.Connect4.WinForms
             if (GameAPI == null) return;
 
             GameAPI.StartGame(type);
-            
+
+            tableLayoutPanel1.Enabled = true;
             tableLayoutPanel1.Controls.Clear();
             lPlayer1Score.Visible = true;
             lPlayer2Score.Visible = true;
         }
 
+        private void WaitingForPlayer()
+        {
+            tableLayoutPanel1.Enabled = false;
+        }
+
         #endregion
+
+
     }
 }
