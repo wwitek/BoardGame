@@ -53,6 +53,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BoardGame.Server.BusinessLogic\BoardGame.Server.BusinessLogic.csproj">
+      <Project>{d89450ae-4420-4747-bca0-e6c2c419c215}</Project>
+      <Name>BoardGame.Server.BusinessLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BoardGame.Server.Contracts\BoardGame.Server.Contracts.csproj">
       <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
       <Name>BoardGame.Server.Contracts</Name>

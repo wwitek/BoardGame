@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2655A00A-AB71-4EC5-BBA8-B1EFEBB2863B}</ProjectGuid>
+    <ProjectGuid>{D89450AE-4420-4747-BCA0-E6C2C419C215}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BoardGame.Server.Services</RootNamespace>
-    <AssemblyName>BoardGame.Server.Services</AssemblyName>
+    <RootNamespace>BoardGame.Server.BusinessLogic</RootNamespace>
+    <AssemblyName>BoardGame.Server.BusinessLogic</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,7 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,20 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameServiceHost.cs" />
-    <Compile Include="GameServiceInstanceProvider.cs" />
-    <Compile Include="GameService.cs" />
+    <Compile Include="GameServer.cs" />
+    <Compile Include="Interfaces\IGameServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BoardGame.Server.BusinessLogic\BoardGame.Server.BusinessLogic.csproj">
-      <Project>{d89450ae-4420-4747-bca0-e6c2c419c215}</Project>
-      <Name>BoardGame.Server.BusinessLogic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BoardGame.Server.Contracts\BoardGame.Server.Contracts.csproj">
-      <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
-      <Name>BoardGame.Server.Contracts</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Server.Contracts"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Proxies", "BoardGame.Proxies\BoardGame.Proxies.csproj", "{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Server.BusinessLogic", "BoardGame.Server.BusinessLogic\BoardGame.Server.BusinessLogic.csproj", "{D89450AE-4420-4747-BCA0-E6C2C419C215}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D89450AE-4420-4747-BCA0-E6C2C419C215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D89450AE-4420-4747-BCA0-E6C2C419C215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D89450AE-4420-4747-BCA0-E6C2C419C215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D89450AE-4420-4747-BCA0-E6C2C419C215}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,5 +86,6 @@ Global
 		{A7DAA50A-8F73-4CB7-80DC-DEA68C0E2730} = {DA1AF840-034F-47A2-B50E-53F12942A0A7}
 		{E02D7577-AD7B-42DF-B38B-96D41919260D} = {DA1AF840-034F-47A2-B50E-53F12942A0A7}
 		{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB} = {B084B1A7-B695-46B2-8890-8D3315F53EC0}
+		{D89450AE-4420-4747-BCA0-E6C2C419C215} = {DA1AF840-034F-47A2-B50E-53F12942A0A7}
 	EndGlobalSection
 EndGlobal
