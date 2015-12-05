@@ -30,5 +30,11 @@ namespace BoardGame.Server.Services
             await Task.Delay(2000);
             return await Task.Factory.StartNew(() => Logic.GetColumn());
         }
+
+        public void Start()
+        {
+            IGameServiceCallback callback = OperationContext.Current.GetCallbackChannel<IGameServiceCallback>();
+            callback.OnCallback();
+        }
     }
 }

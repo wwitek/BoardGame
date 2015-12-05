@@ -8,16 +8,26 @@ using System.Threading.Tasks;
 
 namespace BoardGame.Proxies
 {
-    public class GameProxy : ClientBase<IGameService>, IGameService
+    public class GameProxy : DuplexChannelFactory<IGameService>, IGameService
     {
+        public GameProxy()
+            : base (new InstanceContext(new GameServiceCallback()), "GameCallback")
+        {
+        }
+
         public int GetNextMove()
         {
-            return Channel.GetNextMove();
+            return CreateChannel().GetNextMove();
         }
 
         public async Task<int> GetNextMove2Async()
         {
-            return await Channel.GetNextMove2Async();
+            return await CreateChannel().GetNextMove2Async();
+        }
+
+        public void Start()
+        {
+            CreateChannel().Start();
         }
     }
 }

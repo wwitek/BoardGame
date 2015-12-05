@@ -7,9 +7,12 @@ using System.ServiceModel;
 
 namespace BoardGame.Server.Contracts
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IGameServiceCallback))]
     public interface IGameService
     {
+        [OperationContract(IsOneWay = true)]
+        void Start();
+
         [OperationContract]
         int GetNextMove();
 

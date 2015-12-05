@@ -51,7 +51,7 @@ namespace BoardGame.API
             CurrentGame = GameFactory.Create(players);
         }
 
-        public async void NextMove(int clickedRow, int clickedColumn)
+        public void NextMove(int clickedRow, int clickedColumn)
         {
             if (CurrentGame.IsMoveValid(0, clickedColumn))
             {
@@ -60,10 +60,8 @@ namespace BoardGame.API
                 if (CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
                 {
                     // ToDo: Make Bot's move
-                    GameProxy proxy = new GameProxy();
-                    int a = await proxy.GetNextMove2Async();
 
-                    SendMove(CurrentGame.MakeMove(0, a));
+                    SendMove(CurrentGame.MakeMove(0, 1));
                 }
             }
         }
