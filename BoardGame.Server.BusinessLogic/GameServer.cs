@@ -1,4 +1,6 @@
-﻿using BoardGame.Server.BusinessLogic.Interfaces;
+﻿using BoardGame.Domain.Factories;
+using BoardGame.Domain.Interfaces;
+using BoardGame.Server.BusinessLogic.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,17 +11,28 @@ namespace BoardGame.Server.BusinessLogic
 {
     public class GameServer : IGameServer
     {
-        public int a;
+        private int NextPlayerId = 0;
+        private readonly IGameFactory GameFactory;
+        private readonly IPlayerFactory PlayerFactory;
 
-        public GameServer()
+        public List<IPlayer> WaitingPlayers { get; } = new List<IPlayer>();
+        public List<IGame> RunningGames { get; } = new List<IGame>();
+
+        public GameServer(IGameFactory gameFactory, IPlayerFactory playerFactory)
         {
-            a = 0;
+            GameFactory = gameFactory;
+            PlayerFactory = playerFactory;
         }
 
-        public int GetColumn()
+        public IPlayer CreateNewPlayer(int playerId = 0)
         {
-            if (a == 7) a = 0;
-            return a++;
+            int id = playerId == 0 ? NextPlayerId++ : playerId;
+            return PlayerFactory.Create(Domain.Enums.PlayerType.OnlinePlayer, id);
+        }
+
+        public IGame CreateNewGame(IEnumerable<IPlayer> players)
+        {
+            return GameFactory.Create(players);
         }
     }
 }

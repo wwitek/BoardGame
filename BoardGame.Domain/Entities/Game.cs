@@ -15,6 +15,7 @@ namespace BoardGame.Domain.Entities
         {
             get
             {
+                if (Players.Count < currentPlayerIndex) return null;
                 return Players[currentPlayerIndex - 1];
             }
         }

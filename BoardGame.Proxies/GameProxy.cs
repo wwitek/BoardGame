@@ -5,19 +5,25 @@ using System.Text;
 using System.ServiceModel;
 using BoardGame.Server.Contracts;
 using System.Threading.Tasks;
+using BoardGame.Server.Contracts.Responses;
 
 namespace BoardGame.Proxies
 {
     public class GameProxy : ClientBase<IGameService>, IGameService
     {
-        public int GetNextMove()
+        public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)
         {
-            return Channel.GetNextMove();
+            return await Channel.OnlineGameRequest(playerId);
         }
 
-        public async Task<int> GetNextMove2Async()
+        public async Task<StartGameResponse> ConfirmToPlay(int playerId)
         {
-            return await Channel.GetNextMove2Async();
+            return await Channel.ConfirmToPlay(playerId);
+        }
+
+        public Task<MoveResponse> MakeMove(int playerId, int row, int column)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using BoardGame.Server.BusinessLogic;
+﻿using BoardGame.Domain.Entities;
+using BoardGame.Domain.Factories;
+using BoardGame.Server.BusinessLogic;
 using BoardGame.Server.BusinessLogic.Interfaces;
 using BoardGame.Server.Services;
 using System;
@@ -17,7 +19,12 @@ namespace BoardGame.Server.Host.ConsoleApplication
         {
             try
             {
-                IGameServer serverLogic = new GameServer();
+                var fieldFactory = new FieldFactory();
+                var board = new Board(7, 6, fieldFactory);
+                var playerFactory = new PlayerFactory();
+                var gameFactory = new GameFactory(board);
+
+                IGameServer serverLogic = new GameServer(gameFactory, playerFactory);
                 IContractBehavior contractBehavior = new GameServiceInstanceProvider(serverLogic);
                 ServiceHost host = new GameServiceHost(contractBehavior, typeof(GameService), new Uri("net.tcp://localhost:8002"));
                 host.Open();

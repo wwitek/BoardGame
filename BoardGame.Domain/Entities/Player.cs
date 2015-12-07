@@ -5,15 +5,14 @@ namespace BoardGame.Domain.Entities
 {
     public class Player : IPlayer
     {
-        public int Id { get; set; }
+        public int OnlineId { get; set; }
         public string Name { get; set; }
         public PlayerType Type { get; set; }
 
-        public Player(PlayerType type, int id)
+        public Player(PlayerType type, int onlineId = 0)
         {
-            Id = id;
+            OnlineId = onlineId;
             Type = type;
         }
-
     }
 }

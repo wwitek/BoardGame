@@ -47,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BoardGame.Domain\BoardGame.Domain.csproj">
+      <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
+      <Name>BoardGame.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BoardGame.Server.BusinessLogic\BoardGame.Server.BusinessLogic.csproj">
       <Project>{d89450ae-4420-4747-bca0-e6c2c419c215}</Project>
       <Name>BoardGame.Server.BusinessLogic</Name>

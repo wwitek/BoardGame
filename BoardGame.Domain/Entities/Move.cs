@@ -20,7 +20,6 @@ namespace BoardGame.Domain.Entities
         public List<IField> ConnectionDescendingDiagonal { get; set; } // Northwest to Southeast
         public List<IField> ConnectionAscendingDiagonal { get; set; } // Southwest to Northeast  
 
-        public IMove FollowingBotResult { get; set; }
         public bool IsTie { get; set; }
 
         public Move(int row, int column, int playerId, int needToWin = 0)

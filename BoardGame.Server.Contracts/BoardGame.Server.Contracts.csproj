@@ -35,10 +35,17 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\BoardGame.Domain\BoardGame.Domain.csproj">
+      <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
+      <Name>BoardGame.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IGameService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Responses\MoveResponse.cs" />
+    <Compile Include="Responses\StartGameResponse.cs" />
+    <Compile Include="Responses\OnlineGameResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

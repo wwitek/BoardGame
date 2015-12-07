@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ServiceModel;
+using BoardGame.Server.Contracts.Responses;
 
 namespace BoardGame.Server.Contracts
 {
@@ -11,9 +12,12 @@ namespace BoardGame.Server.Contracts
     public interface IGameService
     {
         [OperationContract]
-        int GetNextMove();
+        Task<OnlineGameResponse> OnlineGameRequest(int playerId);
 
         [OperationContract]
-        Task<int> GetNextMove2Async();
+        Task<StartGameResponse> ConfirmToPlay(int playerId);
+
+        [OperationContract]
+        Task<MoveResponse> MakeMove(int playerId, int row, int column);
     }
 }

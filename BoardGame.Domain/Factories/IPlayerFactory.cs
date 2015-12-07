@@ -5,6 +5,6 @@ namespace BoardGame.Domain.Factories
 {
     public interface IPlayerFactory
     {
-        IPlayer Create(PlayerType type, int id);
+        IPlayer Create(PlayerType type, int id = 0);
     }
 }

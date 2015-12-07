@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.ServiceModel;
 using BoardGame.Server.Contracts;
 using BoardGame.Server.BusinessLogic.Interfaces;
+using BoardGame.Server.Contracts.Responses;
+using BoardGame.Domain.Enums;
+using BoardGame.Domain.Interfaces;
 
 namespace BoardGame.Server.Services
 {
@@ -20,15 +23,52 @@ namespace BoardGame.Server.Services
             Console.WriteLine("GameService with logic created...");
         }
 
-        public int GetNextMove()
+        public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)
         {
-            return Logic.GetColumn();
+            OnlineGameResponse response = null;
+            IPlayer player = Logic.CreateNewPlayer(playerId);
+            Logic.WaitingPlayers.Add(player);
+
+
+            Console.WriteLine("New Player" + player.OnlineId);
+            if (Logic.WaitingPlayers.Count(p => p.OnlineId != player.OnlineId) == 0)
+            {
+                Console.WriteLine("Player" + player.OnlineId + ". Nobody here. Will have to wait.");
+                response = new OnlineGameResponse(GameState.WaitingForPlayer, player.OnlineId);
+                await Task.Delay(5000);
+                Console.WriteLine("Times up for Player" + player.OnlineId);
+            }
+
+            if (Logic.WaitingPlayers.Count(p => p.OnlineId != player.OnlineId) == 0)
+            {
+                Console.WriteLine("Player" + player.OnlineId + ". Still nobody here. Remove from the list.");
+                Logic.WaitingPlayers.Remove(player);
+            }
+            else
+            {
+                Console.WriteLine("Player" + player.OnlineId + ". There is somebody!");
+                response = new OnlineGameResponse(GameState.ReadyForOnlineGame, player.OnlineId);
+            }
+
+            return await Task.Factory.StartNew(() => response);
         }
 
-        public async Task<int> GetNextMove2Async()
+        public async Task<StartGameResponse> ConfirmToPlay(int playerId)
         {
-            await Task.Delay(2000);
-            return await Task.Factory.StartNew(() => Logic.GetColumn());
+            StartGameResponse response = new StartGameResponse(GameState.New, 1, true);
+
+
+
+            return await Task.Factory.StartNew(() => response);
+        }
+
+        public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
+        {
+            MoveResponse response = new MoveResponse(null);
+
+
+
+            return await Task.Factory.StartNew(() => response);
         }
     }
 }

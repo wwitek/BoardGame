@@ -11,6 +11,8 @@ namespace BoardGame.Domain.Enums
         New,
         Running,
         Finished,
-        Aborted
+        Aborted,
+        WaitingForPlayer,
+        ReadyForOnlineGame
     }
 }
