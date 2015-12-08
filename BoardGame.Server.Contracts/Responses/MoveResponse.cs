@@ -12,11 +12,11 @@ namespace BoardGame.Server.Contracts.Responses
     public class MoveResponse
     {
         [DataMember]
-        IMove Move { get; set; }
+        public int ClickedColumn { get; set; }
 
-        public MoveResponse(IMove move)
+        public MoveResponse(int clickedColumn)
         {
-            Move = move;
+            ClickedColumn = clickedColumn;
         }
     }
 }

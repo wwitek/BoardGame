@@ -9,6 +9,7 @@ namespace BoardGame.Domain.Entities
     {
         private int currentPlayerIndex = 1;
 
+        public GameState State { get; set; }
         public IBoard Board { get; }
         public List<IPlayer> Players { get; }
         public IPlayer NextPlayer
@@ -19,6 +20,7 @@ namespace BoardGame.Domain.Entities
                 return Players[currentPlayerIndex - 1];
             }
         }
+        public IMove LastMove { get; set; }
 
         public Game(IBoard board, IEnumerable<IPlayer> players)
         {
@@ -41,13 +43,11 @@ namespace BoardGame.Domain.Entities
 
         public IMove MakeMove(int row, int column)
         {
-            IMove result = Board.InsertChip(row, column, currentPlayerIndex);
+            LastMove = Board.InsertChip(row, column, currentPlayerIndex);
 
-            // Set next player
-            if (!result.IsConnected)
-                SetNextPlayer();
+            SetNextPlayer();
 
-            return result;
+            return LastMove;
         }
 
         // Private methods

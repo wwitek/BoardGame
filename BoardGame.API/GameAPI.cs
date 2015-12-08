@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
@@ -52,25 +53,33 @@ namespace BoardGame.API
                     players.Add(PlayerFactory.Create(PlayerType.Human));
                     break;
                 case GameType.Online:
-                    OnlineGameResponse waitingResponse = new OnlineGameResponse(GameState.WaitingForPlayer, 0);
                     int myId = 0;
-                    while (waitingResponse.State.Equals(GameState.WaitingForPlayer))
+                    OnlineGameResponse waitingResponse = new OnlineGameResponse(GameState.Waiting, 0);
+
+                    while (waitingResponse.State.Equals(GameState.Waiting))
                     {
                         waitingResponse = await Proxy.OnlineGameRequest(myId);
                         myId = waitingResponse.PlayerId;
-                    }
-                    if (waitingResponse.State.Equals(GameState.ReadyForOnlineGame))
-                    {
-                        StartGameResponse startGameResponse = await Proxy.ConfirmToPlay(waitingResponse.PlayerId);
-                        if (startGameResponse.YourTurn)
+
+                        if (waitingResponse.State.Equals(GameState.Ready))
                         {
-                            players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                            players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
-                        }
-                        else
-                        {
-                            players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
-                            players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                            StartGameResponse startGameResponse = await Proxy.ConfirmToPlay(waitingResponse.PlayerId);
+                            if (startGameResponse.State.Equals(GameState.Waiting))
+                            {
+                                waitingResponse = new OnlineGameResponse(GameState.Waiting, 0);
+                            }
+
+                            if (startGameResponse.YourTurn)
+                            {
+                                players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
+                            }
+                            else
+                            {
+                                players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
+                                players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                GetMove(waitingResponse.PlayerId);
+                            }
                         }
                     }
                     break;
@@ -79,19 +88,34 @@ namespace BoardGame.API
             CurrentGame = GameFactory.Create(players);
         }
 
-        public void NextMove(int clickedRow, int clickedColumn)
+        private async void GetMove(int playerId)
         {
-            if (CurrentGame.IsMoveValid(0, clickedColumn))
+            MoveResponse moveResponse = await Proxy.GetMove(playerId);
+            SendMove(CurrentGame.MakeMove(0, moveResponse.ClickedColumn));
+        }
+
+        public async void NextMove(int clickedRow, int clickedColumn)
+        {
+            if (CurrentGame != null && CurrentGame.IsMoveValid(0, clickedColumn))
             {
                 SendMove(CurrentGame.MakeMove(0, clickedColumn));
 
                 if (CurrentGame.NextPlayer != null && CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
                 {
                     // ToDo: Make Bot's move
-                    
+
                     SendMove(CurrentGame.MakeMove(0, 1));
+                }
+                else if (CurrentGame.NextPlayer != null && CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))
+                {
+                    int myId = CurrentGame.Players.First(p => p.Type.Equals(PlayerType.Human)).OnlineId;
+                    MoveResponse moveResponse = await Proxy.MakeMove(myId, 0, clickedColumn);
+
+                    GetMove(myId);
                 }
             }
         }
+
+
     }
 }

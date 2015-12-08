@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BoardGame.Domain.Enums;
 
 namespace BoardGame.Server.BusinessLogic
 {
     public class GameServer : IGameServer
     {
-        private int NextPlayerId = 0;
+        private int NextPlayerId = 1;
         private readonly IGameFactory GameFactory;
         private readonly IPlayerFactory PlayerFactory;
 
@@ -30,9 +31,23 @@ namespace BoardGame.Server.BusinessLogic
             return PlayerFactory.Create(Domain.Enums.PlayerType.OnlinePlayer, id);
         }
 
-        public IGame CreateNewGame(IEnumerable<IPlayer> players)
+        public void NewGame(IEnumerable<IPlayer> players)
         {
-            return GameFactory.Create(players);
+            IGame game = GameFactory.Create(players);
+            game.State = GameState.Ready;
+            RunningGames.Add(game);
         }
+
+        public IGame GetGameByPlayerId(int id)
+        {
+            return RunningGames.SingleOrDefault(g => g.Players.Contains(g.Players.FirstOrDefault(p => p.OnlineId == id)));
+        }
+
+        public IPlayer GetAvailablePlayer(int id)
+        {
+            return WaitingPlayers.Where(wp => wp.OnlineId != id)
+                                 .FirstOrDefault(p => GetGameByPlayerId(p.OnlineId) == null);
+        }
+
     }
 }

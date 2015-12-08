@@ -21,9 +21,14 @@ namespace BoardGame.Proxies
             return await Channel.ConfirmToPlay(playerId);
         }
 
-        public Task<MoveResponse> MakeMove(int playerId, int row, int column)
+        public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
         {
-            throw new NotImplementedException();
+            return await Channel.MakeMove(playerId, row, column);
+        }
+
+        public async Task<MoveResponse> GetMove(int playerId)
+        {
+            return await Channel.GetMove(playerId);
         }
     }
 }

@@ -23,50 +23,127 @@ namespace BoardGame.Server.Services
             Console.WriteLine("GameService with logic created...");
         }
 
+        private void TempLog(int id, string message)
+        {
+            Console.WriteLine("Player " + id + ". " + message + ".");
+        }
+
         public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)
         {
             OnlineGameResponse response = null;
+            IPlayer rivalPlayer = null;
             IPlayer player = Logic.CreateNewPlayer(playerId);
-            Logic.WaitingPlayers.Add(player);
+            
+            TempLog(player.OnlineId, "Request to play");
 
-
-            Console.WriteLine("New Player" + player.OnlineId);
-            if (Logic.WaitingPlayers.Count(p => p.OnlineId != player.OnlineId) == 0)
+            rivalPlayer = Logic.GetAvailablePlayer(player.OnlineId);
+            if (rivalPlayer == null)
             {
-                Console.WriteLine("Player" + player.OnlineId + ". Nobody here. Will have to wait.");
-                response = new OnlineGameResponse(GameState.WaitingForPlayer, player.OnlineId);
+                Logic.WaitingPlayers.Add(player);
+                TempLog(player.OnlineId, "Queue is empty");
+                response = new OnlineGameResponse(GameState.Waiting, player.OnlineId);
                 await Task.Delay(5000);
-                Console.WriteLine("Times up for Player" + player.OnlineId);
+                TempLog(player.OnlineId, "Times up");
             }
 
-            if (Logic.WaitingPlayers.Count(p => p.OnlineId != player.OnlineId) == 0)
+            IGame myGame = Logic.GetGameByPlayerId(player.OnlineId);
+            if (myGame != null)
             {
-                Console.WriteLine("Player" + player.OnlineId + ". Still nobody here. Remove from the list.");
+                TempLog(player.OnlineId, "Somebody added me!");
+                rivalPlayer = myGame.Players.First(p => p.OnlineId != player.OnlineId);
+                TempLog(player.OnlineId, "My rival is Player" + rivalPlayer.OnlineId);
+
                 Logic.WaitingPlayers.Remove(player);
+                Logic.WaitingPlayers.Remove(rivalPlayer);
+                
+                response = new OnlineGameResponse(GameState.Ready, player.OnlineId);
             }
             else
             {
-                Console.WriteLine("Player" + player.OnlineId + ". There is somebody!");
-                response = new OnlineGameResponse(GameState.ReadyForOnlineGame, player.OnlineId);
-            }
+                rivalPlayer = Logic.GetAvailablePlayer(player.OnlineId);
+                if (rivalPlayer == null)
+                {
+                    TempLog(player.OnlineId, "Queue is still empty. Remove from the list.");
+                    Logic.WaitingPlayers.Remove(player);
+                }
+                else
+                {
+                    TempLog(player.OnlineId, "There is somebody!");
+                    TempLog(player.OnlineId, "My rival is Player" + rivalPlayer.OnlineId);
 
+                    List<IPlayer> players = new List<IPlayer>()
+                    {
+                        rivalPlayer,
+                        player
+                    };
+
+                    Logic.NewGame(players);
+                    response = new OnlineGameResponse(GameState.Ready, player.OnlineId);
+                }
+            }
             return await Task.Factory.StartNew(() => response);
         }
 
         public async Task<StartGameResponse> ConfirmToPlay(int playerId)
         {
-            StartGameResponse response = new StartGameResponse(GameState.New, 1, true);
+            IGame game = Logic.GetGameByPlayerId(playerId);
+            bool yourTurn = game.Players[0].OnlineId == playerId;
+            TempLog(playerId, yourTurn ? "My turn!" : "His turn:(");
 
+            game.State++;
+            TempLog(playerId, "Confrmed!");
+            while (!game.State.Equals(GameState.New))
+            {
+                TempLog(playerId, "Waiting for other guy to confim");
+                await Task.Delay(1000);
+                if (game.State.Equals(GameState.New)) break;
 
+                TempLog(playerId, "Still waiting...");
+                await Task.Delay(2000);
+                if (game.State.Equals(GameState.New)) break;
 
+                TempLog(playerId, "Still waiting...");
+                await Task.Delay(3000);
+                if (game.State.Equals(GameState.New)) break;
+
+                TempLog(playerId, "Still waiting...");
+                await Task.Delay(4000);
+                if (game.State.Equals(GameState.New)) break;
+
+                // Something's wrong with another guy. Need to keep waiting for another one
+                TempLog(playerId, "Something's wrong with another guy. Need to keep waiting for another one");
+                game.State = GameState.Waiting;
+                Logic.RunningGames.Remove(game);
+                break;
+            }
+
+            StartGameResponse response = new StartGameResponse(game.State, playerId, yourTurn);
             return await Task.Factory.StartNew(() => response);
         }
 
         public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
         {
-            MoveResponse response = new MoveResponse(null);
+            MoveResponse response = new MoveResponse(column);
+            TempLog(playerId, "Moved in column=" + column);
 
+            IGame game = Logic.GetGameByPlayerId(playerId);
+            IMove move = game.MakeMove(row, column);
 
+            return await Task.Factory.StartNew(() => response);
+        }
+
+        public async Task<MoveResponse> GetMove(int playerId)
+        {
+            IGame game = Logic.GetGameByPlayerId(playerId);
+
+            while(!game.NextPlayer.OnlineId.Equals(playerId))
+            {
+                TempLog(playerId, "Waiting for move...");
+                await Task.Delay(2000);
+            }
+            
+            MoveResponse response = new MoveResponse(game.LastMove.Column);
+            TempLog(playerId, "Got move in column=" + response.ClickedColumn);
 
             return await Task.Factory.StartNew(() => response);
         }

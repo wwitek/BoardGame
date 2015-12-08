@@ -10,8 +10,11 @@ namespace BoardGame.Server.BusinessLogic.Interfaces
     public interface IGameServer
     {
         List<IPlayer> WaitingPlayers { get; }
+        List<IGame> RunningGames { get; }
 
         IPlayer CreateNewPlayer(int playerId = 0);
-        IGame CreateNewGame(IEnumerable<IPlayer> players);
+        void NewGame(IEnumerable<IPlayer> players);
+        IGame GetGameByPlayerId(int id);
+        IPlayer GetAvailablePlayer(int id);
     }
 }
