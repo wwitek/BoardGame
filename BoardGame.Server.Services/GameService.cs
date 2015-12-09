@@ -15,11 +15,11 @@ namespace BoardGame.Server.Services
     public class GameService : IGameService
     {
         IGameServer Logic { get; set; }
+        Random RandomGenerator = new Random();
 
         public GameService(IGameServer logic)
         {
             Logic = logic;
-
             Console.WriteLine("GameService with logic created...");
         }
 
@@ -43,15 +43,13 @@ namespace BoardGame.Server.Services
                 TempLog(player.OnlineId, "Queue is empty");
                 response = new OnlineGameResponse(GameState.Waiting, player.OnlineId);
                 await Task.Delay(5000);
-                TempLog(player.OnlineId, "Times up");
             }
 
             IGame myGame = Logic.GetGameByPlayerId(player.OnlineId);
             if (myGame != null)
             {
-                TempLog(player.OnlineId, "Somebody added me!");
                 rivalPlayer = myGame.Players.First(p => p.OnlineId != player.OnlineId);
-                TempLog(player.OnlineId, "My rival is Player" + rivalPlayer.OnlineId);
+                TempLog(player.OnlineId, "Player"  + rivalPlayer.OnlineId + " added me");
 
                 Logic.WaitingPlayers.Remove(player);
                 Logic.WaitingPlayers.Remove(rivalPlayer);
@@ -68,11 +66,9 @@ namespace BoardGame.Server.Services
                 }
                 else
                 {
-                    TempLog(player.OnlineId, "There is somebody!");
-                    TempLog(player.OnlineId, "My rival will be Player" + rivalPlayer.OnlineId);
-
-                    List<IPlayer> players = new Random().Next(1) == 0 ? new List<IPlayer>() { rivalPlayer, player }
-                                                                      : new List<IPlayer>() { rivalPlayer, player };
+                    TempLog(player.OnlineId, "There is somebody. My rival will be Player" + rivalPlayer.OnlineId);
+                    List<IPlayer> players = RandomGenerator.Next(2) == 0 ? new List<IPlayer>() { rivalPlayer, player }
+                                                                      : new List<IPlayer>() { player, rivalPlayer };
                     Logic.NewGame(players);
                     response = new OnlineGameResponse(GameState.Ready, player.OnlineId);
                 }
@@ -84,28 +80,20 @@ namespace BoardGame.Server.Services
         {
             IGame game = Logic.GetGameByPlayerId(playerId);
             bool yourTurn = game.Players[0].OnlineId == playerId;
-            TempLog(playerId, yourTurn ? "My turn!" : "His turn:(");
 
             game.State++;
-            TempLog(playerId, "Confrmed!");
+            TempLog(playerId, "Confrmed. " + (yourTurn ? "My turn" : "His turn"));
             while (!game.State.Equals(GameState.New))
             {
                 TempLog(playerId, "Waiting for other guy to confim");
-                await Task.Delay(1000);
-                if (game.State.Equals(GameState.New)) break;
+                for (int i = 1; i < 5; i++)
+                {
+                    await Task.Delay(2500);
+                    if (game.State.Equals(GameState.New)) break;
+                    TempLog(playerId, "Still waiting...");
+                }
 
-                TempLog(playerId, "Still waiting...");
-                await Task.Delay(2000);
                 if (game.State.Equals(GameState.New)) break;
-
-                TempLog(playerId, "Still waiting...");
-                await Task.Delay(3000);
-                if (game.State.Equals(GameState.New)) break;
-
-                TempLog(playerId, "Still waiting...");
-                await Task.Delay(4000);
-                if (game.State.Equals(GameState.New)) break;
-
                 // Something's wrong with another guy. Need to keep waiting for another one
                 TempLog(playerId, "Something's wrong with another guy. Need to keep waiting for another one");
                 game.State = GameState.Waiting;
@@ -120,14 +108,12 @@ namespace BoardGame.Server.Services
         public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
         {
             TempLog(playerId, "Moved in column=" + column);
-
             IGame game = Logic.GetGameByPlayerId(playerId);
             game.MakeMove(row, column);
 
             while (!game.NextPlayer.OnlineId.Equals(playerId))
             {
-                TempLog(playerId, "Waiting for move...");
-                await Task.Delay(2000);
+                await Task.Delay(500);
             }
 
             MoveResponse response = new MoveResponse(game.LastMove.Column);
