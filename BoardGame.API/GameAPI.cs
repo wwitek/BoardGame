@@ -78,7 +78,7 @@ namespace BoardGame.API
                             {
                                 players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
                                 players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                GetMove(waitingResponse.PlayerId);
+                                WaitForFirstMove(waitingResponse.PlayerId);
                             }
                         }
                     }
@@ -88,7 +88,7 @@ namespace BoardGame.API
             CurrentGame = GameFactory.Create(players);
         }
 
-        private async void GetMove(int playerId)
+        private async void WaitForFirstMove(int playerId)
         {
             MoveResponse moveResponse = await Proxy.GetMove(playerId);
             SendMove(CurrentGame.MakeMove(0, moveResponse.ClickedColumn));
@@ -103,6 +103,11 @@ namespace BoardGame.API
                 if (CurrentGame.NextPlayer != null && CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
                 {
                     // ToDo: Make Bot's move
+                    // ---------------------------------
+                    // |                               |
+                    // |                               |
+                    // |                               |
+                    // ---------------------------------
 
                     SendMove(CurrentGame.MakeMove(0, 1));
                 }
@@ -110,8 +115,7 @@ namespace BoardGame.API
                 {
                     int myId = CurrentGame.Players.First(p => p.Type.Equals(PlayerType.Human)).OnlineId;
                     MoveResponse moveResponse = await Proxy.MakeMove(myId, 0, clickedColumn);
-
-                    GetMove(myId);
+                    SendMove(CurrentGame.MakeMove(0, moveResponse.ClickedColumn));
                 }
             }
         }

@@ -69,14 +69,10 @@ namespace BoardGame.Server.Services
                 else
                 {
                     TempLog(player.OnlineId, "There is somebody!");
-                    TempLog(player.OnlineId, "My rival is Player" + rivalPlayer.OnlineId);
+                    TempLog(player.OnlineId, "My rival will be Player" + rivalPlayer.OnlineId);
 
-                    List<IPlayer> players = new List<IPlayer>()
-                    {
-                        rivalPlayer,
-                        player
-                    };
-
+                    List<IPlayer> players = new Random().Next(1) == 0 ? new List<IPlayer>() { rivalPlayer, player }
+                                                                      : new List<IPlayer>() { rivalPlayer, player };
                     Logic.NewGame(players);
                     response = new OnlineGameResponse(GameState.Ready, player.OnlineId);
                 }
@@ -123,19 +119,24 @@ namespace BoardGame.Server.Services
 
         public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
         {
-            MoveResponse response = new MoveResponse(column);
             TempLog(playerId, "Moved in column=" + column);
 
             IGame game = Logic.GetGameByPlayerId(playerId);
-            IMove move = game.MakeMove(row, column);
+            game.MakeMove(row, column);
 
+            while (!game.NextPlayer.OnlineId.Equals(playerId))
+            {
+                TempLog(playerId, "Waiting for move...");
+                await Task.Delay(2000);
+            }
+
+            MoveResponse response = new MoveResponse(game.LastMove.Column);
             return await Task.Factory.StartNew(() => response);
         }
 
         public async Task<MoveResponse> GetMove(int playerId)
         {
             IGame game = Logic.GetGameByPlayerId(playerId);
-
             while(!game.NextPlayer.OnlineId.Equals(playerId))
             {
                 TempLog(playerId, "Waiting for move...");

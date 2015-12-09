@@ -52,7 +52,7 @@ namespace BoardGame.Domain.Entities
                 Fields[i, column].PlayerId = playerId;
 
                 IMove result = GetInsertResult(i, column, playerId, 4);
-                
+
                 WinnerId = result.IsConnected ? playerId : 0;
 
                 return result;
