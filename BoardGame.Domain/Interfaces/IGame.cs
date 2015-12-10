@@ -13,5 +13,6 @@ namespace BoardGame.Domain.Interfaces
 
         bool IsMoveValid(int row, int column);
         IMove MakeMove(int row, int column);
+        void MakeMove(IMove move);
     }
 }

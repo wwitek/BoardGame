@@ -17,6 +17,7 @@ namespace BoardGame.Domain.Interfaces
         bool IsMoveValid(int row, int column, int playerId);
 
         IMove InsertChip(int row, int column, int playerId);
+        void InsertChip(IMove move);
         void RemoveChip(int row, int column);
     }
 }

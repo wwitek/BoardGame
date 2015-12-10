@@ -21,6 +21,6 @@ namespace BoardGame.Server.Contracts
         Task<MoveResponse> MakeMove(int playerId, int row, int column);
 
         [OperationContract]
-        Task<MoveResponse> GetMove(int playerId);
+        Task<MoveResponse> GetFirstMove(int playerId);
     }
 }

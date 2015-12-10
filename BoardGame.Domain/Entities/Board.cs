@@ -45,19 +45,26 @@ namespace BoardGame.Domain.Entities
         public IMove InsertChip(int row, int column, int playerId)
         {
             if (column < 0 || column >= Width) throw new Exception("Invalid column!");
-
             for (int i = Height - 1; i >= 0; i--)
             {
                 if (Fields[i, column].PlayerId > 0) continue;
                 Fields[i, column].PlayerId = playerId;
-
                 IMove result = GetInsertResult(i, column, playerId, 4);
-
                 WinnerId = result.IsConnected ? playerId : 0;
-
                 return result;
             }
+            throw new Exception("Cannot add chip here. There is no more room");
+        }
 
+        public void InsertChip(IMove move)
+        {
+            if (move.Column < 0 || move.Column >= Width) throw new Exception("Invalid column!");
+            if (Fields[move.Row, move.Column].PlayerId == 0)
+            {
+                Fields[move.Row, move.Column].PlayerId = move.PlayerId;
+                WinnerId = move.IsConnected ? move.PlayerId : 0;
+                return;
+            }
             throw new Exception("Cannot add chip here. There is no more room");
         }
 

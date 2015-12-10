@@ -44,10 +44,15 @@ namespace BoardGame.Domain.Entities
         public IMove MakeMove(int row, int column)
         {
             LastMove = Board.InsertChip(row, column, currentPlayerIndex);
-
             SetNextPlayer();
-
             return LastMove;
+        }
+
+        public void MakeMove(IMove move)
+        {
+            Board.InsertChip(move);
+            LastMove = move;
+            SetNextPlayer();
         }
 
         // Private methods

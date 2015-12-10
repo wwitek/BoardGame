@@ -120,7 +120,7 @@ namespace BoardGame.Server.Services
             return await Task.Factory.StartNew(() => response);
         }
 
-        public async Task<MoveResponse> GetMove(int playerId)
+        public async Task<MoveResponse> GetFirstMove(int playerId)
         {
             IGame game = Logic.GetGameByPlayerId(playerId);
             while(!game.NextPlayer.OnlineId.Equals(playerId))
