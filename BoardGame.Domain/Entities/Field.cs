@@ -1,7 +1,9 @@
 ﻿using BoardGame.Domain.Interfaces;
+using System.Runtime.Serialization;
 
 namespace BoardGame.Domain.Entities
 {
+    [DataContract]
     public class Field : IField
     {
         public int PlayerId { get; set; }

@@ -84,14 +84,16 @@ namespace BoardGame.API
                     }
                     break;
             }
-
             CurrentGame = GameFactory.Create(players);
         }
 
         private async void WaitForFirstMove(int playerId)
         {
             MoveResponse moveResponse = await Proxy.GetMove(playerId);
-            SendMove(CurrentGame.MakeMove(0, moveResponse.ClickedColumn));
+            if (moveResponse != null && moveResponse.MoveMade != null)
+            {
+                SendMove(CurrentGame.MakeMove(0, moveResponse.MoveMade.Column));
+            }
         }
 
         public async void NextMove(int clickedRow, int clickedColumn)
@@ -115,7 +117,10 @@ namespace BoardGame.API
                 {
                     int myId = CurrentGame.Players.First(p => p.Type.Equals(PlayerType.Human)).OnlineId;
                     MoveResponse moveResponse = await Proxy.MakeMove(myId, 0, clickedColumn);
-                    SendMove(CurrentGame.MakeMove(0, moveResponse.ClickedColumn));
+                    if(moveResponse != null && moveResponse.MoveMade != null)
+                    {
+                        SendMove(CurrentGame.MakeMove(0, moveResponse.MoveMade.Column));
+                    }
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using BoardGame.Domain.Interfaces;
+﻿using BoardGame.Domain.Entities;
+using BoardGame.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,16 @@ using System.Threading.Tasks;
 namespace BoardGame.Server.Contracts.Responses
 {
     [DataContract]
+    [KnownType(typeof(Move))]
+    [KnownType(typeof(Field))]
     public class MoveResponse
     {
         [DataMember]
-        public int ClickedColumn { get; set; }
+        public IMove MoveMade { get; set; }
 
-        public MoveResponse(int clickedColumn)
+        public MoveResponse(IMove moveMade)
         {
-            ClickedColumn = clickedColumn;
+            MoveMade = moveMade;
         }
     }
 }

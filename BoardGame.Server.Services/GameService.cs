@@ -116,7 +116,7 @@ namespace BoardGame.Server.Services
                 await Task.Delay(500);
             }
 
-            MoveResponse response = new MoveResponse(game.LastMove.Column);
+            MoveResponse response = new MoveResponse(game.LastMove);
             return await Task.Factory.StartNew(() => response);
         }
 
@@ -128,9 +128,9 @@ namespace BoardGame.Server.Services
                 TempLog(playerId, "Waiting for move...");
                 await Task.Delay(2000);
             }
-            
-            MoveResponse response = new MoveResponse(game.LastMove.Column);
-            TempLog(playerId, "Got move in column=" + response.ClickedColumn);
+
+            MoveResponse response = new MoveResponse(game.LastMove);
+            TempLog(playerId, "Got move in column=" + response.MoveMade.Column);
 
             return await Task.Factory.StartNew(() => response);
         }
