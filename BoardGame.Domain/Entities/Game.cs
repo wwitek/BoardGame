@@ -1,13 +1,16 @@
 ﻿using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 
 namespace BoardGame.Domain.Entities
 {
     public class Game : IGame
     {
+        private ManualResetEvent waitForNextMoveHandle = new ManualResetEvent(false);
         private int currentPlayerIndex = 1;
         private GameState state;
 
@@ -71,10 +74,18 @@ namespace BoardGame.Domain.Entities
             SetNextPlayer();
         }
 
+        public bool WaitForNextPlayer(int timeout)
+        {
+            waitForNextMoveHandle.Reset();
+            return waitForNextMoveHandle.WaitOne(timeout);
+        }
+
         // Private methods
         private void SetNextPlayer()
         {
             currentPlayerIndex = currentPlayerIndex == 1 ? 2 : 1;
+            if (waitForNextMoveHandle != null)
+                waitForNextMoveHandle.Set();
         }
     }
 }

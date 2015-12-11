@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using BoardGame.Domain.Enums;
 using System.ComponentModel;
+using System;
 
 namespace BoardGame.Domain.Interfaces
 {
@@ -15,6 +16,7 @@ namespace BoardGame.Domain.Interfaces
         bool IsMoveValid(int row, int column);
         IMove MakeMove(int row, int column);
         void MakeMove(IMove move);
+        bool WaitForNextPlayer(int timeout);
 
         event PropertyChangedEventHandler StateChanged;
     }

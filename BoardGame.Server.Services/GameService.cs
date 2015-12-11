@@ -95,6 +95,7 @@ namespace BoardGame.Server.Services
                     if (game.State.Equals(GameState.New)) waitHandle.Set();
                 };
                 game.StateChanged += stateEventHandler;
+
                 TempLog(playerId, "Waiting for other guy to confim");
 
                 if (!waitHandle.WaitOne(5000))
@@ -127,28 +128,19 @@ namespace BoardGame.Server.Services
             TempLog(playerId, "Moved in column=" + column);
             IGame game = Logic.GetGameByPlayerId(playerId);
             game.MakeMove(row, column);
+            bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
 
-            while (!game.NextPlayer.OnlineId.Equals(playerId))
-            {
-                await Task.Delay(500);
-            }
-
-            MoveResponse response = new MoveResponse(game.LastMove);
+            MoveResponse response = new MoveResponse(game.LastMove, timeout);
             return await Task.Factory.StartNew(() => response);
         }
 
         public async Task<MoveResponse> GetFirstMove(int playerId)
         {
             IGame game = Logic.GetGameByPlayerId(playerId);
-            while(!game.NextPlayer.OnlineId.Equals(playerId))
-            {
-                TempLog(playerId, "Waiting for move...");
-                await Task.Delay(2000);
-            }
+            bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
 
-            MoveResponse response = new MoveResponse(game.LastMove);
+            MoveResponse response = new MoveResponse(game.LastMove, timeout);
             TempLog(playerId, "Got move in column=" + response.MoveMade.Column);
-
             return await Task.Factory.StartNew(() => response);
         }
     }

@@ -17,9 +17,15 @@ namespace BoardGame.Server.Contracts.Responses
         [DataMember]
         public IMove MoveMade { get; set; }
 
-        public MoveResponse(IMove moveMade)
+        [DataMember]
+        public bool Timeout { get; set; }
+
+        public MoveResponse(IMove moveMade, bool timeout = false)
         {
             MoveMade = moveMade;
+            Timeout = timeout;
+
+            if (timeout) MoveMade = null;
         }
     }
 }
