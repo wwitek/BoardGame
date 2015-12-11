@@ -1,6 +1,7 @@
 ﻿using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace BoardGame.Domain.Entities
@@ -8,8 +9,21 @@ namespace BoardGame.Domain.Entities
     public class Game : IGame
     {
         private int currentPlayerIndex = 1;
+        private GameState state;
 
-        public GameState State { get; set; }
+        public GameState State
+        {
+            get
+            {
+                return state;
+            }
+            set
+            {
+                state = value;
+                if (StateChanged != null)
+                    StateChanged(this, new PropertyChangedEventArgs("State"));
+            }
+        }
         public IBoard Board { get; }
         public List<IPlayer> Players { get; }
         public IPlayer NextPlayer
@@ -21,6 +35,8 @@ namespace BoardGame.Domain.Entities
             }
         }
         public IMove LastMove { get; set; }
+
+        public event PropertyChangedEventHandler StateChanged;
 
         public Game(IBoard board, IEnumerable<IPlayer> players)
         {

@@ -9,6 +9,8 @@ using BoardGame.Server.BusinessLogic.Interfaces;
 using BoardGame.Server.Contracts.Responses;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
+using System.Threading;
+using System.ComponentModel;
 
 namespace BoardGame.Server.Services
 {
@@ -68,7 +70,7 @@ namespace BoardGame.Server.Services
                 {
                     TempLog(player.OnlineId, "There is somebody. My rival will be Player" + rivalPlayer.OnlineId);
                     List<IPlayer> players = RandomGenerator.Next(2) == 0 ? new List<IPlayer>() { rivalPlayer, player }
-                                                                      : new List<IPlayer>() { player, rivalPlayer };
+                                                                         : new List<IPlayer>() { player, rivalPlayer };
                     Logic.NewGame(players);
                     response = new OnlineGameResponse(GameState.Ready, player.OnlineId);
                 }
@@ -80,30 +82,45 @@ namespace BoardGame.Server.Services
         {
             IGame game = Logic.GetGameByPlayerId(playerId);
             bool yourTurn = game.Players[0].OnlineId == playerId;
-
-            game.State++;
             TempLog(playerId, "Confrmed. " + (yourTurn ? "My turn" : "His turn"));
-            while (!game.State.Equals(GameState.New))
-            {
-                TempLog(playerId, "Waiting for other guy to confim");
-                for (int i = 1; i < 5; i++)
-                {
-                    await Task.Delay(2500);
-                    if (game.State.Equals(GameState.New)) break;
-                    TempLog(playerId, "Still waiting...");
-                }
 
-                if (game.State.Equals(GameState.New)) break;
-                // Something's wrong with another guy. Need to keep waiting for another one
-                TempLog(playerId, "Something's wrong with another guy. Need to keep waiting for another one");
-                game.State = GameState.Waiting;
-                Logic.RunningGames.Remove(game);
-                break;
+            if (game.State.Equals(GameState.Ready))
+            {
+                game.State = GameState.Confirmed;
+                ManualResetEvent waitHandle = new ManualResetEvent(false);
+                PropertyChangedEventHandler stateEventHandler = null;
+                stateEventHandler = (s, e) =>
+                {
+                    game.StateChanged -= stateEventHandler;
+                    if (game.State.Equals(GameState.New)) waitHandle.Set();
+                };
+                game.StateChanged += stateEventHandler;
+                TempLog(playerId, "Waiting for other guy to confim");
+
+                if (!waitHandle.WaitOne(5000))
+                {
+                    TempLog(playerId, "Timeout");
+                    game.State = GameState.Waiting;
+                    Logic.RunningGames.Remove(game);
+                }
+                else
+                {
+                    TempLog(playerId, "Confirmed by other player");
+                }
+            }
+            else if (game.State.Equals(GameState.Confirmed))
+            {
+                game.State = GameState.New;
+            }
+            else
+            {
+                //TODO: Any other state shouldn't happened
             }
 
             StartGameResponse response = new StartGameResponse(game.State, playerId, yourTurn);
             return await Task.Factory.StartNew(() => response);
         }
+
 
         public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
         {

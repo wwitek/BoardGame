@@ -68,17 +68,19 @@ namespace BoardGame.API
                             {
                                 waitingResponse = new OnlineGameResponse(GameState.Waiting, 0);
                             }
-
-                            if (startGameResponse.YourTurn)
-                            {
-                                players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
-                            }
                             else
                             {
-                                players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
-                                players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                GetFirstMove(waitingResponse.PlayerId);
+                                if (startGameResponse.YourTurn)
+                                {
+                                    players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                    players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
+                                }
+                                else
+                                {
+                                    players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
+                                    players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                    GetFirstMove(waitingResponse.PlayerId);
+                                }
                             }
                         }
                     }

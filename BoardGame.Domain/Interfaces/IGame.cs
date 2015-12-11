@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BoardGame.Domain.Enums;
+using System.ComponentModel;
 
 namespace BoardGame.Domain.Interfaces
 {
@@ -14,5 +15,7 @@ namespace BoardGame.Domain.Interfaces
         bool IsMoveValid(int row, int column);
         IMove MakeMove(int row, int column);
         void MakeMove(IMove move);
+
+        event PropertyChangedEventHandler StateChanged;
     }
 }
