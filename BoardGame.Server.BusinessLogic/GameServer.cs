@@ -28,7 +28,7 @@ namespace BoardGame.Server.BusinessLogic
         public IPlayer CreateNewPlayer(int playerId = 0)
         {
             int id = playerId == 0 ? NextPlayerId++ : playerId;
-            return PlayerFactory.Create(Domain.Enums.PlayerType.OnlinePlayer, id);
+            return PlayerFactory.Create(PlayerType.OnlinePlayer, id);
         }
 
         public void NewGame(IEnumerable<IPlayer> players)

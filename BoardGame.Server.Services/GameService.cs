@@ -42,9 +42,13 @@ namespace BoardGame.Server.Services
             if (rivalPlayer == null)
             {
                 Logic.WaitingPlayers.Add(player);
+
+
                 TempLog(player.OnlineId, "Queue is empty");
                 response = new OnlineGameResponse(GameState.Waiting, player.OnlineId);
                 await Task.Delay(5000);
+
+
             }
 
             IGame myGame = Logic.GetGameByPlayerId(player.OnlineId);
@@ -91,10 +95,10 @@ namespace BoardGame.Server.Services
                 PropertyChangedEventHandler stateEventHandler = null;
                 stateEventHandler = (s, e) =>
                 {
-                    game.StateChanged -= stateEventHandler;
+                    game.OnStateChanged -= stateEventHandler;
                     if (game.State.Equals(GameState.New)) waitHandle.Set();
                 };
-                game.StateChanged += stateEventHandler;
+                game.OnStateChanged += stateEventHandler;
 
                 TempLog(playerId, "Waiting for other guy to confim");
 

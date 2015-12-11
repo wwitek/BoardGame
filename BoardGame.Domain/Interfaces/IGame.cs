@@ -18,6 +18,6 @@ namespace BoardGame.Domain.Interfaces
         void MakeMove(IMove move);
         bool WaitForNextPlayer(int timeout);
 
-        event PropertyChangedEventHandler StateChanged;
+        event PropertyChangedEventHandler OnStateChanged;
     }
 }

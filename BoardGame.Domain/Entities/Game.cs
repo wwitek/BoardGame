@@ -23,8 +23,8 @@ namespace BoardGame.Domain.Entities
             set
             {
                 state = value;
-                if (StateChanged != null)
-                    StateChanged(this, new PropertyChangedEventArgs("State"));
+                if (OnStateChanged != null)
+                    OnStateChanged(this, new PropertyChangedEventArgs("State"));
             }
         }
         public IBoard Board { get; }
@@ -39,7 +39,7 @@ namespace BoardGame.Domain.Entities
         }
         public IMove LastMove { get; set; }
 
-        public event PropertyChangedEventHandler StateChanged;
+        public event PropertyChangedEventHandler OnStateChanged;
 
         public Game(IBoard board, IEnumerable<IPlayer> players)
         {
