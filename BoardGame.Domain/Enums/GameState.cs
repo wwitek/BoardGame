@@ -8,9 +8,7 @@ namespace BoardGame.Domain.Enums
 {
     public enum GameState
     {
-        Waiting,
         Ready,
-        Confirming,
         Confirmed,
         New,
         Running,

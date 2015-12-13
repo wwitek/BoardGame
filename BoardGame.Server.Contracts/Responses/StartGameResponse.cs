@@ -12,7 +12,7 @@ namespace BoardGame.Server.Contracts.Responses
     public class StartGameResponse
     {
         [DataMember]
-        public GameState State { get; set; }
+        public bool IsConfirmed { get; set; }
 
         [DataMember]
         public int GameId { get; set; }
@@ -20,9 +20,9 @@ namespace BoardGame.Server.Contracts.Responses
         [DataMember]
         public bool YourTurn { get; set; }
 
-        public StartGameResponse(GameState state, int gameId, bool yourTurn)
+        public StartGameResponse(bool isConfirmed, int gameId, bool yourTurn)
         {
-            State = state;
+            IsConfirmed = isConfirmed;
             GameId = gameId;
             YourTurn = yourTurn;
         }

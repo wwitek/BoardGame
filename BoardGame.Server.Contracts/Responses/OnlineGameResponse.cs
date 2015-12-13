@@ -12,14 +12,14 @@ namespace BoardGame.Server.Contracts.Responses
     public class OnlineGameResponse
     {
         [DataMember]
-        public GameState State { get; set; }
+        public bool IsReady { get; set; }
 
         [DataMember]
         public int PlayerId { get; set; }
 
-        public OnlineGameResponse(GameState state, int playerId)
+        public OnlineGameResponse(int playerId = 0, bool ready = false)
         {
-            State = state;
+            IsReady = ready;
             PlayerId = playerId;
         }
     }

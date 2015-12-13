@@ -7,5 +7,6 @@ namespace BoardGame.Domain.Interfaces
         int OnlineId { get; set; }
         string Name { get; set; }
         PlayerType Type { get; set; }
+        bool Confirmed { get; set; }
     }
 }

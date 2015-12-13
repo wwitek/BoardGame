@@ -13,7 +13,8 @@ namespace BoardGame.Server.BusinessLogic
 {
     public class GameServer : IGameServer
     {
-        private readonly object lockObject = new object();
+        private readonly object newgameLock = new object();
+        private readonly object confirmLock = new object();
         private int NextPlayerId = 1;
         private readonly IGameFactory GameFactory;
         private readonly IPlayerFactory PlayerFactory;
@@ -35,7 +36,7 @@ namespace BoardGame.Server.BusinessLogic
 
         public bool NewGame(List<IPlayer> players)
         {
-            lock (lockObject)
+            lock (newgameLock)
             {
                 if (players == null || players.Count != 2)
                 {
@@ -60,5 +61,19 @@ namespace BoardGame.Server.BusinessLogic
             return RunningGames.SingleOrDefault(g => g.Players.Contains(g.Players.FirstOrDefault(p => p.OnlineId == id)));
         }
 
+        public void ConfirmPlayer(int id)
+        {
+            lock (confirmLock)
+            {
+                IGame game = GetGameByPlayerId(id);
+                IPlayer player = game.Players.SingleOrDefault(p => p.OnlineId == id);
+                player.Confirmed = true;
+
+                if (game.Players.All(p => p.Confirmed))
+                {
+                    game.State = GameState.Confirmed;
+                }
+            }
+        }
     }
 }

@@ -54,21 +54,15 @@ namespace BoardGame.API
                     break;
                 case GameType.Online:
                     int myId = 0;
-                    OnlineGameResponse waitingResponse = new OnlineGameResponse(GameState.Waiting, 0);
-
-                    while (waitingResponse.State.Equals(GameState.Waiting))
+                    OnlineGameResponse waitingResponse = new OnlineGameResponse();
+                    while (!waitingResponse.IsReady)
                     {
                         waitingResponse = await Proxy.OnlineGameRequest(myId);
                         myId = waitingResponse.PlayerId;
-
-                        if (waitingResponse.State.Equals(GameState.Ready))
+                        if (waitingResponse.IsReady)
                         {
                             StartGameResponse startGameResponse = await Proxy.ConfirmToPlay(waitingResponse.PlayerId);
-                            if (startGameResponse.State.Equals(GameState.Waiting))
-                            {
-                                waitingResponse = new OnlineGameResponse(GameState.Waiting, 0);
-                            }
-                            else
+                            if (startGameResponse.IsConfirmed)
                             {
                                 if (startGameResponse.YourTurn)
                                 {
@@ -81,6 +75,10 @@ namespace BoardGame.API
                                     players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
                                     GetFirstMove(waitingResponse.PlayerId);
                                 }
+                            }
+                            else
+                            {
+                                waitingResponse.IsReady = false;
                             }
                         }
                     }

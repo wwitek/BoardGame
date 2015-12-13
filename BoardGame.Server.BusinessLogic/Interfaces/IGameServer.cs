@@ -16,5 +16,6 @@ namespace BoardGame.Server.BusinessLogic.Interfaces
         IPlayer CreateNewPlayer(int playerId = 0);
         bool NewGame(List<IPlayer> players);
         IGame GetGameByPlayerId(int id);
+        void ConfirmPlayer(int id);
     }
 }
