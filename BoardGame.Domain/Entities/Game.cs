@@ -10,6 +10,7 @@ namespace BoardGame.Domain.Entities
 {
     public class Game : IGame
     {
+        private readonly object lockObject = new object();
         private ManualResetEvent waitForNextMoveHandle = new ManualResetEvent(false);
         private int currentPlayerIndex = 1;
         private GameState state;
@@ -22,9 +23,12 @@ namespace BoardGame.Domain.Entities
             }
             set
             {
-                state = value;
-                if (OnStateChanged != null)
-                    OnStateChanged(this, new PropertyChangedEventArgs("State"));
+                lock(lockObject)
+                {
+                    state = value;
+                    if (OnStateChanged != null)
+                        OnStateChanged(this, new PropertyChangedEventArgs("State"));
+                }
             }
         }
         public IBoard Board { get; }

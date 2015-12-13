@@ -1,4 +1,5 @@
-﻿using BoardGame.Domain.Interfaces;
+﻿using BoardGame.Domain.Helpers;
+using BoardGame.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,11 @@ namespace BoardGame.Server.BusinessLogic.Interfaces
 {
     public interface IGameServer
     {
-        List<IPlayer> WaitingPlayers { get; }
+        BlockingPredicateCollection<IPlayer> WaitingPlayers { get; }
         List<IGame> RunningGames { get; }
 
         IPlayer CreateNewPlayer(int playerId = 0);
-        void NewGame(IEnumerable<IPlayer> players);
+        bool NewGame(List<IPlayer> players);
         IGame GetGameByPlayerId(int id);
-        IPlayer GetAvailablePlayer(int id);
     }
 }

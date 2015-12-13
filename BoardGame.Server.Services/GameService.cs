@@ -35,74 +35,67 @@ namespace BoardGame.Server.Services
             OnlineGameResponse response = null;
             IPlayer rivalPlayer = null;
             IPlayer player = Logic.CreateNewPlayer(playerId);
-            
             TempLog(player.OnlineId, "Request to play");
 
-            rivalPlayer = Logic.GetAvailablePlayer(player.OnlineId);
-            if (rivalPlayer == null)
+            Logic.WaitingPlayers.Add(player);
+            if (Logic.WaitingPlayers.TryTake(out rivalPlayer, 5000, rp => rp.OnlineId != player.OnlineId))
             {
-                Logic.WaitingPlayers.Add(player);
+                TempLog(player.OnlineId, "There is somebody. My rival will be Player" + rivalPlayer.OnlineId);
 
+                List<IPlayer> players = RandomGenerator.Next(2) == 0 ? new List<IPlayer>() { rivalPlayer, player }
+                                                                     : new List<IPlayer>() { player, rivalPlayer };
+                TempLog(player.OnlineId, "Players created");
 
-                TempLog(player.OnlineId, "Queue is empty");
-                response = new OnlineGameResponse(GameState.Waiting, player.OnlineId);
-                await Task.Delay(5000);
+                if (Logic.NewGame(players))
+                {
+                    TempLog(player.OnlineId, "New game created");
+                }
 
+                if (Logic.GetGameByPlayerId(player.OnlineId).Equals(Logic.GetGameByPlayerId(rivalPlayer.OnlineId)))
+                {
+                    TempLog(player.OnlineId, "Game created correctly");
+                }
 
-            }
-
-            IGame myGame = Logic.GetGameByPlayerId(player.OnlineId);
-            if (myGame != null)
-            {
-                rivalPlayer = myGame.Players.First(p => p.OnlineId != player.OnlineId);
-                TempLog(player.OnlineId, "Player"  + rivalPlayer.OnlineId + " added me");
-
-                Logic.WaitingPlayers.Remove(player);
-                Logic.WaitingPlayers.Remove(rivalPlayer);
-                
                 response = new OnlineGameResponse(GameState.Ready, player.OnlineId);
+                TempLog(player.OnlineId, "Response created");
             }
             else
             {
-                rivalPlayer = Logic.GetAvailablePlayer(player.OnlineId);
-                if (rivalPlayer == null)
-                {
-                    TempLog(player.OnlineId, "Queue is still empty. Remove from the list.");
-                    Logic.WaitingPlayers.Remove(player);
-                }
-                else
-                {
-                    TempLog(player.OnlineId, "There is somebody. My rival will be Player" + rivalPlayer.OnlineId);
-                    List<IPlayer> players = RandomGenerator.Next(2) == 0 ? new List<IPlayer>() { rivalPlayer, player }
-                                                                         : new List<IPlayer>() { player, rivalPlayer };
-                    Logic.NewGame(players);
-                    response = new OnlineGameResponse(GameState.Ready, player.OnlineId);
-                }
+                TempLog(player.OnlineId, "Queue is empty");
+                Logic.WaitingPlayers.Remove(player);
+                response = new OnlineGameResponse(GameState.Waiting, player.OnlineId);
             }
             return await Task.Factory.StartNew(() => response);
         }
 
         public async Task<StartGameResponse> ConfirmToPlay(int playerId)
         {
-            IGame game = Logic.GetGameByPlayerId(playerId);
+            TempLog(playerId, "ConfirmToPlay");
+            IGame game = null;
+            game = Logic.GetGameByPlayerId(playerId);
+
             bool yourTurn = game.Players[0].OnlineId == playerId;
             TempLog(playerId, "Confrmed. " + (yourTurn ? "My turn" : "His turn"));
 
             if (game.State.Equals(GameState.Ready))
             {
-                game.State = GameState.Confirmed;
+                TempLog(playerId, "Game was Ready. Will change it to Confirming");
+                game.State = GameState.Confirming;
+                TempLog(playerId, "Game is Confirming state");
+
                 ManualResetEvent waitHandle = new ManualResetEvent(false);
                 PropertyChangedEventHandler stateEventHandler = null;
                 stateEventHandler = (s, e) =>
                 {
+                    TempLog(playerId, "State changed");
                     game.OnStateChanged -= stateEventHandler;
-                    if (game.State.Equals(GameState.New)) waitHandle.Set();
+                    if (game.State.Equals(GameState.New)) TempLog(playerId, "New waitHandle set"); waitHandle.Set();
                 };
                 game.OnStateChanged += stateEventHandler;
+                TempLog(playerId, "Waiting for other guy to confim..");
 
-                TempLog(playerId, "Waiting for other guy to confim");
-
-                if (!waitHandle.WaitOne(5000))
+                game.State = GameState.Confirmed;
+                if (!waitHandle.WaitOne(60000))
                 {
                     TempLog(playerId, "Timeout");
                     game.State = GameState.Waiting;
@@ -113,8 +106,39 @@ namespace BoardGame.Server.Services
                     TempLog(playerId, "Confirmed by other player");
                 }
             }
+            else if (game.State.Equals(GameState.Confirming))
+            {
+                TempLog(playerId, "Game is still in Confirming process. Will wait till it's finished");
+                ManualResetEvent waitHandle = new ManualResetEvent(false);
+                PropertyChangedEventHandler stateEventHandler = null;
+                stateEventHandler = (s, e) =>
+                {
+                    TempLog(playerId, "State changed");
+                    game.OnStateChanged -= stateEventHandler;
+                    if (game.State.Equals(GameState.Confirmed)) TempLog(playerId, "Confirmed waitHandle set"); waitHandle.Set();
+                };
+                game.OnStateChanged += stateEventHandler;
+
+                if (game.State.Equals(GameState.Confirmed))
+                {
+                    game.State = GameState.Confirmed;
+                }
+
+                if (!waitHandle.WaitOne(60000))
+                {
+                    TempLog(playerId, "Timeout");
+                    game.State = GameState.Waiting;
+                    Logic.RunningGames.Remove(game);
+                }
+                else
+                {
+                    TempLog(playerId, "Confirmed by other player");
+                }
+                game.State = GameState.New;
+            }
             else if (game.State.Equals(GameState.Confirmed))
             {
+                TempLog(playerId, "Game was Confirmed. Will change it to New");
                 game.State = GameState.New;
             }
             else
@@ -123,9 +147,9 @@ namespace BoardGame.Server.Services
             }
 
             StartGameResponse response = new StartGameResponse(game.State, playerId, yourTurn);
+            TempLog(playerId, "ConfirmToPlay responsed: " + response.State);
             return await Task.Factory.StartNew(() => response);
         }
-
 
         public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
         {
@@ -140,11 +164,13 @@ namespace BoardGame.Server.Services
 
         public async Task<MoveResponse> GetFirstMove(int playerId)
         {
+            TempLog(playerId, "Waiting for the first move..");
+
             IGame game = Logic.GetGameByPlayerId(playerId);
             bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
 
             MoveResponse response = new MoveResponse(game.LastMove, timeout);
-            TempLog(playerId, "Got move in column=" + response.MoveMade.Column);
+            if (!timeout) TempLog(playerId, "Got move in column=" + response.MoveMade.Column);
             return await Task.Factory.StartNew(() => response);
         }
     }

@@ -118,7 +118,15 @@ namespace BoardGame.Client.Connect4.WinForms
         {
             if (GameAPI == null) return;
 
-            GameAPI.StartGame(type);
+            try
+            { 
+                GameAPI.StartGame(type);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Console.WriteLine(ex);
+            }
 
             tableLayoutPanel1.Enabled = true;
             tableLayoutPanel1.Controls.Clear();

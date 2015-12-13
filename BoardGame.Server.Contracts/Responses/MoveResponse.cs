@@ -25,7 +25,7 @@ namespace BoardGame.Server.Contracts.Responses
             MoveMade = moveMade;
             Timeout = timeout;
 
-            if (timeout) MoveMade = null;
+            if (!timeout) MoveMade = null;
         }
     }
 }
