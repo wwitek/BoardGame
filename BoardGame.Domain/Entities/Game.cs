@@ -59,8 +59,6 @@ namespace BoardGame.Domain.Entities
             {
                 return Board.IsMoveValid(row, column, currentPlayerIndex);
             }
-
-            //if current player is Bot or Online player, your move is not allowed
             return false;
         }
 

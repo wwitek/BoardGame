@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Domain.Factories;
-using System.ServiceModel;
-using BoardGame.Proxies;
 using BoardGame.Server.Contracts;
 using BoardGame.Server.Contracts.Responses;
+using BoardGame.Domain.Logger;
 
 namespace BoardGame.API
 {
@@ -17,16 +16,19 @@ namespace BoardGame.API
         private readonly IGameFactory GameFactory;
         private readonly IPlayerFactory PlayerFactory;
         private readonly IGameService Proxy;
+        private readonly ILogger Logger;
 
         public event EventHandler<MoveEventArgs> OnMoveReceived = null;
 
         public GameAPI(IGameFactory gameFactory = null, 
                        IPlayerFactory playerFactory = null,
-                       IGameService proxy = null)
+                       IGameService proxy = null,
+                       ILogger logger = null)
         {
             GameFactory = gameFactory;
             PlayerFactory = playerFactory;
             Proxy = proxy;
+            Logger = logger;
         }
 
         private void SendMove(IMove move)
@@ -126,7 +128,5 @@ namespace BoardGame.API
                 }
             }
         }
-
-
     }
 }

@@ -1,11 +1,8 @@
-﻿using BoardGame.Domain.Factories;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Server.BusinessLogic.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Helpers;
 
@@ -13,8 +10,9 @@ namespace BoardGame.Server.BusinessLogic
 {
     public class GameServer : IGameServer
     {
-        private readonly object newgameLock = new object();
+        private readonly object newGameLock = new object();
         private readonly object confirmLock = new object();
+
         private int NextPlayerId = 1;
         private readonly IGameFactory GameFactory;
         private readonly IPlayerFactory PlayerFactory;
@@ -36,11 +34,11 @@ namespace BoardGame.Server.BusinessLogic
 
         public bool NewGame(List<IPlayer> players)
         {
-            lock (newgameLock)
+            lock (newGameLock)
             {
                 if (players == null || players.Count != 2)
                 {
-                    // TODO Logging...
+                    // TODO throw an excpetion
                     return false;
                 }
 
@@ -51,7 +49,6 @@ namespace BoardGame.Server.BusinessLogic
                     RunningGames.Add(game);
                     return true;
                 }
-
                 return false;
             }
         }
