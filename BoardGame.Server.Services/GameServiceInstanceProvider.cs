@@ -1,4 +1,5 @@
-﻿using BoardGame.Server.BusinessLogic.Interfaces;
+﻿using BoardGame.Domain.Logger;
+using BoardGame.Server.BusinessLogic.Interfaces;
 using System;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -10,14 +11,16 @@ namespace BoardGame.Server.Services
     public class GameServiceInstanceProvider : IInstanceProvider, IContractBehavior
     {
         private readonly IGameServer GameServer;
+        private readonly ILogger Logger;
 
-        public GameServiceInstanceProvider(IGameServer gameServer)
+        public GameServiceInstanceProvider(IGameServer gameServer, ILogger logger)
         {
             if (gameServer == null)
             {
                 throw new ArgumentNullException("GameServer");
             }
             GameServer = gameServer;
+            Logger = logger;
         }
 
         #region IInstanceProvider Members
@@ -29,7 +32,7 @@ namespace BoardGame.Server.Services
 
         public object GetInstance(InstanceContext instanceContext)
         {
-            return new GameService(GameServer);
+            return new GameService(GameServer, Logger);
         }
 
         public void ReleaseInstance(InstanceContext instanceContext, object instance)

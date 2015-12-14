@@ -17,11 +17,11 @@ namespace BoardGame.Server.BusinessLogic
         private int NextPlayerId = 1;
         private readonly IGameFactory GameFactory;
         private readonly IPlayerFactory PlayerFactory;
+        private ILogger Logger { get; }
 
         public BlockingPredicateCollection<IPlayer> WaitingPlayers { get; } = new BlockingPredicateCollection<IPlayer>();
         public List<IGame> RunningGames { get; } = new List<IGame>();
-        public ILogger Logger { get; }
-
+        
         public GameServer(IGameFactory gameFactory,
                           IPlayerFactory playerFactory,
                           ILogger logger = null)

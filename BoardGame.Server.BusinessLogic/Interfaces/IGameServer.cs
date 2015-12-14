@@ -13,7 +13,6 @@ namespace BoardGame.Server.BusinessLogic.Interfaces
     {
         BlockingPredicateCollection<IPlayer> WaitingPlayers { get; }
         List<IGame> RunningGames { get; }
-        ILogger Logger { get; }
 
         IPlayer CreateNewPlayer(int playerId = 0);
         bool NewGame(List<IPlayer> players);

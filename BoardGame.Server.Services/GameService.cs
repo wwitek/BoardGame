@@ -17,12 +17,15 @@ namespace BoardGame.Server.Services
 {
     public class GameService : IGameService
     {
-        IGameServer Logic { get; set; }
+        private IGameServer Logic { get; }
+        private ILogger Logger { get; }
+
         Random RandomGenerator = new Random();
 
-        public GameService(IGameServer logic)
+        public GameService(IGameServer logic, ILogger logger)
         {
             Logic = logic;
+            Logger = logger;
         }
 
         private void TempLog(int id, string message)
@@ -35,79 +38,105 @@ namespace BoardGame.Server.Services
             OnlineGameResponse response = null;
             IPlayer rivalPlayer = null;
             IPlayer player = Logic.CreateNewPlayer(playerId);
-            TempLog(player.OnlineId, "Request to play");
-
+            Logger.Info("Player{0} requested to play", player.OnlineId);
             Logic.WaitingPlayers.Add(player);
+
             if (Logic.WaitingPlayers.TryTake(out rivalPlayer, 5000, rp => rp.OnlineId != player.OnlineId))
             {
-                TempLog(player.OnlineId, "There is somebody. My rival will be Player" + rivalPlayer.OnlineId);
+                Logger.Info("Rival (Player{0}) was found for Player{1}", rivalPlayer.OnlineId, player.OnlineId);
                 List<IPlayer> players = RandomGenerator.Next(2) == 0 ? new List<IPlayer>() { rivalPlayer, player }
                                                                      : new List<IPlayer>() { player, rivalPlayer };
-                if (Logic.NewGame(players)) TempLog(player.OnlineId, "New game created");
-                
+                if (Logic.NewGame(players)) Logger.Info("New game created for: Player{0} and Player{1}. Player{0} will start", players[0].OnlineId, players[1].OnlineId);
                 response = new OnlineGameResponse(player.OnlineId, true);
-                TempLog(player.OnlineId, "Response created");
             }
             else
             {
-                TempLog(player.OnlineId, "Queue is empty");
+                Logger.Info("Rival wasn't found for Player{0}", player.OnlineId);
                 Logic.WaitingPlayers.Remove(player);
                 response = new OnlineGameResponse(player.OnlineId, false);
             }
+            Logger.Info("OnlineGameResponse was send back to client: Player{0}", player.OnlineId);
             return await Task.Factory.StartNew(() => response);
         }
 
         public async Task<StartGameResponse> ConfirmToPlay(int playerId)
         {
+            Logger.Info("Player{0} requested to confirm", playerId);
+
+            StartGameResponse response = null;
             IGame game = Logic.GetGameByPlayerId(playerId);
-            bool isConfirmed = false;
-            bool yourTurn = game.Players[0].OnlineId == playerId;
-            TempLog(playerId, "Confrmed. " + (yourTurn ? "My turn" : "His turn"));
-
-            ManualResetEvent waitHandle = new ManualResetEvent(false);
-            PropertyChangedEventHandler stateEventHandler = null;
-            stateEventHandler = (s, e) =>
+            if (game != null)
             {
-                TempLog(playerId, "Online status changed to " + game.State);
-                if (game.State.Equals(GameState.Confirmed))
+                bool isConfirmed = false;
+                bool yourTurn = game.Players[0].OnlineId == playerId;
+
+                ManualResetEvent waitHandle = new ManualResetEvent(false);
+                PropertyChangedEventHandler stateEventHandler = null;
+                stateEventHandler = (s, e) =>
                 {
-                    game.OnStateChanged -= stateEventHandler;
-                    TempLog(playerId, "New waitHandle set"); waitHandle.Set();
+                    if (game.State.Equals(GameState.Confirmed))
+                    {
+                        Logger.Info("Player{0} vs Player{1} - game status was changed to Confirmed", game.Players[0].OnlineId, game.Players[1].OnlineId);
+                        game.OnStateChanged -= stateEventHandler;
+                        waitHandle.Set();
+                    }
+                    else
+                    {
+                        //TODO: Something's wrong...
+                    }
+                };
+                game.OnStateChanged += stateEventHandler;
+                Logic.ConfirmPlayer(playerId);
+                Logger.Info("Player{0} confirmed", playerId);
+                isConfirmed = waitHandle.WaitOne(10000);
+
+                int rivalId = game.Players.SingleOrDefault(p => p.OnlineId != playerId).OnlineId;
+                if (isConfirmed)
+                {
+                    Logger.Info("Request confirmed by Player{0}'s rival, Player{1}", playerId, rivalId);
                 }
-            };
-            game.OnStateChanged += stateEventHandler;
-            Logic.ConfirmPlayer(playerId);
-            isConfirmed = waitHandle.WaitOne(10000);
-
-            TempLog(playerId, (isConfirmed ? "Confirmed by other player" : "Timeout! Will wait again"));
-            if (!isConfirmed) Logic.RunningGames.Remove(game);
-
-            StartGameResponse response = new StartGameResponse(isConfirmed, playerId, yourTurn);
-            TempLog(playerId, "ConfirmToPlay responsed: isConfirmed=" + isConfirmed);
+                else
+                {
+                    Logger.Info("Timeout! Player{0} didn't confirm his request to play. Player{1} will be looking for rival again.", rivalId, playerId);
+                    Logic.RunningGames.Remove(game);
+                }
+                response = new StartGameResponse(isConfirmed, playerId, yourTurn);
+            }
+            Logger.Info("StartGameResponse was send back to client: Player{0}", playerId);
             return await Task.Factory.StartNew(() => response);
         }
 
         public async Task<MoveResponse> GetFirstMove(int playerId)
         {
-            TempLog(playerId, "Waiting for the first move..");
-
+            Logger.Info("Player{0} is waiting for the rival's first move..", playerId);
+            MoveResponse response = null;
             IGame game = Logic.GetGameByPlayerId(playerId);
-            bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
-
-            MoveResponse response = new MoveResponse(game.LastMove, timeout);
-            if (!timeout) TempLog(playerId, "Got move in column=" + response.MoveMade.Column);
+            if (game != null)
+            {
+                bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
+                response = new MoveResponse(game.LastMove, timeout);
+                if (!timeout) Logger.Info("Timeout! Player{0} move timed out!", game.Players.SingleOrDefault(p => p.OnlineId != playerId).OnlineId);
+            }
+            else
+            {
+                //TODO 
+            }
             return await Task.Factory.StartNew(() => response);
         }
 
         public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
         {
-            TempLog(playerId, "Moved in column=" + column);
-
+            Logger.Info("Player{0} moved in column {1}", playerId, column);
+            MoveResponse response = null;
             IGame game = Logic.GetGameByPlayerId(playerId);
-            game.MakeMove(row, column);
-            bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
+            if (game != null)
+            {
+                game.MakeMove(row, column);
+                bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
 
-            MoveResponse response = new MoveResponse(game.LastMove, timeout);
+                if (!timeout) Logger.Info("Timeout! Player{0} move timed out!", playerId);
+                response = new MoveResponse(game.LastMove, timeout);
+            }
             return await Task.Factory.StartNew(() => response);
         }
     }
