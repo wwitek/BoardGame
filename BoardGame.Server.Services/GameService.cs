@@ -11,6 +11,7 @@ using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 using System.Threading;
 using System.ComponentModel;
+using BoardGame.Domain.Logger;
 
 namespace BoardGame.Server.Services
 {
@@ -22,7 +23,6 @@ namespace BoardGame.Server.Services
         public GameService(IGameServer logic)
         {
             Logic = logic;
-            Console.WriteLine("GameService with logic created...");
         }
 
         private void TempLog(int id, string message)
@@ -87,17 +87,6 @@ namespace BoardGame.Server.Services
             return await Task.Factory.StartNew(() => response);
         }
 
-        public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
-        {
-            TempLog(playerId, "Moved in column=" + column);
-            IGame game = Logic.GetGameByPlayerId(playerId);
-            game.MakeMove(row, column);
-            bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
-
-            MoveResponse response = new MoveResponse(game.LastMove, timeout);
-            return await Task.Factory.StartNew(() => response);
-        }
-
         public async Task<MoveResponse> GetFirstMove(int playerId)
         {
             TempLog(playerId, "Waiting for the first move..");
@@ -107,6 +96,18 @@ namespace BoardGame.Server.Services
 
             MoveResponse response = new MoveResponse(game.LastMove, timeout);
             if (!timeout) TempLog(playerId, "Got move in column=" + response.MoveMade.Column);
+            return await Task.Factory.StartNew(() => response);
+        }
+
+        public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
+        {
+            TempLog(playerId, "Moved in column=" + column);
+
+            IGame game = Logic.GetGameByPlayerId(playerId);
+            game.MakeMove(row, column);
+            bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
+
+            MoveResponse response = new MoveResponse(game.LastMove, timeout);
             return await Task.Factory.StartNew(() => response);
         }
     }

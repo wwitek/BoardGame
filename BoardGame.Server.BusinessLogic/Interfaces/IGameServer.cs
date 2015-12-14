@@ -1,5 +1,6 @@
 ﻿using BoardGame.Domain.Helpers;
 using BoardGame.Domain.Interfaces;
+using BoardGame.Domain.Logger;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace BoardGame.Server.BusinessLogic.Interfaces
     {
         BlockingPredicateCollection<IPlayer> WaitingPlayers { get; }
         List<IGame> RunningGames { get; }
+        ILogger Logger { get; }
 
         IPlayer CreateNewPlayer(int playerId = 0);
         bool NewGame(List<IPlayer> players);

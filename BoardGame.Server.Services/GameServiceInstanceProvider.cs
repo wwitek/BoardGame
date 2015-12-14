@@ -17,7 +17,6 @@ namespace BoardGame.Server.Services
             {
                 throw new ArgumentNullException("GameServer");
             }
-
             GameServer = gameServer;
         }
 

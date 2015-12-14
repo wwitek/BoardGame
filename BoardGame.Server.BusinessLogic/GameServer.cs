@@ -5,6 +5,7 @@ using BoardGame.Domain.Interfaces;
 using BoardGame.Server.BusinessLogic.Interfaces;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Helpers;
+using BoardGame.Domain.Logger;
 
 namespace BoardGame.Server.BusinessLogic
 {
@@ -19,11 +20,15 @@ namespace BoardGame.Server.BusinessLogic
 
         public BlockingPredicateCollection<IPlayer> WaitingPlayers { get; } = new BlockingPredicateCollection<IPlayer>();
         public List<IGame> RunningGames { get; } = new List<IGame>();
+        public ILogger Logger { get; }
 
-        public GameServer(IGameFactory gameFactory, IPlayerFactory playerFactory)
+        public GameServer(IGameFactory gameFactory,
+                          IPlayerFactory playerFactory,
+                          ILogger logger = null)
         {
             GameFactory = gameFactory;
             PlayerFactory = playerFactory;
+            Logger = logger;
         }
 
         public IPlayer CreateNewPlayer(int playerId = 0)

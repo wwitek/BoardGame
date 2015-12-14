@@ -1,5 +1,6 @@
 ﻿using BoardGame.Domain.Entities;
 using BoardGame.Domain.Factories;
+using BoardGame.Domain.Logger;
 using BoardGame.Server.BusinessLogic;
 using BoardGame.Server.BusinessLogic.Interfaces;
 using BoardGame.Server.Services;
@@ -23,8 +24,9 @@ namespace BoardGame.Server.Host.ConsoleApplication
                 var board = new Board(7, 6, fieldFactory);
                 var playerFactory = new PlayerFactory();
                 var gameFactory = new GameFactory(board);
+                var logger = new MyLogger();
 
-                IGameServer serverLogic = new GameServer(gameFactory, playerFactory);
+                IGameServer serverLogic = new GameServer(gameFactory, playerFactory, logger);
                 IContractBehavior contractBehavior = new GameServiceInstanceProvider(serverLogic);
                 ServiceHost host = new GameServiceHost(contractBehavior, typeof(GameService), new Uri("net.tcp://localhost:8002"));
                 host.Open();
@@ -38,6 +40,14 @@ namespace BoardGame.Server.Host.ConsoleApplication
                 Console.WriteLine(ex);
                 Console.ReadKey();
             }
+        }
+    }
+
+    public class MyLogger : ILogger
+    {
+        public void Log(LogEntry entry)
+        {
+            Console.WriteLine(entry.Message);
         }
     }
 }
