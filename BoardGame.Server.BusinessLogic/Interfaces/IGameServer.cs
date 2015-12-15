@@ -14,7 +14,7 @@ namespace BoardGame.Server.BusinessLogic.Interfaces
         BlockingPredicateCollection<IPlayer> WaitingPlayers { get; }
         List<IGame> RunningGames { get; }
 
-        IPlayer CreateNewPlayer(int playerId = 0);
+        IPlayer NewPlayer(int playerId = 0);
         bool NewGame(List<IPlayer> players);
         IGame GetGameByPlayerId(int id);
         void ConfirmPlayer(int id);

@@ -40,6 +40,11 @@ namespace BoardGame.Domain.Logger
             logger.Log(new LogEntry(LoggingEventType.Warning, message, exception));
         }
 
+        public static void Warning(this ILogger logger, string message, Exception exception = null, params object[] args)
+        {
+            logger.Log(new LogEntry(LoggingEventType.Warning, string.Format(message, args), exception));
+        }
+
         public static void Error(this ILogger logger, Exception exception)
         {
             logger.Log(new LogEntry(LoggingEventType.Error, exception.Message, exception));

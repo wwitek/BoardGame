@@ -6,6 +6,7 @@ using BoardGame.Server.BusinessLogic.Interfaces;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Helpers;
 using BoardGame.Domain.Logger;
+using System;
 
 namespace BoardGame.Server.BusinessLogic
 {
@@ -31,7 +32,12 @@ namespace BoardGame.Server.BusinessLogic
             Logger = logger;
         }
 
-        public IPlayer CreateNewPlayer(int playerId = 0)
+        private IGame GetGameByPlayerIdOrDefault(int id)
+        {
+            return RunningGames.SingleOrDefault(g => g.Players.Contains(g.Players.FirstOrDefault(p => p.OnlineId == id)));
+        }
+
+        public IPlayer NewPlayer(int playerId = 0)
         {
             int id = playerId == 0 ? NextPlayerId++ : playerId;
             return PlayerFactory.Create(PlayerType.OnlinePlayer, id);
@@ -43,11 +49,11 @@ namespace BoardGame.Server.BusinessLogic
             {
                 if (players == null || players.Count != 2)
                 {
-                    // TODO throw an excpetion
-                    return false;
+                    throw new GameServerException("Exception occurred while creating new game. NewGame method requires not-null list of 2 players.");
                 }
 
-                if (GetGameByPlayerId(players[0].OnlineId) == null && GetGameByPlayerId(players[1].OnlineId) == null)
+                if (GetGameByPlayerIdOrDefault(players[0].OnlineId) == null &&
+                    GetGameByPlayerIdOrDefault(players[1].OnlineId) == null)
                 {
                     IGame game = GameFactory.Create(players);
                     game.State = GameState.Ready;
@@ -60,7 +66,18 @@ namespace BoardGame.Server.BusinessLogic
 
         public IGame GetGameByPlayerId(int id)
         {
-            return RunningGames.SingleOrDefault(g => g.Players.Contains(g.Players.FirstOrDefault(p => p.OnlineId == id)));
+            try
+            {
+                return RunningGames.Single(g => g.Players.Contains(g.Players.FirstOrDefault(p => p.OnlineId == id)));
+            }
+            catch(InvalidOperationException ioe)
+            {
+                throw new GameServerException("Exception occurred while getting game by player's id. Either cannot find any game with player's id=" + id + " or there are more games with such id.", ioe);
+            }
+            catch(ArgumentNullException ane)
+            {
+                throw new GameServerException("Exception occurred in GetGameByPlayerId method. RunningGames property is null.", ane);
+            }
         }
 
         public void ConfirmPlayer(int id)
@@ -68,7 +85,7 @@ namespace BoardGame.Server.BusinessLogic
             lock (confirmLock)
             {
                 IGame game = GetGameByPlayerId(id);
-                IPlayer player = game.Players.SingleOrDefault(p => p.OnlineId == id);
+                IPlayer player = game.Players.Single(p => p.OnlineId == id);
                 player.Confirmed = true;
 
                 if (game.Players.All(p => p.Confirmed))
