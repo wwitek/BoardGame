@@ -15,12 +15,12 @@ using BoardGame.Domain.Logger;
 
 namespace BoardGame.Server.Services
 {
+    [GlobalErrorHandlerBehaviour(typeof(GameServiceErrorHandler))]
     public class GameService : IGameService
     {
         private IGameServer Logic { get; }
         private ILogger Logger { get; }
-
-        private readonly Random RandomGenerator = new Random();
+        private Random RandomGenerator { get; } = new Random();
 
         public GameService(IGameServer logic, ILogger logger)
         {

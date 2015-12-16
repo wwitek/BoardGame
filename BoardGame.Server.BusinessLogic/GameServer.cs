@@ -70,13 +70,13 @@ namespace BoardGame.Server.BusinessLogic
             {
                 return RunningGames.Single(g => g.Players.Contains(g.Players.FirstOrDefault(p => p.OnlineId == id)));
             }
-            catch(InvalidOperationException ioe)
+            catch(InvalidOperationException ex)
             {
-                throw new GameServerException("Exception occurred while getting game by player's id. Either cannot find any game with player's id=" + id + " or there are more games with such id.", ioe);
+                throw new GameServerException("Exception occurred while getting game by player's id. Either cannot find any game with player's id=" + id + " or there are more games with such id.", ex);
             }
-            catch(ArgumentNullException ane)
+            catch(ArgumentNullException ex)
             {
-                throw new GameServerException("Exception occurred in GetGameByPlayerId method. RunningGames property is null.", ane);
+                throw new GameServerException("Exception occurred in GetGameByPlayerId method. RunningGames property is null.", ex);
             }
         }
 
