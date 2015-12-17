@@ -47,7 +47,6 @@
     <Compile Include="GameServiceHost.cs" />
     <Compile Include="GameServiceInstanceProvider.cs" />
     <Compile Include="GameService.cs" />
-    <Compile Include="GlobalErrorHandlerBehaviourAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

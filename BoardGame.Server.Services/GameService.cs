@@ -15,7 +15,6 @@ using BoardGame.Domain.Logger;
 
 namespace BoardGame.Server.Services
 {
-    [GlobalErrorHandlerBehaviour(typeof(GameServiceErrorHandler))]
     public class GameService : IGameService
     {
         private IGameServer Logic { get; }
