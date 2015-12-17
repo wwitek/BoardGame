@@ -139,8 +139,12 @@ namespace BoardGame.Client.Connect4.WinForms
             tableLayoutPanel1.Enabled = false;
         }
 
+
         #endregion
 
-
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            GameAPI.Close();
+        }
     }
 }

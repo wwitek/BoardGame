@@ -7,6 +7,8 @@ using BoardGame.Domain.Factories;
 using BoardGame.Server.Contracts;
 using BoardGame.Server.Contracts.Responses;
 using BoardGame.Domain.Logger;
+using BoardGame.Proxies;
+using System.ServiceModel;
 
 namespace BoardGame.API
 {
@@ -126,6 +128,11 @@ namespace BoardGame.API
                     }
                 }
             }
+        }
+
+        public void Close()
+        {
+            ((ICommunicationObject)Proxy).Close();
         }
     }
 }

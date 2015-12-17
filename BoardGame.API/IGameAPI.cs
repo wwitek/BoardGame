@@ -9,5 +9,6 @@ namespace BoardGame.API
 
         void StartGame(GameType type);
         void NextMove(int clickedRow, int clickedColumn);
+        void Close();
     }
 }
