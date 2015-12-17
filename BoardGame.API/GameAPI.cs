@@ -43,7 +43,6 @@ namespace BoardGame.API
         {
             if (GameFactory == null || PlayerFactory == null) return;
             var players = new List<IPlayer>();
-
             switch (type)
             {
                 case GameType.SinglePlayer:
