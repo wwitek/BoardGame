@@ -115,11 +115,18 @@ namespace BoardGame.Server.Services
             Logger.Info("Player{0} moved in column {1}", playerId, column);
             IGame game = Logic.GetGameByPlayerId(playerId);
             game.MakeMove(row, column);
-
-            bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
-
-            if (!timeout) Logger.Info("Timeout! Player{0} move timed out!", playerId);
-            response = new MoveResponse(game.LastMove, timeout);
+            if (game.LastMove.IsConnected)
+            {
+                Logger.Info("Player{0} won!", playerId);
+                Logic.RunningGames.Remove(game);
+                response = new MoveResponse(null);
+            }
+            else
+            {
+                bool timeout = game.WaitForNextPlayer(1 * 10 * 1000);
+                if (!timeout) Logger.Info("Timeout! Player{0} move timed out!", playerId);
+                response = new MoveResponse(game.LastMove, timeout);
+            }
             return await Task.Factory.StartNew(() => response);
         }
     }
