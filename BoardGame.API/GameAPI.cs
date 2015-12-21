@@ -86,6 +86,12 @@ namespace BoardGame.API
                         }
                     }
                     break;
+                case GameType.Bluetooth:
+                    break;
+                case GameType.Wifi:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
             CurrentGame = GameFactory.Create(players);
         }
@@ -93,7 +99,7 @@ namespace BoardGame.API
         private async void GetFirstMove(int playerId)
         {
             MoveResponse moveResponse = await Proxy.GetFirstMove(playerId);
-            if (moveResponse != null && moveResponse.MoveMade != null)
+            if (moveResponse?.MoveMade != null)
             {
                 CurrentGame.MakeMove(moveResponse.MoveMade);
                 SendMove(moveResponse.MoveMade);
@@ -121,7 +127,7 @@ namespace BoardGame.API
                 {
                     int myId = CurrentGame.Players.First(p => p.Type.Equals(PlayerType.Human)).OnlineId;
                     MoveResponse moveResponse = await Proxy.MakeMove(myId, 0, clickedColumn);
-                    if(moveResponse != null && moveResponse.MoveMade != null)
+                    if (moveResponse?.MoveMade != null)
                     {
                         CurrentGame.MakeMove(moveResponse.MoveMade);
                         SendMove(moveResponse.MoveMade);
@@ -132,7 +138,7 @@ namespace BoardGame.API
 
         public void Close()
         {
-            ((ICommunicationObject)Proxy).Close();
+            ((ICommunicationObject) Proxy).Close();
         }
     }
 }

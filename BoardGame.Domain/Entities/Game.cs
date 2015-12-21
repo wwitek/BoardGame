@@ -1,6 +1,5 @@
 ﻿using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace BoardGame.Domain.Entities
     public class Game : IGame
     {
         private readonly object lockObject = new object();
-        private ManualResetEvent waitForNextMoveHandle = new ManualResetEvent(false);
+        private readonly ManualResetEvent waitForNextMoveHandle = new ManualResetEvent(false);
         private int currentPlayerIndex = 1;
         private GameState state;
 
@@ -26,8 +25,7 @@ namespace BoardGame.Domain.Entities
                 lock(lockObject)
                 {
                     state = value;
-                    if (OnStateChanged != null)
-                        OnStateChanged(this, new PropertyChangedEventArgs("State"));
+                    OnStateChanged?.Invoke(this, new PropertyChangedEventArgs("State"));
                 }
             }
         }
@@ -86,8 +84,7 @@ namespace BoardGame.Domain.Entities
         private void SetNextPlayer()
         {
             currentPlayerIndex = currentPlayerIndex == 1 ? 2 : 1;
-            if (waitForNextMoveHandle != null)
-                waitForNextMoveHandle.Set();
+            waitForNextMoveHandle?.Set();
         }
     }
 }
