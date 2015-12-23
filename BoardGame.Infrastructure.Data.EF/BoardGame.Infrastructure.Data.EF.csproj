@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A7DAA50A-8F73-4CB7-80DC-DEA68C0E2730}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{3DD80431-E862-4EAD-864B-8C468CB07D88}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BoardGame.Server.Host.ConsoleApplication</RootNamespace>
-    <AssemblyName>BoardGame.Server.Host.ConsoleApplication</AssemblyName>
+    <RootNamespace>BoardGame.Infrastructure.Data.EF</RootNamespace>
+    <AssemblyName>BoardGame.Infrastructure.Data.EF</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,14 +38,9 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,14 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Log4netAdapter.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Contexts\GameContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\MoveRepository.cs" />
+    <Compile Include="Repository.cs" />
+    <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -72,27 +64,12 @@
       <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
       <Name>BoardGame.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BoardGame.Infrastructure.Data.EF\BoardGame.Infrastructure.Data.EF.csproj">
-      <Project>{3dd80431-e862-4ead-864b-8c468cb07d88}</Project>
-      <Name>BoardGame.Infrastructure.Data.EF</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BoardGame.Infrastructure.Data\BoardGame.Infrastructure.Data.csproj">
       <Project>{48bf557d-0160-433e-b049-8ba752e2451f}</Project>
       <Name>BoardGame.Infrastructure.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BoardGame.Server.BusinessLogic\BoardGame.Server.BusinessLogic.csproj">
-      <Project>{d89450ae-4420-4747-bca0-e6c2c419c215}</Project>
-      <Name>BoardGame.Server.BusinessLogic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BoardGame.Server.Contracts\BoardGame.Server.Contracts.csproj">
-      <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
-      <Name>BoardGame.Server.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BoardGame.Server.Services\BoardGame.Server.Services.csproj">
-      <Project>{2655a00a-ab71-4ec5-bba8-b1efebb2863b}</Project>
-      <Name>BoardGame.Server.Services</Name>
-    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
