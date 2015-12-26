@@ -31,6 +31,8 @@ namespace BoardGame.Server.Services
         {
             OnlineGameResponse response = null;
             IPlayer rivalPlayer = null;
+            int a = 0;
+            int b = 2/a;
             IPlayer player = Logic.NewPlayer(playerId);
             Logger.Info("Player{0} requested to play", player.OnlineId);
             Logic.WaitingPlayers.Add(player);

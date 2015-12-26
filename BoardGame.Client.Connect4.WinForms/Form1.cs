@@ -21,7 +21,8 @@ namespace BoardGame.Client.Connect4.WinForms
         public Form1(GameAPI gameAPI = null)
         {
             GameAPI = gameAPI;
-            GameAPI.OnMoveReceived += (s, e) => MakeMove(e.Move);
+            if (GameAPI != null)
+                GameAPI.OnMoveReceived += (s, e) => MakeMove(e.Move);
 
             InitializeComponent();
             InitializeBoard();

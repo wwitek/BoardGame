@@ -9,6 +9,7 @@ using BoardGame.Server.Contracts.Responses;
 using BoardGame.Domain.Logger;
 using BoardGame.Proxies;
 using System.ServiceModel;
+using BoardGame.Domain.Entities;
 
 namespace BoardGame.API
 {
@@ -35,65 +36,71 @@ namespace BoardGame.API
 
         private void SendMove(IMove move)
         {
-            if (OnMoveReceived != null)
-            {
-                OnMoveReceived(this, new MoveEventArgs { Move = move });
-            }
+            OnMoveReceived?.Invoke(this, new MoveEventArgs { Move = move });
         }
 
         public async void StartGame(GameType type)
         {
             if (GameFactory == null || PlayerFactory == null) return;
             var players = new List<IPlayer>();
-            switch (type)
+            try
             {
-                case GameType.SinglePlayer:
-                    players.Add(PlayerFactory.Create(PlayerType.Human));
-                    players.Add(PlayerFactory.Create(PlayerType.Bot));
-                    break;
-                case GameType.TwoPlayers:
-                    players.Add(PlayerFactory.Create(PlayerType.Human));
-                    players.Add(PlayerFactory.Create(PlayerType.Human));
-                    break;
-                case GameType.Online:
-                    int myId = 0;
-                    OnlineGameResponse waitingResponse = new OnlineGameResponse();
-                    while (!waitingResponse.IsReady)
-                    {
-                        waitingResponse = await Proxy.OnlineGameRequest(myId);
-                        myId = waitingResponse.PlayerId;
-                        if (waitingResponse.IsReady)
+                switch (type)
+                {
+                    case GameType.SinglePlayer:
+                        players.Add(PlayerFactory.Create(PlayerType.Human, 1));
+                        players.Add(PlayerFactory.Create(PlayerType.Bot, 2));
+                        break;
+                    case GameType.TwoPlayers:
+                        players.Add(PlayerFactory.Create(PlayerType.Human));
+                        players.Add(PlayerFactory.Create(PlayerType.Human));
+                        break;
+                    case GameType.Online:
+                        int myId = 0;
+                        OnlineGameResponse waitingResponse = new OnlineGameResponse();
+                        while (!waitingResponse.IsReady)
                         {
-                            StartGameResponse startGameResponse = await Proxy.ConfirmToPlay(waitingResponse.PlayerId);
-                            if (startGameResponse.IsConfirmed)
+                            waitingResponse = await Proxy.OnlineGameRequest(myId);
+                            myId = waitingResponse.PlayerId;
+                            if (waitingResponse.IsReady)
                             {
-                                if (startGameResponse.YourTurn)
+                                StartGameResponse startGameResponse =
+                                    await Proxy.ConfirmToPlay(waitingResponse.PlayerId);
+                                if (startGameResponse.IsConfirmed)
                                 {
-                                    players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                    players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
+                                    if (startGameResponse.YourTurn)
+                                    {
+                                        players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                        players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
+                                    }
+                                    else
+                                    {
+                                        players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
+                                        players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                        GetFirstMove(waitingResponse.PlayerId);
+                                    }
                                 }
                                 else
                                 {
-                                    players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
-                                    players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                    GetFirstMove(waitingResponse.PlayerId);
+                                    waitingResponse.IsReady = false;
                                 }
                             }
-                            else
-                            {
-                                waitingResponse.IsReady = false;
-                            }
                         }
-                    }
-                    break;
-                case GameType.Bluetooth:
-                    break;
-                case GameType.Wifi:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                        break;
+                    case GameType.Bluetooth:
+                        break;
+                    case GameType.Wifi:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+                CurrentGame = GameFactory.Create(players);
             }
-            CurrentGame = GameFactory.Create(players);
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         private async void GetFirstMove(int playerId)
@@ -114,14 +121,10 @@ namespace BoardGame.API
 
                 if (CurrentGame.NextPlayer != null && CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
                 {
-                    // ToDo: Make Bot's move
-                    // ---------------------------------
-                    // |                               |
-                    // |                               |
-                    // |                               |
-                    // ---------------------------------
-
-                    SendMove(CurrentGame.MakeMove(0, 1));
+                    IBot bot = new Bot();
+                    IMove move = bot.MakeMove(BotLevel.Medium, CurrentGame);
+                    //CurrentGame.MakeMove(move);
+                    SendMove(move);
                 }
                 else if (CurrentGame.NextPlayer != null && CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))
                 {
@@ -138,7 +141,7 @@ namespace BoardGame.API
 
         public void Close()
         {
-            ((ICommunicationObject) Proxy).Close();
+            ((ICommunicationObject) Proxy).Abort();
         }
     }
 }

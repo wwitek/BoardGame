@@ -22,15 +22,16 @@ namespace BoardGame.Client.Connect4.WinForms
         {
             var fieldFactory = new FieldFactory();
             var board = new Board(7, 6, fieldFactory);
-            var playerFactory = new PlayerFactory();
             var gameFactory = new GameFactory(board);
+            
+            var playerFactory = new PlayerFactory();
             var proxy = new GameProxy();
             var logger = new Log4netAdapter("GameAPI");
-            var gameAPI = new GameAPI(gameFactory, playerFactory, proxy, logger);
+            var api = new GameAPI(gameFactory, playerFactory, proxy, logger);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(gameAPI));
+            Application.Run(new Form1(api));
         }
     }
 }
