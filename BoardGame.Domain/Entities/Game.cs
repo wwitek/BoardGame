@@ -40,6 +40,7 @@ namespace BoardGame.Domain.Entities
             }
         }
         public IMove LastMove { get; set; }
+        public IBotLevel BotLevel { get; set; }
 
         public event PropertyChangedEventHandler OnStateChanged;
 

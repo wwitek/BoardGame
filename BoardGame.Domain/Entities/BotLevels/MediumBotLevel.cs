@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 
-namespace BoardGame.Domain.Entities
+namespace BoardGame.Domain.Entities.BotLevels
 {
-    public class Bot : IBot
+    public class MediumBotLevel : IBotLevel
     {
         private const int MaxDepth = 8;
         private const int WinValue = 1;
@@ -19,17 +20,14 @@ namespace BoardGame.Domain.Entities
         private int botId;
         private int humanId;
 
-        public IMove MakeMove(BotLevel level, IGame game)
+        public string DisplayName => "Medium";
+
+        public IMove GenerateMove(IGame game)
         {
+            board = game.Board;
             humanId = game.Players.SingleOrDefault(p => p.Type.Equals(PlayerType.Human)).OnlineId;
             botId = game.Players.SingleOrDefault(p => p.Type.Equals(PlayerType.Bot)).OnlineId;
-            board = game.Board;
 
-            return MediumMove(game);
-        }
-
-        private IMove MediumMove(IGame game)
-        {
             List<int> moves = new List<int>();
             double max = -1;
 
@@ -38,7 +36,7 @@ namespace BoardGame.Domain.Entities
                 if (board.IsMoveValid(0, i, botId))
                 {
                     double value = GetMoveValue(i);
-                    //Debug.WriteLine("Move {0}: {1}", i, value);
+                    Debug.WriteLine("Move {0}: {1}", i, value);
                     if (value > max)
                     {
                         max = value;
@@ -114,6 +112,5 @@ namespace BoardGame.Domain.Entities
                 return beta;
             }
         }
-
     }
 }

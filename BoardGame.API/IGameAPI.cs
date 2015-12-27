@@ -7,7 +7,7 @@ namespace BoardGame.API
     {
         event EventHandler<MoveEventArgs> OnMoveReceived;
 
-        void StartGame(GameType type);
+        void StartGame(GameType type, string level = "");
         void NextMove(int clickedRow, int clickedColumn);
         void Close();
     }

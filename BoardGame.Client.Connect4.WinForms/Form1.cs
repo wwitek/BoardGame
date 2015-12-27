@@ -41,7 +41,7 @@ namespace BoardGame.Client.Connect4.WinForms
 
         private void bSinglePlayer_Click(object sender, EventArgs e)
         {
-            NewGame(GameType.SinglePlayer);
+            NewGame(GameType.SinglePlayer, "Medium");
         }
 
         private void bTwoPlayers_Click(object sender, EventArgs e)
@@ -115,13 +115,13 @@ namespace BoardGame.Client.Connect4.WinForms
             }
         }
 
-        private void NewGame(GameType type)
+        private void NewGame(GameType type, string level = "")
         {
             if (GameAPI == null) return;
 
             try
             { 
-                GameAPI.StartGame(type);
+                GameAPI.StartGame(type, level);
             }
             catch(Exception ex)
             {
