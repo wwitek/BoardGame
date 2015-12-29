@@ -17,25 +17,22 @@ namespace BoardGame.API
     public class GameAPI : IGameAPI
     {
         private IGame CurrentGame { get; set; }
-        private readonly IGameFactory GameFactory;
-        private readonly IPlayerFactory PlayerFactory;
-        private readonly IEnumerable<IBotLevel> BotLevels; 
-        private readonly IGameService Proxy;
-        private readonly ILogger Logger;
+        private readonly IGameFactory gameFactory;
+        private readonly IPlayerFactory playerFactory;
+        private readonly IGameService proxy;
+        private readonly ILogger logger;
 
         public event EventHandler<MoveEventArgs> OnMoveReceived = null;
 
         public GameAPI(IGameFactory gameFactory = null, 
                        IPlayerFactory playerFactory = null,
-                       IEnumerable<IBotLevel> botLevels = null,
                        IGameService proxy = null,
                        ILogger logger = null)
         {
-            GameFactory = gameFactory;
-            PlayerFactory = playerFactory;
-            BotLevels = botLevels;
-            Proxy = proxy;
-            Logger = logger;
+            this.gameFactory = gameFactory;
+            this.playerFactory = playerFactory;
+            this.proxy = proxy;
+            this.logger = logger;
         }
 
         private void SendMove(IMove move)
@@ -43,52 +40,42 @@ namespace BoardGame.API
             OnMoveReceived?.Invoke(this, new MoveEventArgs { Move = move });
         }
 
-        private IBotLevel GetBotLevel(string name)
-        {
-            foreach (var botLevel in BotLevels)
-            {
-                if (botLevel.DisplayName.Equals(name))
-                    return botLevel;
-            }
-            throw new Exception("There is no " + name + " level registered");
-        }
-
         public async void StartGame(GameType type, string level = "")
         {
-            if (GameFactory == null || PlayerFactory == null) return;
+            if (gameFactory == null || playerFactory == null) return;
             var players = new List<IPlayer>();
             switch (type)
             {
                 case GameType.SinglePlayer:
-                    players.Add(PlayerFactory.Create(PlayerType.Human, 1));
-                    players.Add(PlayerFactory.Create(PlayerType.Bot, 2));
+                    players.Add(playerFactory.Create(PlayerType.Human, 1));
+                    players.Add(playerFactory.Create(PlayerType.Bot, 2));
                     break;
                 case GameType.TwoPlayers:
-                    players.Add(PlayerFactory.Create(PlayerType.Human));
-                    players.Add(PlayerFactory.Create(PlayerType.Human));
+                    players.Add(playerFactory.Create(PlayerType.Human));
+                    players.Add(playerFactory.Create(PlayerType.Human));
                     break;
                 case GameType.Online:
                     int myId = 0;
                     OnlineGameResponse waitingResponse = new OnlineGameResponse();
                     while (!waitingResponse.IsReady)
                     {
-                        waitingResponse = await Proxy.OnlineGameRequest(myId);
+                        waitingResponse = await proxy.OnlineGameRequest(myId);
                         myId = waitingResponse.PlayerId;
                         if (waitingResponse.IsReady)
                         {
                             StartGameResponse startGameResponse =
-                                await Proxy.ConfirmToPlay(waitingResponse.PlayerId);
+                                await proxy.ConfirmToPlay(waitingResponse.PlayerId);
                             if (startGameResponse.IsConfirmed)
                             {
                                 if (startGameResponse.YourTurn)
                                 {
-                                    players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                    players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
+                                    players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                    players.Add(playerFactory.Create(PlayerType.OnlinePlayer));
                                 }
                                 else
                                 {
-                                    players.Add(PlayerFactory.Create(PlayerType.OnlinePlayer));
-                                    players.Add(PlayerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                    players.Add(playerFactory.Create(PlayerType.OnlinePlayer));
+                                    players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
                                     GetFirstMove(waitingResponse.PlayerId);
                                 }
                             }
@@ -106,21 +93,12 @@ namespace BoardGame.API
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-            CurrentGame = GameFactory.Create(players);
-
-            if (players.Any(p => p.Type.Equals(PlayerType.Bot)))
-            {
-                IBotLevel botLevel = GetBotLevel(level);
-                if (botLevel == null)
-                    throw new GameException("Cannot run single-mode game without any bot levels definded");
-
-                CurrentGame.BotLevel = botLevel;
-            }
+            CurrentGame = gameFactory.Create(players, level);
         }
 
         private async void GetFirstMove(int playerId)
         {
-            MoveResponse moveResponse = await Proxy.GetFirstMove(playerId);
+            MoveResponse moveResponse = await proxy.GetFirstMove(playerId);
             if (moveResponse?.MoveMade != null)
             {
                 CurrentGame.MakeMove(moveResponse.MoveMade);
@@ -142,7 +120,7 @@ namespace BoardGame.API
                 else if (CurrentGame.NextPlayer != null && CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))
                 {
                     int myId = CurrentGame.Players.First(p => p.Type.Equals(PlayerType.Human)).OnlineId;
-                    MoveResponse moveResponse = await Proxy.MakeMove(myId, 0, clickedColumn);
+                    MoveResponse moveResponse = await proxy.MakeMove(myId, 0, clickedColumn);
                     if (moveResponse?.MoveMade != null)
                     {
                         CurrentGame.MakeMove(moveResponse.MoveMade);
@@ -154,7 +132,7 @@ namespace BoardGame.API
 
         public void Close()
         {
-            ((ICommunicationObject) Proxy).Abort();
+            ((ICommunicationObject) proxy).Abort();
         }
     }
 }

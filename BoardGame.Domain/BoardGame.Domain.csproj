@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Board.cs" />
+    <Compile Include="Entities\BotLevels\EasyBotLevel.cs" />
     <Compile Include="Entities\Field.cs" />
     <Compile Include="Entities\Game.cs" />
     <Compile Include="Entities\Move.cs" />

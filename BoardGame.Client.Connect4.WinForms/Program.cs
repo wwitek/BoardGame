@@ -22,17 +22,20 @@ namespace BoardGame.Client.Connect4.WinForms
         [STAThread]
         static void Main()
         {
+            var botLevels = new List<IBotLevel>
+            {
+                new MediumBotLevel(),
+                new EasyBotLevel()
+            };
+
             var fieldFactory = new FieldFactory();
             var board = new Board(7, 6, fieldFactory);
-            var gameFactory = new GameFactory(board);
-
-            List<IBotLevel> botLevels = new List<IBotLevel>();
-            botLevels.Add(new MediumBotLevel());
+            var gameFactory = new GameFactory(board, botLevels);
 
             var playerFactory = new PlayerFactory();
             var proxy = new GameProxy();
             var logger = new Log4netAdapter("GameAPI");
-            var api = new GameAPI(gameFactory, playerFactory, botLevels, proxy, logger);
+            var api = new GameAPI(gameFactory, playerFactory, proxy, logger);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

@@ -5,19 +5,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BoardGame.Domain.Enums;
 
 namespace BoardGame.Domain.Factories
 {
     public class GameFactory : IGameFactory
     {
-        public IBoard Board { get; set; }
-        public GameFactory(IBoard board)
+        private readonly IBoard board;
+        private readonly IList<IBotLevel> botLevels;
+
+        public GameFactory(IBoard board, IList<IBotLevel> botLevels = null)
         {
-            Board = board;
+            this.board = board;
+            this.botLevels = botLevels;
         }
-        public IGame Create(IEnumerable<IPlayer> players)
+
+        public IGame Create(IList<IPlayer> players, string botLevel)
         {
-            return new Game(Board, players);
+            if (botLevel?.Length == 0 && players.Any(p => p.Type.Equals(PlayerType.Bot)))
+            {
+                //ToDo throw exception
+            }
+
+            IBotLevel level = botLevels.FirstOrDefault(b => b.DisplayName.Equals(botLevel));
+            if (level == null && players.Any(p => p.Type.Equals(PlayerType.Bot)))
+            {
+                //ToDo throw exception
+            }
+
+            return new Game(board, players, level);
         }
     }
 }

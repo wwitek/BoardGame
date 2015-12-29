@@ -10,8 +10,8 @@ namespace BoardGame.Server.Services
 {
     public class GameServiceInstanceProvider : IInstanceProvider, IContractBehavior
     {
-        private readonly IGameServer GameServer;
-        private readonly ILogger Logger;
+        private readonly IGameServer gameServer;
+        private readonly ILogger logger;
 
         public GameServiceInstanceProvider(IGameServer gameServer, ILogger logger)
         {
@@ -19,8 +19,8 @@ namespace BoardGame.Server.Services
             {
                 throw new ArgumentNullException("GameServer");
             }
-            GameServer = gameServer;
-            Logger = logger;
+            this.gameServer = gameServer;
+            this.logger = logger;
         }
 
         #region IInstanceProvider Members
@@ -32,7 +32,7 @@ namespace BoardGame.Server.Services
 
         public object GetInstance(InstanceContext instanceContext)
         {
-            return new GameService(GameServer, Logger);
+            return new GameService(gameServer, logger);
         }
 
         public void ReleaseInstance(InstanceContext instanceContext, object instance)

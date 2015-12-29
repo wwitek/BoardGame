@@ -15,10 +15,10 @@ namespace BoardGame.Server.BusinessLogic
         private readonly object newGameLock = new object();
         private readonly object confirmLock = new object();
 
-        private int NextPlayerId = 1;
-        private readonly IGameFactory GameFactory;
-        private readonly IPlayerFactory PlayerFactory;
-        private ILogger Logger { get; }
+        private int nextPlayerId = 1;
+        private readonly IGameFactory gameFactory;
+        private readonly IPlayerFactory playerFactory;
+        private readonly ILogger logger;
 
         public BlockingPredicateCollection<IPlayer> WaitingPlayers { get; } = new BlockingPredicateCollection<IPlayer>();
         public List<IGame> RunningGames { get; } = new List<IGame>();
@@ -27,9 +27,9 @@ namespace BoardGame.Server.BusinessLogic
                           IPlayerFactory playerFactory,
                           ILogger logger = null)
         {
-            GameFactory = gameFactory;
-            PlayerFactory = playerFactory;
-            Logger = logger;
+            this.gameFactory = gameFactory;
+            this.playerFactory = playerFactory;
+            this.logger = logger;
         }
 
         private IGame GetGameByPlayerIdOrDefault(int id)
@@ -39,8 +39,8 @@ namespace BoardGame.Server.BusinessLogic
 
         public IPlayer NewPlayer(int playerId = 0)
         {
-            int id = playerId == 0 ? NextPlayerId++ : playerId;
-            return PlayerFactory.Create(PlayerType.OnlinePlayer, id);
+            int id = playerId == 0 ? nextPlayerId++ : playerId;
+            return playerFactory.Create(PlayerType.OnlinePlayer, id);
         }
 
         public bool NewGame(List<IPlayer> players)
@@ -55,7 +55,7 @@ namespace BoardGame.Server.BusinessLogic
                 if (GetGameByPlayerIdOrDefault(players[0].OnlineId) == null &&
                     GetGameByPlayerIdOrDefault(players[1].OnlineId) == null)
                 {
-                    IGame game = GameFactory.Create(players);
+                    IGame game = gameFactory.Create(players);
                     game.State = GameState.Ready;
                     RunningGames.Add(game);
                     return true;
