@@ -22,13 +22,16 @@ namespace BoardGame.API
         private readonly IGameService proxy;
         private readonly ILogger logger;
 
-        public event EventHandler<MoveEventArgs> OnMoveReceived = null;
+        public event EventHandler<MoveEventArgs> OnMoveReceived;
 
-        public GameAPI(IGameFactory gameFactory = null, 
-                       IPlayerFactory playerFactory = null,
+        public GameAPI(IGameFactory gameFactory, 
+                       IPlayerFactory playerFactory,
                        IGameService proxy = null,
                        ILogger logger = null)
         {
+            Requires.IsNotNull(gameFactory, "gameFactory");
+            Requires.IsNotNull(playerFactory, "playerFactory");
+
             this.gameFactory = gameFactory;
             this.playerFactory = playerFactory;
             this.proxy = proxy;
@@ -37,12 +40,20 @@ namespace BoardGame.API
 
         private void SendMove(IMove move)
         {
+            Requires.IsNotNull(OnMoveReceived, "OnMoveReceived");
+
             OnMoveReceived?.Invoke(this, new MoveEventArgs { Move = move });
         }
 
         public async void StartGame(GameType type, string level = "")
         {
-            if (gameFactory == null || playerFactory == null) return;
+            if (OnMoveReceived == null)
+            {
+                logger?.Error("InvalidOperationException: " + StringResources.TheGameCanNotBeStartedBecauseOfOnMoveReceivedIsNull());
+                throw new InvalidOperationException(
+                    StringResources.TheGameCanNotBeStartedBecauseOfOnMoveReceivedIsNull());
+            }
+
             var players = new List<IPlayer>();
             switch (type)
             {
@@ -56,6 +67,14 @@ namespace BoardGame.API
                     break;
                 case GameType.Online:
                     int myId = 0;
+
+                    if (proxy == null)
+                    {
+                        logger?.Error("InvalidOperationException: " + StringResources.TheGameCanNotBeStartedBecauseOfProxyIsNull());
+                        throw new InvalidOperationException(
+                            StringResources.TheGameCanNotBeStartedBecauseOfProxyIsNull());
+                    }
+
                     OnlineGameResponse waitingResponse = new OnlineGameResponse();
                     while (!waitingResponse.IsReady)
                     {
@@ -108,17 +127,43 @@ namespace BoardGame.API
 
         public async void NextMove(int clickedRow, int clickedColumn)
         {
-            if (CurrentGame != null && CurrentGame.IsMoveValid(0, clickedColumn))
+            if (CurrentGame == null)
+            {
+                logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformTheMoveBecauseGameIsNull());
+                throw new InvalidOperationException(
+                    StringResources.CanNotPerformTheMoveBecauseGameIsNull());
+            }
+
+            if (CurrentGame.IsMoveValid(0, clickedColumn))
             {
                 SendMove(CurrentGame.MakeMove(0, clickedColumn));
 
-                if (CurrentGame.NextPlayer != null && CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
+                if (CurrentGame.NextPlayer == null)
                 {
+                    logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformNextMoveBecauseNextPlayerIsNull());
+                    throw new InvalidOperationException(
+                        StringResources.CanNotPerformNextMoveBecauseNextPlayerIsNull());
+                }
+                if (CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
+                {
+                    if (CurrentGame.BotLevel == null)
+                    {
+                        logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
+                        throw new InvalidOperationException(
+                            StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
+                    }
                     IMove move = CurrentGame.BotLevel.GenerateMove(CurrentGame);
                     SendMove(move);
                 }
-                else if (CurrentGame.NextPlayer != null && CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))
+                else if (CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))
                 {
+                    if (proxy == null)
+                    {
+                        logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformOnlineMoveBecauseOfProxyIsNull());
+                        throw new InvalidOperationException(
+                            StringResources.CanNotPerformOnlineMoveBecauseOfProxyIsNull());
+                    }
+
                     int myId = CurrentGame.Players.First(p => p.Type.Equals(PlayerType.Human)).OnlineId;
                     MoveResponse moveResponse = await proxy.MakeMove(myId, 0, clickedColumn);
                     if (moveResponse?.MoveMade != null)
