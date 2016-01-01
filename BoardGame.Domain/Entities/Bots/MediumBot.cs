@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 
-namespace BoardGame.Domain.Entities.BotLevels
+namespace BoardGame.Domain.Entities.Bots
 {
-    public class MediumBotLevel : IBotLevel
+    public class MediumBot : IBot
     {
         private const int MaxDepth = 8;
         private const int WinValue = 1;

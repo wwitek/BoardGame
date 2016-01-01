@@ -38,16 +38,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Board.cs" />
-    <Compile Include="Entities\BotLevels\EasyBotLevel.cs" />
+    <Compile Include="Entities\Bots\EasyBot.cs" />
     <Compile Include="Entities\Field.cs" />
     <Compile Include="Entities\Game.cs" />
     <Compile Include="Entities\Move.cs" />
     <Compile Include="Entities\Player.cs" />
-    <Compile Include="Entities\BotLevels\MediumBotLevel.cs" />
+    <Compile Include="Entities\Bots\MediumBot.cs" />
     <Compile Include="Enums\GameState.cs" />
     <Compile Include="Enums\GameType.cs" />
     <Compile Include="Enums\LoggingEventType.cs" />
     <Compile Include="Enums\PlayerType.cs" />
+    <Compile Include="Exceptions\GameException.cs" />
     <Compile Include="Factories\FieldFactory.cs" />
     <Compile Include="Factories\GameFactory.cs" />
     <Compile Include="Factories\IFieldFactory.cs" />
@@ -55,7 +56,7 @@
     <Compile Include="Factories\IPlayerFactory.cs" />
     <Compile Include="Factories\PlayerFactory.cs" />
     <Compile Include="Helpers\BlockingPredicateCollection.cs" />
-    <Compile Include="Interfaces\IBotLevel.cs" />
+    <Compile Include="Interfaces\IBot.cs" />
     <Compile Include="Interfaces\IField.cs" />
     <Compile Include="Interfaces\IBoard.cs" />
     <Compile Include="Interfaces\IGame.cs" />

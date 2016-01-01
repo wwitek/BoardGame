@@ -40,19 +40,19 @@ namespace BoardGame.Domain.Entities
             }
         }
         public IMove LastMove { get; set; }
-        public IBotLevel BotLevel { get; }
+        public IBot Bot { get; }
 
         public event PropertyChangedEventHandler OnStateChanged;
 
-        public Game(IBoard board, IEnumerable<IPlayer> players, IBotLevel botLevel = null)
+        public Game(IBoard board, IEnumerable<IPlayer> players, IBot bot = null)
         {
             Board = board;
             Board.Reset();
 
             Players = players.ToList();
-            BotLevel = botLevel;
+            Bot = bot;
 
-            if (botLevel == null && Players.Any(p => p.Type.Equals(PlayerType.Bot)))
+            if (bot == null && Players.Any(p => p.Type.Equals(PlayerType.Bot)))
             {
                 //ToDo throw exception
             }

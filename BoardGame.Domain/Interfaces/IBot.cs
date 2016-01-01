@@ -7,7 +7,7 @@ using BoardGame.Domain.Enums;
 
 namespace BoardGame.Domain.Interfaces
 {
-    public interface IBotLevel
+    public interface IBot
     {
         string DisplayName { get; }
         IMove GenerateMove(IGame game);

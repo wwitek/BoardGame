@@ -12,28 +12,29 @@ namespace BoardGame.Domain.Factories
     public class GameFactory : IGameFactory
     {
         private readonly IBoard board;
-        private readonly IList<IBotLevel> botLevels;
+        private readonly IList<IBot> bots;
 
-        public GameFactory(IBoard board, IList<IBotLevel> botLevels = null)
+        public GameFactory(IBoard board, IList<IBot> bots = null)
         {
             this.board = board;
-            this.botLevels = botLevels;
+            this.bots = bots;
         }
 
-        public IGame Create(IList<IPlayer> players, string botLevel)
+        public IGame Create(IList<IPlayer> players, string botName)
         {
-            if (botLevel?.Length == 0 && players.Any(p => p.Type.Equals(PlayerType.Bot)))
+            if (botName?.Length == 0 && players.Any(p => p.Type.Equals(PlayerType.Bot)))
             {
                 //ToDo throw exception
             }
 
-            IBotLevel level = botLevels.FirstOrDefault(b => b.DisplayName.Equals(botLevel));
-            if (level == null && players.Any(p => p.Type.Equals(PlayerType.Bot)))
+            IBot bot = bots.FirstOrDefault(b => b.DisplayName.Equals(botName));
+
+            if (bot == null && players.Any(p => p.Type.Equals(PlayerType.Bot)))
             {
                 //ToDo throw exception
             }
 
-            return new Game(board, players, level);
+            return new Game(board, players, bot);
         }
     }
 }

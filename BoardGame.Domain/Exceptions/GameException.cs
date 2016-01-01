@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoardGame.API.Exceptions
+namespace BoardGame.Domain.Exceptions
 {
     public class GameException : Exception
     {

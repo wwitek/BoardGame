@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 
-namespace BoardGame.Domain.Entities.BotLevels
+namespace BoardGame.Domain.Entities.Bots
 {
-    public class EasyBotLevel : IBotLevel
+    public class EasyBot : IBot
     {
         public string DisplayName => "Easy";
 

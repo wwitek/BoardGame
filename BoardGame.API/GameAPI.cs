@@ -7,10 +7,7 @@ using BoardGame.Domain.Factories;
 using BoardGame.Server.Contracts;
 using BoardGame.Server.Contracts.Responses;
 using BoardGame.Domain.Logger;
-using BoardGame.Proxies;
 using System.ServiceModel;
-using BoardGame.Domain.Entities;
-using BoardGame.Domain.Entities.BotLevels;
 
 namespace BoardGame.API
 {
@@ -146,13 +143,13 @@ namespace BoardGame.API
                 }
                 if (CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
                 {
-                    if (CurrentGame.BotLevel == null)
+                    if (CurrentGame.Bot == null)
                     {
                         logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
                         throw new InvalidOperationException(
                             StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
                     }
-                    IMove move = CurrentGame.BotLevel.GenerateMove(CurrentGame);
+                    IMove move = CurrentGame.Bot.GenerateMove(CurrentGame);
                     SendMove(move);
                 }
                 else if (CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BoardGame.Domain.Entities.BotLevels;
+using BoardGame.Domain.Entities.Bots;
 using BoardGame.Domain.Interfaces;
 
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
@@ -22,15 +22,15 @@ namespace BoardGame.Client.Connect4.WinForms
         [STAThread]
         static void Main()
         {
-            var botLevels = new List<IBotLevel>
+            var bots = new List<IBot>
             {
-                new MediumBotLevel(),
-                new EasyBotLevel()
+                new MediumBot(),
+                new EasyBot()
             };
 
             var fieldFactory = new FieldFactory();
             var board = new Board(7, 6, fieldFactory);
-            var gameFactory = new GameFactory(board, botLevels);
+            var gameFactory = new GameFactory(board, bots);
 
             var playerFactory = new PlayerFactory();
             var proxy = new GameProxy();

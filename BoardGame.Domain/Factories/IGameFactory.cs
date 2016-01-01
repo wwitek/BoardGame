@@ -10,6 +10,6 @@ namespace BoardGame.Domain.Factories
 {
     public interface IGameFactory
     {
-        IGame Create(IList<IPlayer> players, string botLevel = "");
+        IGame Create(IList<IPlayer> players, string botName = "");
     }
 }
