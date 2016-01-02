@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,6 +44,24 @@ namespace BoardGame.API
         internal static string CanNotPerformBotsMoveBecauseBotWasNotDefined()
         {
             return @"Cannot perform the next move, becasue Bot was not defined.";
+        }
+
+        internal static string CommunicationProblemOccured(string where, string exceptionMessage)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                @"Communication problem occured in GameAPI's {0} method. Exception: {1}.", where, exceptionMessage);
+        }
+
+        internal static string ExceptionOccuredOnServerSide(string where, string exceptionMessage)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                @"Server side exception occured in GameAPI's {0} method. Exception: {1}.", where, exceptionMessage);
+        }
+
+        internal static string TimeoutExceptionOccured(string where, string exceptionMessage)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                @"TimeoutException occured in GameAPI's {0} method. Exception: {1}.", where, exceptionMessage);
         }
     }
 }

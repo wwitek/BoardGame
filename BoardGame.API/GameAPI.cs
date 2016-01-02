@@ -118,18 +118,24 @@ namespace BoardGame.API
             }
             catch (TimeoutException ex)
             {
-                throw new GameServerException(
-                    "TimeoutException exception while starting the game", ex);
+                string exceptionMessage = StringResources.TimeoutExceptionOccured("StartGame", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
             }
             catch (FaultException ex)
             {
-                throw new GameServerException(
-                    "Exception occured on server side", ex);
+                string exceptionMessage = StringResources.ExceptionOccuredOnServerSide("StartGame", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
             }
             catch (CommunicationException ex)
             {
-                throw new GameServerException(
-                    "Communication problem occured", ex);
+                string exceptionMessage = StringResources.CommunicationProblemOccured("StartGame", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
             }
         }
 
@@ -146,18 +152,24 @@ namespace BoardGame.API
             }
             catch (TimeoutException ex)
             {
-                throw new GameServerException(
-                    "TimeoutException exception while starting the game", ex);
+                string exceptionMessage = StringResources.TimeoutExceptionOccured("GetFirstMove", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
             }
             catch (FaultException ex)
             {
-                throw new GameServerException(
-                    "Exception occured on server side", ex);
+                string exceptionMessage = StringResources.ExceptionOccuredOnServerSide("GetFirstMove", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
             }
             catch (CommunicationException ex)
             {
-                throw new GameServerException(
-                    "Communication problem occured", ex);
+                string exceptionMessage = StringResources.CommunicationProblemOccured("GetFirstMove", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
             }
         }
 
@@ -214,23 +226,30 @@ namespace BoardGame.API
             }
             catch (TimeoutException ex)
             {
-                throw new GameServerException(
-                    "TimeoutException exception while starting the game", ex);
+                string exceptionMessage = StringResources.TimeoutExceptionOccured("NextMove", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
             }
             catch (FaultException ex)
             {
-                throw new GameServerException(
-                    "Exception occured on server side", ex);
+                string exceptionMessage = StringResources.ExceptionOccuredOnServerSide("NextMove", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
             }
             catch (CommunicationException ex)
             {
-                throw new GameServerException(
-                    "Communication problem occured", ex);
+                string exceptionMessage = StringResources.CommunicationProblemOccured("NextMove", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
             }
         }
 
         public void Close()
         {
+            logger?.Info("Closing GameAPI. Server connection will be aborted");
             ((ICommunicationObject) proxy).Abort();
         }
     }
