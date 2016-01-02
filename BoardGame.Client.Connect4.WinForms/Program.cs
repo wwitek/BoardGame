@@ -22,24 +22,33 @@ namespace BoardGame.Client.Connect4.WinForms
         [STAThread]
         static void Main()
         {
-            var bots = new List<IBot>
+            try
             {
-                new MediumBot(),
-                new EasyBot()
-            };
+                var bots = new List<IBot>
+                {
+                    new MediumBot(),
+                    new EasyBot()
+                };
 
-            var fieldFactory = new FieldFactory();
-            var board = new Board(7, 6, fieldFactory);
-            var gameFactory = new GameFactory(board, bots);
+                var fieldFactory = new FieldFactory();
+                var board = new Board(7, 6, fieldFactory);
+                var gameFactory = new GameFactory(board, bots);
 
-            var playerFactory = new PlayerFactory();
-            var proxy = new GameProxy();
-            var logger = new Log4netAdapter("GameAPI");
-            var api = new GameAPI(gameFactory, playerFactory, proxy, logger);
+                var playerFactory = new PlayerFactory();
+                var proxy = new GameProxy();
+                var logger = new Log4netAdapter("GameAPI");
+                var api = new GameAPI(gameFactory, playerFactory, proxy, logger);
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(api));
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Form1(api));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                MessageBox.Show(e.ToString());
+                Application.Exit();
+            }
         }
     }
 }

@@ -29,10 +29,9 @@ namespace BoardGame.Server.Services
 
         public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)
         {
-            OnlineGameResponse response = null;
-            IPlayer rivalPlayer = null;
-            int a = 0;
-            int b = 2/a;
+            OnlineGameResponse response;
+            IPlayer rivalPlayer;
+
             IPlayer player = Logic.NewPlayer(playerId);
             Logger.Info("Player{0} requested to play", player.OnlineId);
             Logic.WaitingPlayers.Add(player);
@@ -57,7 +56,8 @@ namespace BoardGame.Server.Services
 
         public async Task<StartGameResponse> ConfirmToPlay(int playerId)
         {
-            StartGameResponse response = null;
+            StartGameResponse response;
+
             Logger.Info("Player{0} requested to confirm", playerId);
             IGame game = Logic.GetGameByPlayerId(playerId);
             bool isConfirmed = false;
@@ -100,7 +100,8 @@ namespace BoardGame.Server.Services
 
         public async Task<MoveResponse> GetFirstMove(int playerId)
         {
-            MoveResponse response = null;
+            MoveResponse response;
+
             Logger.Info("Player{0} is waiting for the rival's first move..", playerId);
             IGame game = Logic.GetGameByPlayerId(playerId);
 
@@ -113,7 +114,8 @@ namespace BoardGame.Server.Services
 
         public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
         {
-            MoveResponse response = null;
+            MoveResponse response;
+
             Logger.Info("Player{0} moved in column {1}", playerId, column);
             IGame game = Logic.GetGameByPlayerId(playerId);
             game.MakeMove(row, column);

@@ -49,7 +49,8 @@ namespace BoardGame.Server.BusinessLogic
             {
                 if (players == null || players.Count != 2)
                 {
-                    throw new GameServerException("Exception occurred while creating new game. NewGame method requires not-null list of 2 players.");
+                    throw new GameServerException(
+                        "Exception occurred while creating new game. NewGame method requires not-null list of 2 players.");
                 }
 
                 if (GetGameByPlayerIdOrDefault(players[0].OnlineId) == null &&

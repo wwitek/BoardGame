@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BoardGame.Domain.Exceptions
 {
-    public class GameException : Exception
+    public class GameCreateException : Exception
     {
-        public GameException(string message, Exception innerException = null)
+        internal GameCreateException(string message, Exception innerException = null)
             : base(message, innerException)
         {
         }

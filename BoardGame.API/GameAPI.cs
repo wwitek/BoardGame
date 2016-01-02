@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Domain.Factories;
@@ -8,6 +9,7 @@ using BoardGame.Server.Contracts;
 using BoardGame.Server.Contracts.Responses;
 using BoardGame.Domain.Logger;
 using System.ServiceModel;
+using BoardGame.API.Exceptions;
 
 namespace BoardGame.API
 {
@@ -44,131 +46,186 @@ namespace BoardGame.API
 
         public async void StartGame(GameType type, string level = "")
         {
-            if (OnMoveReceived == null)
-            {
-                logger?.Error("InvalidOperationException: " + StringResources.TheGameCanNotBeStartedBecauseOfOnMoveReceivedIsNull());
-                throw new InvalidOperationException(
-                    StringResources.TheGameCanNotBeStartedBecauseOfOnMoveReceivedIsNull());
-            }
+            try
+            { 
+                if (OnMoveReceived == null)
+                {
+                    logger?.Error("InvalidOperationException: " + StringResources.TheGameCanNotBeStartedBecauseOfOnMoveReceivedIsNull());
+                    throw new InvalidOperationException(
+                        StringResources.TheGameCanNotBeStartedBecauseOfOnMoveReceivedIsNull());
+                }
 
-            var players = new List<IPlayer>();
-            switch (type)
-            {
-                case GameType.SinglePlayer:
-                    players.Add(playerFactory.Create(PlayerType.Human, 1));
-                    players.Add(playerFactory.Create(PlayerType.Bot, 2));
-                    break;
-                case GameType.TwoPlayers:
-                    players.Add(playerFactory.Create(PlayerType.Human));
-                    players.Add(playerFactory.Create(PlayerType.Human));
-                    break;
-                case GameType.Online:
-                    int myId = 0;
+                var players = new List<IPlayer>();
+                switch (type)
+                {
+                    case GameType.SinglePlayer:
+                        players.Add(playerFactory.Create(PlayerType.Human, 1));
+                        players.Add(playerFactory.Create(PlayerType.Bot, 2));
+                        break;
+                    case GameType.TwoPlayers:
+                        players.Add(playerFactory.Create(PlayerType.Human, 0));
+                        players.Add(playerFactory.Create(PlayerType.Human, 0));
+                        break;
+                    case GameType.Online:
+                        int myId = 0;
 
-                    if (proxy == null)
-                    {
-                        logger?.Error("InvalidOperationException: " + StringResources.TheGameCanNotBeStartedBecauseOfProxyIsNull());
-                        throw new InvalidOperationException(
-                            StringResources.TheGameCanNotBeStartedBecauseOfProxyIsNull());
-                    }
-
-                    OnlineGameResponse waitingResponse = new OnlineGameResponse();
-                    while (!waitingResponse.IsReady)
-                    {
-                        waitingResponse = await proxy.OnlineGameRequest(myId);
-                        myId = waitingResponse.PlayerId;
-                        if (waitingResponse.IsReady)
+                        if (proxy == null)
                         {
-                            StartGameResponse startGameResponse =
-                                await proxy.ConfirmToPlay(waitingResponse.PlayerId);
-                            if (startGameResponse.IsConfirmed)
+                            logger?.Error("InvalidOperationException: " +
+                                          StringResources.TheGameCanNotBeStartedBecauseOfProxyIsNull());
+                            throw new InvalidOperationException(
+                                StringResources.TheGameCanNotBeStartedBecauseOfProxyIsNull());
+                        }
+
+                        OnlineGameResponse waitingResponse = new OnlineGameResponse();
+                        while (!waitingResponse.IsReady)
+                        {
+                            waitingResponse = await proxy.OnlineGameRequest(myId);
+                            myId = waitingResponse.PlayerId;
+                            if (waitingResponse.IsReady)
                             {
-                                if (startGameResponse.YourTurn)
+                                StartGameResponse startGameResponse =
+                                    await proxy.ConfirmToPlay(waitingResponse.PlayerId);
+                                if (startGameResponse.IsConfirmed)
                                 {
-                                    players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                    players.Add(playerFactory.Create(PlayerType.OnlinePlayer));
+                                    if (startGameResponse.YourTurn)
+                                    {
+                                        players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                        players.Add(playerFactory.Create(PlayerType.OnlinePlayer, 0));
+                                    }
+                                    else
+                                    {
+                                        players.Add(playerFactory.Create(PlayerType.OnlinePlayer, 0));
+                                        players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                                        GetFirstMove(waitingResponse.PlayerId);
+                                    }
                                 }
                                 else
                                 {
-                                    players.Add(playerFactory.Create(PlayerType.OnlinePlayer));
-                                    players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                    GetFirstMove(waitingResponse.PlayerId);
+                                    waitingResponse.IsReady = false;
                                 }
                             }
-                            else
-                            {
-                                waitingResponse.IsReady = false;
-                            }
                         }
-                    }
-                    break;
-                case GameType.Bluetooth:
-                    break;
-                case GameType.Wifi:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                        break;
+                    case GameType.Bluetooth:
+                        break;
+                    case GameType.Wifi:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+                CurrentGame = gameFactory.Create(players, level);
             }
-            CurrentGame = gameFactory.Create(players, level);
+            catch (TimeoutException ex)
+            {
+                throw new GameServerException(
+                    "TimeoutException exception while starting the game", ex);
+            }
+            catch (FaultException ex)
+            {
+                throw new GameServerException(
+                    "Exception occured on server side", ex);
+            }
+            catch (CommunicationException ex)
+            {
+                throw new GameServerException(
+                    "Communication problem occured", ex);
+            }
         }
 
         private async void GetFirstMove(int playerId)
         {
-            MoveResponse moveResponse = await proxy.GetFirstMove(playerId);
-            if (moveResponse?.MoveMade != null)
+            try
             {
-                CurrentGame.MakeMove(moveResponse.MoveMade);
-                SendMove(moveResponse.MoveMade);
+                MoveResponse moveResponse = await proxy.GetFirstMove(playerId);
+                if (moveResponse?.MoveMade != null)
+                {
+                    CurrentGame.MakeMove(moveResponse.MoveMade);
+                    SendMove(moveResponse.MoveMade);
+                }
+            }
+            catch (TimeoutException ex)
+            {
+                throw new GameServerException(
+                    "TimeoutException exception while starting the game", ex);
+            }
+            catch (FaultException ex)
+            {
+                throw new GameServerException(
+                    "Exception occured on server side", ex);
+            }
+            catch (CommunicationException ex)
+            {
+                throw new GameServerException(
+                    "Communication problem occured", ex);
             }
         }
 
         public async void NextMove(int clickedRow, int clickedColumn)
         {
-            if (CurrentGame == null)
+            try
             {
-                logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformTheMoveBecauseGameIsNull());
-                throw new InvalidOperationException(
-                    StringResources.CanNotPerformTheMoveBecauseGameIsNull());
-            }
-
-            if (CurrentGame.IsMoveValid(0, clickedColumn))
-            {
-                SendMove(CurrentGame.MakeMove(0, clickedColumn));
-
-                if (CurrentGame.NextPlayer == null)
+                if (CurrentGame == null)
                 {
-                    logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformNextMoveBecauseNextPlayerIsNull());
+                    logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformTheMoveBecauseGameIsNull());
                     throw new InvalidOperationException(
-                        StringResources.CanNotPerformNextMoveBecauseNextPlayerIsNull());
+                        StringResources.CanNotPerformTheMoveBecauseGameIsNull());
                 }
-                if (CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
-                {
-                    if (CurrentGame.Bot == null)
-                    {
-                        logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
-                        throw new InvalidOperationException(
-                            StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
-                    }
-                    IMove move = CurrentGame.Bot.GenerateMove(CurrentGame);
-                    SendMove(move);
-                }
-                else if (CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))
-                {
-                    if (proxy == null)
-                    {
-                        logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformOnlineMoveBecauseOfProxyIsNull());
-                        throw new InvalidOperationException(
-                            StringResources.CanNotPerformOnlineMoveBecauseOfProxyIsNull());
-                    }
 
-                    int myId = CurrentGame.Players.First(p => p.Type.Equals(PlayerType.Human)).OnlineId;
-                    MoveResponse moveResponse = await proxy.MakeMove(myId, 0, clickedColumn);
-                    if (moveResponse?.MoveMade != null)
+                if (CurrentGame.IsMoveValid(0, clickedColumn))
+                {
+                    SendMove(CurrentGame.MakeMove(0, clickedColumn));
+
+                    if (CurrentGame.NextPlayer == null)
                     {
-                        CurrentGame.MakeMove(moveResponse.MoveMade);
-                        SendMove(moveResponse.MoveMade);
+                        logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformNextMoveBecauseNextPlayerIsNull());
+                        throw new InvalidOperationException(
+                            StringResources.CanNotPerformNextMoveBecauseNextPlayerIsNull());
+                    }
+                    if (CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
+                    {
+                        if (CurrentGame.Bot == null)
+                        {
+                            logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
+                            throw new InvalidOperationException(
+                                StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
+                        }
+                        IMove move = CurrentGame.Bot.GenerateMove(CurrentGame);
+                        SendMove(move);
+                    }
+                    else if (CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))
+                    {
+                        if (proxy == null)
+                        {
+                            logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformOnlineMoveBecauseOfProxyIsNull());
+                            throw new InvalidOperationException(
+                                StringResources.CanNotPerformOnlineMoveBecauseOfProxyIsNull());
+                        }
+
+                        int myId = CurrentGame.Players.First(p => p.Type.Equals(PlayerType.Human)).OnlineId;
+                        MoveResponse moveResponse = await proxy.MakeMove(myId, 0, clickedColumn);
+                        if (moveResponse?.MoveMade != null)
+                        {
+                            CurrentGame.MakeMove(moveResponse.MoveMade);
+                            SendMove(moveResponse.MoveMade);
+                        }
                     }
                 }
+            }
+            catch (TimeoutException ex)
+            {
+                throw new GameServerException(
+                    "TimeoutException exception while starting the game", ex);
+            }
+            catch (FaultException ex)
+            {
+                throw new GameServerException(
+                    "Exception occured on server side", ex);
+            }
+            catch (CommunicationException ex)
+            {
+                throw new GameServerException(
+                    "Communication problem occured", ex);
             }
         }
 

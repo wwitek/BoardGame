@@ -10,7 +10,7 @@ namespace BoardGame.Domain.Entities
         public PlayerType Type { get; set; }
         public bool Confirmed { get; set; }
 
-        public Player(PlayerType type, int onlineId = 0)
+        internal Player(PlayerType type, int onlineId = 0)
         {
             OnlineId = onlineId;
             Type = type;

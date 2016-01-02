@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
+using BoardGame.Domain.Exceptions;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Domain.Factories;
 
@@ -44,7 +46,12 @@ namespace BoardGame.Domain.Entities
 
         public IMove InsertChip(int row, int column, int playerId)
         {
-            if (column < 0 || column >= Width) throw new Exception("Invalid column!");
+            if (column < 0 || column >= Width)
+            {
+                throw new InvalidColumnException(
+                    StringResources.ColumnOutsideTheScope("InsertChip", column));
+            }
+
             for (int i = Height - 1; i >= 0; i--)
             {
                 if (Fields[i, column].PlayerId > 0) continue;
@@ -53,24 +60,37 @@ namespace BoardGame.Domain.Entities
                 WinnerId = result.IsConnected ? playerId : 0;
                 return result;
             }
-            throw new Exception("Cannot add chip here. There is no more room");
+
+            throw new InvalidColumnException(
+                StringResources.ColumnIsFull("InsertChip", column));
         }
 
         public void InsertChip(IMove move)
         {
-            if (move.Column < 0 || move.Column >= Width) throw new Exception("Invalid column!");
+            if (move.Column < 0 || move.Column >= Width)
+            {
+                throw new InvalidColumnException(
+                    StringResources.ColumnOutsideTheScope("InsertChip", move.Column));
+            }
+
             if (Fields[move.Row, move.Column].PlayerId == 0)
             {
                 Fields[move.Row, move.Column].PlayerId = move.PlayerId;
                 WinnerId = move.IsConnected ? move.PlayerId : 0;
                 return;
             }
-            throw new Exception("Cannot add chip here. There is no more room");
+
+            throw new InvalidColumnException(
+                StringResources.ColumnIsFull("InsertChip", move.Column));
         }
 
         public void RemoveChip(int row, int column)
         {
-            if (column < 0 || column >= Width) throw new Exception("Invalid column!");
+            if (column < 0 || column >= Width)
+            {
+                throw new InvalidColumnException(
+                    StringResources.ColumnOutsideTheScope("RemoveChip", column));
+            }
 
             for (int i = 0; i < Height; i++)
             {

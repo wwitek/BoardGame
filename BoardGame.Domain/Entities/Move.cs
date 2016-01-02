@@ -38,7 +38,7 @@ namespace BoardGame.Domain.Entities
         [DataMember]
         public bool IsTie { get; set; }
 
-        public Move(int row, int column, int playerId, int needToWin = 0)
+        internal Move(int row, int column, int playerId, int needToWin = 0)
         {
             Row = row;
             Column = column;

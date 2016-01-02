@@ -49,6 +49,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\GameServerException.cs" />
     <Compile Include="MoveEventArgs.cs" />
     <Compile Include="GameAPI.cs" />
     <Compile Include="IGameAPI.cs" />
