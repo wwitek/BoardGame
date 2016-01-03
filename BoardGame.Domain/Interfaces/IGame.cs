@@ -11,7 +11,6 @@ namespace BoardGame.Domain.Interfaces
         IBoard Board { get; }
         List<IPlayer> Players { get; }
         IPlayer NextPlayer { get; }
-        IMove LastMove { get; set; }
         IBot Bot { get; }
 
         bool IsMoveValid(int row, int column);

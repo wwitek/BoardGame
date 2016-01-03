@@ -11,6 +11,7 @@ using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 using System.Threading;
 using System.ComponentModel;
+using System.Diagnostics;
 using BoardGame.Domain.Logger;
 
 namespace BoardGame.Server.Services
@@ -25,6 +26,7 @@ namespace BoardGame.Server.Services
         {
             Logic = logic;
             Logger = logger;
+            Logger.Info("GameService created.");
         }
 
         public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)
@@ -90,7 +92,8 @@ namespace BoardGame.Server.Services
             }
             else
             {
-                Logger.Info("Timeout! Player{0} didn't confirm his request to play. Player{1} will be looking for rival again.", rivalId, playerId);
+                Logger.Info("Timeout! Player{0} didn't confirm his request to play. " +
+                            "Player{1} will be looking for rival again.", rivalId, playerId);
                 Logic.RunningGames.Remove(game);
             }
             response = new StartGameResponse(isConfirmed, playerId, yourTurn);
@@ -107,8 +110,13 @@ namespace BoardGame.Server.Services
 
             bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
 
-            response = new MoveResponse(game.LastMove, timeout);
-            if (!timeout) Logger.Info("Timeout! Player{0} move timed out!", game.Players.SingleOrDefault(p => p.OnlineId != playerId).OnlineId);
+            response = new MoveResponse(game.Board.LastMove, timeout);
+            if (!timeout)
+            {
+                Logger.Info("Timeout! Player{0} move timed out!", 
+                            game.Players.SingleOrDefault(p => p.OnlineId != playerId).OnlineId);
+            }
+
             return await Task.Factory.StartNew(() => response);
         }
 
@@ -119,7 +127,7 @@ namespace BoardGame.Server.Services
             Logger.Info("Player{0} moved in column {1}", playerId, column);
             IGame game = Logic.GetGameByPlayerId(playerId);
             game.MakeMove(row, column);
-            if (game.LastMove.IsConnected)
+            if (game.Board.LastMove.IsConnected)
             {
                 Logger.Info("Player{0} won!", playerId);
                 Logic.RunningGames.Remove(game);
@@ -129,7 +137,7 @@ namespace BoardGame.Server.Services
             {
                 bool timeout = game.WaitForNextPlayer(1 * 10 * 1000);
                 if (!timeout) Logger.Info("Timeout! Player{0} move timed out!", playerId);
-                response = new MoveResponse(game.LastMove, timeout);
+                response = new MoveResponse(game.Board.LastMove, timeout);
             }
             return await Task.Factory.StartNew(() => response);
         }

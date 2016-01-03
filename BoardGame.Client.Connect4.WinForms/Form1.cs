@@ -41,7 +41,7 @@ namespace BoardGame.Client.Connect4.WinForms
 
         private void bSinglePlayer_Click(object sender, EventArgs e)
         {
-            NewGame(GameType.SinglePlayer, "Easy");
+            NewGame(GameType.SinglePlayer, "Medium");
         }
 
         private void bTwoPlayers_Click(object sender, EventArgs e)

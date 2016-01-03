@@ -30,22 +30,10 @@ namespace BoardGame.Domain.Factories
                     StringResources.TheGameMustHaveTwoPlayers());
             }
 
-            if (players.Count(p => p.Type == PlayerType.Human) == 0)
-            {
-                throw new GameCreateException(
-                    StringResources.TheGameMustHaveAHumanPlayer());
-            }
-
             if (players.Count(p => p.Type == PlayerType.Bot) > 1)
             {
                 throw new GameCreateException(
                     StringResources.TheGameCanNotBeCreatedBecauseOfTooManyBots());
-            }
-
-            if (players.Count(p => p.Type == PlayerType.OnlinePlayer) > 1)
-            {
-                throw new GameCreateException(
-                    StringResources.TheGameCanNotBeCreatedBecauseOfTooManyOnlinePlayers());
             }
 
             if (string.IsNullOrEmpty(botName) && players.Any(p => p.Type.Equals(PlayerType.Bot)))
@@ -63,7 +51,7 @@ namespace BoardGame.Domain.Factories
 
             #endregion
 
-            IBot bot = bots.FirstOrDefault(b => b.DisplayName.Equals(botName));
+            IBot bot = bots?.FirstOrDefault(b => b.DisplayName.Equals(botName));
 
             #region Exception handling
             if (bot == null && players.Any(p => p.Type.Equals(PlayerType.Bot)))

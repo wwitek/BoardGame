@@ -2,6 +2,7 @@
 using BoardGame.Domain.Interfaces;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using BoardGame.Domain.Exceptions;
@@ -40,13 +41,13 @@ namespace BoardGame.Domain.Entities
                 return Players[currentPlayerIndex - 1];
             }
         }
-        public IMove LastMove { get; set; }
         public IBot Bot { get; }
 
         public event PropertyChangedEventHandler OnStateChanged;
 
         internal Game(IBoard board, IEnumerable<IPlayer> players, IBot bot = null)
         {
+            State = GameState.New;
             Board = board;
             Board.Reset();
 
@@ -71,15 +72,16 @@ namespace BoardGame.Domain.Entities
 
         public IMove MakeMove(int row, int column)
         {
-            LastMove = Board.InsertChip(row, column, currentPlayerIndex);
+            IMove move = Board.InsertChip(row, column, currentPlayerIndex);
             SetNextPlayer();
-            return LastMove;
+
+            State = (move.IsConnected || move.IsTie) ? GameState.Finished : GameState.Running;
+            return move;
         }
 
         public void MakeMove(IMove move)
         {
-            Board.InsertChip(move);
-            LastMove = move;
+            Board.ApplyMove(move);
             SetNextPlayer();
         }
 

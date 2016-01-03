@@ -184,21 +184,26 @@ namespace BoardGame.API
                         StringResources.CanNotPerformTheMoveBecauseGameIsNull());
                 }
 
-                if (CurrentGame.IsMoveValid(0, clickedColumn))
+                if (CurrentGame.IsMoveValid(0, clickedColumn) && 
+                    (CurrentGame.State != GameState.Finished || CurrentGame.State != GameState.Aborted))
                 {
                     SendMove(CurrentGame.MakeMove(0, clickedColumn));
 
                     if (CurrentGame.NextPlayer == null)
                     {
-                        logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformNextMoveBecauseNextPlayerIsNull());
+                        logger?.Error("InvalidOperationException: " +
+                                      StringResources.CanNotPerformNextMoveBecauseNextPlayerIsNull());
                         throw new InvalidOperationException(
                             StringResources.CanNotPerformNextMoveBecauseNextPlayerIsNull());
                     }
-                    if (CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
+
+                    if (CurrentGame.State.Equals(GameState.Running) &&
+                        CurrentGame.NextPlayer.Type.Equals(PlayerType.Bot))
                     {
                         if (CurrentGame.Bot == null)
                         {
-                            logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
+                            logger?.Error("InvalidOperationException: " +
+                                          StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
                             throw new InvalidOperationException(
                                 StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
                         }
@@ -209,7 +214,8 @@ namespace BoardGame.API
                     {
                         if (proxy == null)
                         {
-                            logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformOnlineMoveBecauseOfProxyIsNull());
+                            logger?.Error("InvalidOperationException: " +
+                                          StringResources.CanNotPerformOnlineMoveBecauseOfProxyIsNull());
                             throw new InvalidOperationException(
                                 StringResources.CanNotPerformOnlineMoveBecauseOfProxyIsNull());
                         }

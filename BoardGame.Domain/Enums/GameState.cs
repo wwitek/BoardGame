@@ -8,9 +8,9 @@ namespace BoardGame.Domain.Enums
 {
     public enum GameState
     {
+        New,
         Ready,
         Confirmed,
-        New,
         Running,
         Finished,
         Aborted

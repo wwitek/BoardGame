@@ -9,39 +9,40 @@ namespace BoardGame.Domain.Entities
 {
     public class Board : IBoard
     {
-        private IField[,] Fields;
+        private IField[,] fields;
+        private readonly IFieldFactory fieldFactory;
 
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public IFieldFactory FieldFactory { get; set; }
-        public int WinnerId { get; set; }
+        public int Width { get; }
+        public int Height { get; }
+        public IMove LastMove { get; private set; }
+        public int WinnerId => (LastMove == null) ? 0 : (LastMove.IsConnected) ? LastMove.PlayerId : 0;
 
         public Board(int width, int height, IFieldFactory fieldFactory)
         {
             Width = width;
             Height = height;
-            FieldFactory = fieldFactory;
+            this.fieldFactory = fieldFactory;
 
             Reset();
         }
 
         public void Reset()
         {
-            WinnerId = 0;
+            LastMove = null;
 
-            Fields = new IField[Height, Width];
-            for (int i = 0; i < Fields.GetLength(0); i++)
+            fields = new IField[Height, Width];
+            for (int i = 0; i < fields.GetLength(0); i++)
             {
-                for (int j = 0; j < Fields.GetLength(1); j++)
+                for (int j = 0; j < fields.GetLength(1); j++)
                 {
-                    Fields[i, j] = FieldFactory.Create(i, j);
+                    fields[i, j] = fieldFactory.Create(i, j);
                 }
             }
         }
 
         public bool IsMoveValid(int row, int column, int playerId)
         {
-            return Fields.Cast<Field>().Take(7).ToList()[column].PlayerId == 0 && WinnerId == 0;
+            return fields.Cast<Field>().Take(7).ToList()[column].PlayerId == 0 && WinnerId == 0;
         }
 
         public IMove InsertChip(int row, int column, int playerId)
@@ -54,18 +55,18 @@ namespace BoardGame.Domain.Entities
 
             for (int i = Height - 1; i >= 0; i--)
             {
-                if (Fields[i, column].PlayerId > 0) continue;
-                Fields[i, column].PlayerId = playerId;
-                IMove result = GetInsertResult(i, column, playerId, 4);
-                WinnerId = result.IsConnected ? playerId : 0;
-                return result;
+                if (fields[i, column].PlayerId > 0) continue;
+                fields[i, column].PlayerId = playerId;
+
+                LastMove = PerformMove(i, column, playerId, 4);
+                return LastMove;
             }
 
             throw new InvalidColumnException(
                 StringResources.ColumnIsFull("InsertChip", column));
         }
 
-        public void InsertChip(IMove move)
+        public void ApplyMove(IMove move)
         {
             if (move.Column < 0 || move.Column >= Width)
             {
@@ -73,10 +74,10 @@ namespace BoardGame.Domain.Entities
                     StringResources.ColumnOutsideTheScope("InsertChip", move.Column));
             }
 
-            if (Fields[move.Row, move.Column].PlayerId == 0)
+            if (fields[move.Row, move.Column].PlayerId == 0)
             {
-                Fields[move.Row, move.Column].PlayerId = move.PlayerId;
-                WinnerId = move.IsConnected ? move.PlayerId : 0;
+                fields[move.Row, move.Column].PlayerId = move.PlayerId;
+                LastMove = move;
                 return;
             }
 
@@ -94,14 +95,14 @@ namespace BoardGame.Domain.Entities
 
             for (int i = 0; i < Height; i++)
             {
-                if (Fields[i, column].PlayerId == 0) continue;
-                Fields[i, column].PlayerId = 0;
-                WinnerId = 0;
+                if (fields[i, column].PlayerId == 0) continue;
+                fields[i, column].PlayerId = 0;
+                LastMove = null;
                 return;
             }
         }
 
-        public IMove GetInsertResult(int row, int column, int playerId, int needToWin = 0)
+        private IMove PerformMove(int row, int column, int playerId, int needToWin = 0)
         {
             IMove result = new Move(row, column, playerId, needToWin);
 
@@ -109,28 +110,28 @@ namespace BoardGame.Domain.Entities
             // --------------------------------------------
             for (int i = row - 1; i >= 0; i--)
             {
-                if (Fields[i, column].PlayerId != playerId) break;
-                result.ConnectionVertical.Add(Fields[i, column]);
+                if (fields[i, column].PlayerId != playerId) break;
+                result.ConnectionVertical.Add(fields[i, column]);
             }
-            result.ConnectionVertical.Add(Fields[row, column]);
+            result.ConnectionVertical.Add(fields[row, column]);
             for (int i = row + 1; i < Height; i++)
             {
-                if (Fields[i, column].PlayerId != playerId) break;
-                result.ConnectionVertical.Add(Fields[i, column]);
+                if (fields[i, column].PlayerId != playerId) break;
+                result.ConnectionVertical.Add(fields[i, column]);
             }
 
             // Horizontally
             // --------------------------------------------
             for (int i = column - 1; i >= 0; i--)
             {
-                if (Fields[row, i].PlayerId != playerId) break;
-                result.ConnectionHorizontal.Add(Fields[row, i]);
+                if (fields[row, i].PlayerId != playerId) break;
+                result.ConnectionHorizontal.Add(fields[row, i]);
             }
-            result.ConnectionHorizontal.Add(Fields[row, column]);
+            result.ConnectionHorizontal.Add(fields[row, column]);
             for (int i = column + 1; i < Width; i++)
             {
-                if (Fields[row, i].PlayerId != playerId) break;
-                result.ConnectionHorizontal.Add(Fields[row, i]);
+                if (fields[row, i].PlayerId != playerId) break;
+                result.ConnectionHorizontal.Add(fields[row, i]);
             }
 
             // Diagonally - Northwest to Southeast
@@ -139,15 +140,15 @@ namespace BoardGame.Domain.Entities
             // Northwest
             for (int i = 1; i <= Math.Min(row, column); i++)
             {
-                if (Fields[row - i, column - i].PlayerId != playerId) break;
-                result.ConnectionDescendingDiagonal.Add(Fields[row - i, column - i]);
+                if (fields[row - i, column - i].PlayerId != playerId) break;
+                result.ConnectionDescendingDiagonal.Add(fields[row - i, column - i]);
             }
-            result.ConnectionDescendingDiagonal.Add(Fields[row, column]);
+            result.ConnectionDescendingDiagonal.Add(fields[row, column]);
             // Southeast
             for (int i = 1; i < Math.Min(Height - row, Width - column); i++)
             {
-                if (Fields[row + i, column + i].PlayerId != playerId) break;
-                result.ConnectionDescendingDiagonal.Add(Fields[row + i, column + i]);
+                if (fields[row + i, column + i].PlayerId != playerId) break;
+                result.ConnectionDescendingDiagonal.Add(fields[row + i, column + i]);
             }
 
             // Diagonally - Southwest to Northeast  
@@ -156,18 +157,18 @@ namespace BoardGame.Domain.Entities
             // Southwest
             for (int i = 1; i <= Math.Min(Height - row - 1, column); i++)
             {
-                if (Fields[row + i, column - i].PlayerId != playerId) break;
-                result.ConnectionAscendingDiagonal.Add(Fields[row + i, column - i]);
+                if (fields[row + i, column - i].PlayerId != playerId) break;
+                result.ConnectionAscendingDiagonal.Add(fields[row + i, column - i]);
             }
-            result.ConnectionAscendingDiagonal.Add(Fields[row, column]);
+            result.ConnectionAscendingDiagonal.Add(fields[row, column]);
             // Northeast
             for (int i = 1; i <= Math.Min(row, Width - column - 1); i++)
             {
-                if (Fields[row - i, column + i].PlayerId != playerId) break;
-                result.ConnectionAscendingDiagonal.Add(Fields[row - i, column + i]);
+                if (fields[row - i, column + i].PlayerId != playerId) break;
+                result.ConnectionAscendingDiagonal.Add(fields[row - i, column + i]);
             }
 
-            result.IsTie = (!Fields.Cast<IField>().Take(7).Any(f => f.PlayerId == 0)) && !result.IsConnected;
+            result.IsTie = (!fields.Cast<IField>().Take(7).Any(f => f.PlayerId == 0)) && !result.IsConnected;
             return result;
         }
 

@@ -8,16 +8,15 @@ namespace BoardGame.Domain.Interfaces
 {
     public interface IBoard
     {
-        int Width { get; set; }
-        int Height { get; set; }
-        IFieldFactory FieldFactory { get; set; }
-        int WinnerId { get; set; }
+        int Width { get; }
+        int Height { get; }
+        int WinnerId { get; }
+        IMove LastMove { get; }
 
         void Reset();
         bool IsMoveValid(int row, int column, int playerId);
-
         IMove InsertChip(int row, int column, int playerId);
-        void InsertChip(IMove move);
         void RemoveChip(int row, int column);
+        void ApplyMove(IMove move);
     }
 }

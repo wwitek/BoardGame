@@ -33,7 +33,7 @@ namespace BoardGame.API
         internal static string CanNotPerformTheMoveBecauseGameIsNull()
         {
             return @"Cannot perform the move, becasue CurrectGame object is null. 
-                     Please make sure CurrentGame was created properly.";
+                     Please make sure you have started the game and if CurrentGame was created properly.";
         }
 
         internal static string CanNotPerformNextMoveBecauseNextPlayerIsNull()

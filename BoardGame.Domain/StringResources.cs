@@ -36,19 +36,9 @@ namespace BoardGame.Domain
             return @"You cannot create a game with more then one Bot player.";
         }
 
-        internal static string TheGameCanNotBeCreatedBecauseOfTooManyOnlinePlayers()
-        {
-            return @"You cannot create a game with more then one Online player.";
-        }
-
         internal static string TheGameMustHaveTwoPlayers()
         {
             return @"The Game cannot be created. It has to have two players.";
-        }
-
-        internal static string TheGameMustHaveAHumanPlayer()
-        {
-            return @"You cannot create a game without Human player.";
         }
 
         internal static string PlayersMustHaveIdGreaterThanZero()
