@@ -1,0 +1,14 @@
+﻿<Window x:Class="BoardGame.Client.Connect4.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF"
+        mc:Ignorable="d"
+        Title="Connect Four" Height="350" Width="350">
+    <Grid RenderTransformOrigin="0.495,0.466">
+        <Button x:Name="OnlineGameButton" Content="Online game" Margin="80,0,80,40.5" VerticalAlignment="Bottom" Height="50"/>
+        <Button x:Name="TwoPlayersButton" Content="Two players" Margin="80,0,80,95.5" VerticalAlignment="Bottom" Height="50"/>
+        <Button x:Name="SinglePlayerButton" Content="Single player" Margin="80,0,80,150.5" VerticalAlignment="Bottom" Height="50"/>
+    </Grid>
+</Window>

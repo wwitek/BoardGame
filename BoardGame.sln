@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Infrastructure.Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Infrastructure.Data.EF", "BoardGame.Infrastructure.Data.EF\BoardGame.Infrastructure.Data.EF.csproj", "{3DD80431-E862-4EAD-864B-8C468CB07D88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Connect4.WPF", "BoardGame.Client.Connect4.WPF\BoardGame.Client.Connect4.WPF.csproj", "{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{3DD80431-E862-4EAD-864B-8C468CB07D88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DD80431-E862-4EAD-864B-8C468CB07D88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD80431-E862-4EAD-864B-8C468CB07D88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,5 +107,6 @@ Global
 		{D89450AE-4420-4747-BCA0-E6C2C419C215} = {DA1AF840-034F-47A2-B50E-53F12942A0A7}
 		{48BF557D-0160-433E-B049-8BA752E2451F} = {B084B1A7-B695-46B2-8890-8D3315F53EC0}
 		{3DD80431-E862-4EAD-864B-8C468CB07D88} = {B084B1A7-B695-46B2-8890-8D3315F53EC0}
+		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D} = {893E82F4-2101-4238-A29A-16D8E08FA2FA}
 	EndGlobalSection
 EndGlobal
