@@ -42,6 +42,21 @@ namespace BoardGame.Domain.Entities
 
         public bool IsMoveValid(int row, int column, int playerId)
         {
+            if (row > -1)
+            {
+                if (fields[row, column].PlayerId == 0)
+                {
+                    for (int r = row + 1; r < Height; r++)
+                    {
+                        if (fields[r, column].PlayerId == 0)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
             return fields.Cast<Field>().Take(7).ToList()[column].PlayerId == 0 && WinnerId == 0;
         }
 

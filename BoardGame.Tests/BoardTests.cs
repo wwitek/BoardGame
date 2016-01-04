@@ -18,6 +18,19 @@ namespace BoardGame.Tests
         {
             var fieldFactory = new FieldFactory();
             IBoard board = new Board(7, 6, fieldFactory);
+
+            for (int i = 0; i < board.Height - 1; i++)
+            {
+                for (int j = 0; j < board.Width; j++)
+                {
+                    Assert.IsFalse(board.IsMoveValid(i, j, 1));
+                }
+            }
+
+            for (int j = 0; j < board.Width; j++)
+            {
+                Assert.IsTrue(board.IsMoveValid(board.Height - 1, j, 1));
+            }
         }
 
         [TestCase(0)]

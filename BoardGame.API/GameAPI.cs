@@ -184,7 +184,7 @@ namespace BoardGame.API
                         StringResources.CanNotPerformTheMoveBecauseGameIsNull());
                 }
 
-                if (CurrentGame.IsMoveValid(0, clickedColumn) && 
+                if (CurrentGame.IsMoveValid(-1, clickedColumn) && 
                     (CurrentGame.State != GameState.Finished || CurrentGame.State != GameState.Aborted))
                 {
                     SendMove(CurrentGame.MakeMove(0, clickedColumn));

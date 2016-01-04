@@ -33,7 +33,7 @@ namespace BoardGame.Domain.Entities.Bots
 
             for (int i = 0; i < board.Width; i++)
             {
-                if (board.IsMoveValid(0, i, botId))
+                if (board.IsMoveValid(-1, i, botId))
                 {
                     double value = GetMoveValue(i);
                     Debug.WriteLine("Move {0}: {1}", i, value);
@@ -85,7 +85,7 @@ namespace BoardGame.Domain.Entities.Bots
             {
                 for (int i = 0; i < board.Width; i++)
                 {
-                    if (board.IsMoveValid(0, i, botId))
+                    if (board.IsMoveValid(-1, i, botId))
                     {
                         IMove result = board.InsertChip(0, i, botId);
                         double alfabeta = AlfaBeta(false, depth - 1, alfa, beta);
@@ -100,7 +100,7 @@ namespace BoardGame.Domain.Entities.Bots
             {
                 for (int i = 0; i < board.Width; i++)
                 {
-                    if (board.IsMoveValid(0, i, humanId))
+                    if (board.IsMoveValid(-1, i, humanId))
                     {
                         IMove result = board.InsertChip(0, i, humanId);
                         double alfabeta = AlfaBeta(true, depth - 1, alfa, beta);
