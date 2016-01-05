@@ -57,7 +57,7 @@ namespace BoardGame.Domain.Entities
                 }
                 return false;
             }
-            return fields.Cast<Field>().Take(7).ToList()[column].PlayerId == 0 && WinnerId == 0;
+            return fields.Cast<IField>().Take(7).ToList()[column].PlayerId == 0 && WinnerId == 0;
         }
 
         public IMove InsertChip(int row, int column, int playerId)
@@ -83,6 +83,8 @@ namespace BoardGame.Domain.Entities
 
         public void ApplyMove(IMove move)
         {
+            Requires.IsNotNull(move, "move");
+
             if (move.Column < 0 || move.Column >= Width)
             {
                 throw new InvalidColumnException(
