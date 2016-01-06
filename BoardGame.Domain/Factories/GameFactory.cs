@@ -21,7 +21,7 @@ namespace BoardGame.Domain.Factories
             this.bots = bots;
         }
 
-        public IGame Create(IList<IPlayer> players, string botName)
+        public IGame Create(IList<IPlayer> players, string botName = "")
         {
             #region Exception handling
             if (players.Count != 2)

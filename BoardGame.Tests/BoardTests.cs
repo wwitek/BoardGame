@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BoardGame.Domain.Entities;
-using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace BoardGame.Tests
@@ -17,25 +11,10 @@ namespace BoardGame.Tests
     {
         private IBoard board;
 
-        private static IBoard CreateBoard(int[,] ids)
-        {
-            var fieldFactory = Substitute.For<IFieldFactory>();
-            fieldFactory.Create(Arg.Any<int>(), Arg.Any<int>())
-                .Returns(x =>
-                {
-                    var field = Substitute.For<IField>();
-                    field.Row = (int)x[0];
-                    field.Column = (int)x[1];
-                    field.PlayerId = ids[field.Row, field.Column];
-                    return field;
-                });
-            return new Board(7, 6, fieldFactory);
-        }
-
         [SetUp]
         public void RunBeforeAnyTests()
         {
-            board = CreateBoard(new int[,]
+            board = TestHelper.CreateBoard(new int[,]
             {
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0},
@@ -116,11 +95,7 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void ApplyMoveTest(int column)
         {
-            var move = Substitute.For<IMove>();
-            move.Column = column;
-            move.Row = 5;
-            move.PlayerId = 1;
-
+            var move = TestHelper.CreateMove(5, column, 1);
             board.ApplyMove(move);
         }
 
@@ -237,7 +212,7 @@ namespace BoardGame.Tests
         [Test]
         public void RemoveChipTest()
         {
-            board = CreateBoard(new int[,]
+            board = TestHelper.CreateBoard(new int[,]
             {
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0},
@@ -259,7 +234,7 @@ namespace BoardGame.Tests
         private static Dictionary<int, IBoard> CreateBoardWithInteger(int start, int[,] ids)
         {
             var boardDct = new Dictionary<int, IBoard>();
-            boardDct.Add(start, CreateBoard(ids));
+            boardDct.Add(start, TestHelper.CreateBoard(ids));
             return boardDct;
         }
 
@@ -343,7 +318,7 @@ namespace BoardGame.Tests
 
         static readonly object[] FullBoardTestSet =
         {
-            CreateBoard(new int[,]
+            TestHelper.CreateBoard(new int[,]
             {
                 {2, 1, 2, 0, 2, 1, 2}, //2 - 4
                 {2, 2, 1, 0, 1, 2, 2}, //2 - 4

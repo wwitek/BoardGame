@@ -45,7 +45,7 @@ namespace BoardGame.Domain.Entities
 
         public event PropertyChangedEventHandler OnStateChanged;
 
-        internal Game(IBoard board, IEnumerable<IPlayer> players, IBot bot = null)
+        public Game(IBoard board, IEnumerable<IPlayer> players, IBot bot = null)
         {
             State = GameState.New;
             Board = board;
@@ -58,6 +58,12 @@ namespace BoardGame.Domain.Entities
             {
                 throw new BotNotRegisteredException(
                     StringResources.TheGameCanNotBeStartedBecauseOfBotHasNotBeenRegistered());
+            }
+
+            if (Players.Count(p => p.Type == PlayerType.Bot) > 1)
+            {
+                throw new GameCreateException(
+                    StringResources.TheGameCanNotBeCreatedBecauseOfTooManyBots());
             }
         }
 
@@ -83,6 +89,7 @@ namespace BoardGame.Domain.Entities
         {
             Board.ApplyMove(move);
             SetNextPlayer();
+            State = (move.IsConnected || move.IsTie) ? GameState.Finished : GameState.Running;
         }
 
         /// <summary>
