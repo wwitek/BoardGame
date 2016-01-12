@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="BoardGame.Client.Connect4.WPF.CustomControls.GameBoard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="310" d:DesignWidth="360">
+    <UserControl.Resources>
+        <LinearGradientBrush x:Key="GradientRed"  StartPoint="0,0.6" EndPoint="1,0.25">
+            <GradientStop Color="DarkRed" Offset="0"/>
+            <GradientStop Color="Red" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="GradientYellow"  StartPoint="0,0.6" EndPoint="1,0.25">
+            <GradientStop Color="DarkGoldenrod" Offset="0"/>
+            <GradientStop Color="Gold" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="GradientBlue"  StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="Navy" Offset="0"/>
+            <GradientStop Color="MidnightBlue" Offset="1"/>
+        </LinearGradientBrush>
+
+        <SolidColorBrush x:Key="BorderBrush" Color="Navy"></SolidColorBrush>
+        <SolidColorBrush x:Key="FillBrush" Color="MidnightBlue"></SolidColorBrush>
+        
+        <VisualBrush x:Key="BoardVisualBrush" TileMode="Tile" Stretch="Fill" Viewport="0,0,0.142857143,0.166666667">
+            <VisualBrush.Visual>
+                <Canvas>
+                    <Path Fill="{StaticResource FillBrush}" StrokeThickness="0" Stroke="{StaticResource BorderBrush}">
+                        <Path.Data>
+                            <CombinedGeometry GeometryCombineMode="Xor">
+                                <CombinedGeometry.Geometry1>
+                                    <RectangleGeometry Rect="0, 0, 60, 60" />
+                                </CombinedGeometry.Geometry1>
+                                <CombinedGeometry.Geometry2>
+                                    <EllipseGeometry RadiusX="25" RadiusY="25" Center="30,30" />
+                                </CombinedGeometry.Geometry2>
+                            </CombinedGeometry>
+                        </Path.Data>
+                    </Path>
+                    <Path  Stroke="{StaticResource GradientBlue}" StrokeThickness="2">
+                        <Path.Data>
+                            <EllipseGeometry RadiusX="25" RadiusY="25" Center="30,30"></EllipseGeometry>
+                        </Path.Data>
+                    </Path>
+                </Canvas>
+            </VisualBrush.Visual>
+        </VisualBrush>
+    </UserControl.Resources>
+    <Grid x:Name="BoardGrid">
+        <Canvas Margin="5,5,5,5" Background="{StaticResource BoardVisualBrush}" />
+        <Rectangle Margin="0,0,0,0" Stroke="{StaticResource BorderBrush}" StrokeThickness="5"/>
+    </Grid>
+</UserControl>

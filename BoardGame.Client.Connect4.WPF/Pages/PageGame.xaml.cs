@@ -12,19 +12,24 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using BoardGame.Client.Connect4.WPF.Pages;
+using BoardGame.Client.Connect4.WPF.CustomControls;
 
-namespace BoardGame.Client.Connect4.WPF
+namespace BoardGame.Client.Connect4.WPF.Pages
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for PageGame.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PageGame : Page
     {
-        public MainWindow()
+        public PageGame()
         {
             InitializeComponent();
-            MainFrame.Content = new PageStart(MainFrame);
+        }
+
+        private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            GameBoard board = sender as GameBoard;
+            board?.MakeMove(1,4,1);
         }
     }
 }

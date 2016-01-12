@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF"
         mc:Ignorable="d"
-        Title="Connect Four" Height="350" Width="350">
-    <Grid RenderTransformOrigin="0.495,0.466">
-        <Button x:Name="OnlineGameButton" Content="Online game" Margin="80,0,80,40.5" VerticalAlignment="Bottom" Height="50"/>
-        <Button x:Name="TwoPlayersButton" Content="Two players" Margin="80,0,80,95.5" VerticalAlignment="Bottom" Height="50"/>
-        <Button x:Name="SinglePlayerButton" Content="Single player" Margin="80,0,80,150.5" VerticalAlignment="Bottom" Height="50"/>
+        Title="Connect Four" Height="400" Width="400" AllowsTransparency="True" WindowStyle="None" Opacity="0.95" Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" BorderThickness="3">
+    <Window.BorderBrush>
+        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.DesktopColorKey}}"/>
+    </Window.BorderBrush>
+    <Grid>
+        <Frame x:Name="MainFrame"
+               Margin="10,10,10,10" 
+               NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>
