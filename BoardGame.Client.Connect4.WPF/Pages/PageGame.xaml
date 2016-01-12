@@ -10,6 +10,9 @@
       Title="PageGame">
 
     <Grid>
-        <customControls:GameBoard Width="360" Height="310" Padding="0,0,0,0" Margin="0,60,0,0" MouseDown="UIElement_OnMouseDown" />
+        <customControls:GameBoard Width="360" Height="310" 
+                                  Margin="0,60,0,0"
+                                  BorderStrokeThickness="5"
+                                  MouseDown="UIElement_OnMouseDown" />
     </Grid>
 </Page>
