@@ -28,11 +28,6 @@ namespace BoardGame.Client.Connect4.WPF.Pages
             this.mainFrame = mainFrame;
         }
 
-        private void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.mainFrame.Content = new PageGame();
-        }
-
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
             this.mainFrame.Content = new PageGame();

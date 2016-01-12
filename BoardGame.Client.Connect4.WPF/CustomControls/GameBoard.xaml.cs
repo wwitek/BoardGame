@@ -11,9 +11,11 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Expression.Interactivity.Media;
 
 namespace BoardGame.Client.Connect4.WPF.CustomControls
 {
@@ -27,19 +29,11 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
             InitializeComponent();
         }
 
-        public async void MakeMove(int player, int row, int column)
+        public void MakeMove(int player, int row, int column)
         {
-            Ellipse ellipse = new Ellipse();
-            ellipse.Fill = (Brush) FindResource("GradientRed");
-            ellipse.Margin = new Thickness(109, 9, 209, 259);
-            BoardGrid.Children.Insert(0, ellipse);
-
-            for (int i = 0; i < 1000; i++)
-            {
-                var i1 = i;
-                await Task.Factory.StartNew(() => Thread.Sleep(5))
-                    .ContinueWith(task => ellipse.Margin = new Thickness(109, 9 + i1, 209, 259 - i1), TaskScheduler.FromCurrentSynchronizationContext());
-            }
+            ControlStoryboardAction action = new ControlStoryboardAction();
+            action.Storyboard = (Storyboard)FindResource("MoveChipFirstColumn");
+            action.Storyboard.Begin();
         }
     }
 }
