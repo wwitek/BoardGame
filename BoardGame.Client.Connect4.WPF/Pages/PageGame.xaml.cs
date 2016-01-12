@@ -22,27 +22,18 @@ namespace BoardGame.Client.Connect4.WPF.Pages
     /// </summary>
     public partial class PageGame : Page
     {
+        int playerId = 1;
+
         public PageGame()
         {
             InitializeComponent();
         }
 
-        private async void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
+        private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             GameBoard board = sender as GameBoard;
-            int playerId = 1;
-            for (int col = 0; col < 7; col++)
-            {
-                for (int row = 5; row >= 4; row--)
-                {
-                    playerId = (playerId == 1) ? 2 : 1;
-                    board?.AnimateMove(playerId, row, col);
-                    await Task.Delay(250);
-                }
-            }
-            await Task.Delay(5000);
-            board?.AnimateReset();
-
+            board?.AnimateMove(playerId, 5, board.ColumnClicked);
+            playerId = (playerId == 1) ? 2 : 1;
         }
     }
 }

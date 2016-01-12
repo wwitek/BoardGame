@@ -24,6 +24,7 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
     /// </summary>
     public partial class GameBoard : UserControl
     {
+        public int ColumnClicked { get; private set; }
         public int BorderStrokeThickness
         {
             get { return (int)GetValue(StrokeThicknessProperty); }
@@ -127,6 +128,15 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
                 BoardGrid.Children.RemoveRange(0, BoardGrid.Children.Count - 2);
 
             resetInProgress = false;
+        }
+
+        private void BoardGrid_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            double x = e.GetPosition(this).X - BorderStrokeThickness;
+            double actualCellWidth = (((Grid) sender).ActualWidth - 2 * BorderStrokeThickness) / 7;
+            ColumnClicked = (int)(x / actualCellWidth);
+            if (ColumnClicked > 6) ColumnClicked = 6;
+            if (ColumnClicked < 0) ColumnClicked = 0;
         }
     }
 }

@@ -48,7 +48,7 @@
             </VisualBrush.Visual>
         </VisualBrush>
     </UserControl.Resources>
-    <Grid x:Name="BoardGrid">
+    <Grid x:Name="BoardGrid" MouseDown="BoardGrid_OnMouseDown">
         <Canvas Margin="{Binding Path=BorderStrokeThickness,
                                              RelativeSource={RelativeSource FindAncestor,
                                              AncestorType=customControls:GameBoard,
