@@ -57,6 +57,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Pages\PageSinglePlayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Styles\ButtonStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -92,10 +96,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\TitleStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pages\PageGame.xaml.cs">
       <DependentUpon>PageGame.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PageSinglePlayer.xaml.cs">
+      <DependentUpon>PageSinglePlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\PageStart.xaml.cs">
       <DependentUpon>PageStart.xaml</DependentUpon>

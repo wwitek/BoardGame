@@ -6,13 +6,17 @@
       xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF"
       xmlns:customControls="clr-namespace:BoardGame.Client.Connect4.WPF.CustomControls"
       mc:Ignorable="d" 
-      d:DesignHeight="380" d:DesignWidth="380"
+      d:DesignHeight="430" d:DesignWidth="380"
       Title="PageGame">
 
     <Grid>
-        <customControls:GameBoard Width="360" Height="310" 
-                                  Margin="0,60,0,0"
-                                  BorderStrokeThickness="5"
+        <customControls:GameBoard BorderStrokeThickness="5"
+                                  Margin="10,110,10,10"
                                   MouseDown="UIElement_OnMouseDown" />
+        <Button x:Name="QuitButton" Style="{StaticResource NavigationButton}" 
+                Content="Quit" Click="QuitButton_Click" 
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Margin="0,63,0,0" />
     </Grid>
 </Page>

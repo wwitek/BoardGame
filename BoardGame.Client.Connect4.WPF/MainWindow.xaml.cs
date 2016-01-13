@@ -26,5 +26,11 @@ namespace BoardGame.Client.Connect4.WPF
             InitializeComponent();
             MainFrame.Content = new PageStart(MainFrame);
         }
+
+        private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
     }
 }

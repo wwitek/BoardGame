@@ -18,34 +18,29 @@ namespace BoardGame.Client.Connect4.WPF.Pages
     /// <summary>
     /// Interaction logic for PageStart.xaml
     /// </summary>
-    public partial class PageStart : Page
+    public partial class PageSinglePlayer : Page
     {
         private Frame mainFrame;
 
-        public PageStart(Frame mainFrame)
+        public PageSinglePlayer(Frame mainFrame)
         {
             InitializeComponent();
             this.mainFrame = mainFrame;
         }
-
-        private void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
+        
+        private void EasyButton_Click(object sender, RoutedEventArgs e)
         {
-            this.mainFrame.Content = new PageSinglePlayer(mainFrame);
+            mainFrame.Content = new PageGame(mainFrame);
         }
 
-        private void TwoPlayerButton_Click(object sender, RoutedEventArgs e)
+        private void MediumButton_Click(object sender, RoutedEventArgs e)
         {
-            this.mainFrame.Content = new PageGame(mainFrame);
+            mainFrame.Content = new PageGame(mainFrame);
         }
 
-        private void OnlineGameButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            this.mainFrame.Content = new PageGame(mainFrame);
-        }
-
-        private void QuitButton_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
+            mainFrame.Content = new PageStart(mainFrame);
         }
     }
 }

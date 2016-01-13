@@ -22,11 +22,13 @@ namespace BoardGame.Client.Connect4.WPF.Pages
     /// </summary>
     public partial class PageGame : Page
     {
+        private Frame mainFrame;
         int playerId = 1;
 
-        public PageGame()
+        public PageGame(Frame mainFrame)
         {
             InitializeComponent();
+            this.mainFrame = mainFrame;
         }
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -34,6 +36,11 @@ namespace BoardGame.Client.Connect4.WPF.Pages
             GameBoard board = sender as GameBoard;
             board?.AnimateMove(playerId, 5, board.ColumnClicked);
             playerId = (playerId == 1) ? 2 : 1;
+        }
+
+        private void QuitButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.mainFrame.Content = new PageStart(mainFrame);
         }
     }
 }

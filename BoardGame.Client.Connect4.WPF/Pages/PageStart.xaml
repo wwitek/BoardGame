@@ -5,11 +5,16 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF"
       mc:Ignorable="d" 
-      d:DesignHeight="300" d:DesignWidth="300"
+      d:DesignHeight="430" d:DesignWidth="380"
       Title="PageStart">
 
     <Grid>
-        <Button x:Name="Button1" Style="{StaticResource MenuButton}" 
-                Content="Start" Margin="88,123,92,147" Width="Auto" Click="Button1_Click"/>
+        <StackPanel VerticalAlignment="top">
+            <Label Style="{StaticResource TitleStyle}"></Label>
+            <Button x:Name="SinglePlayerButton" Style="{StaticResource MenuButton}" Content="Single player" Click="SinglePlayerButton_Click" Margin="5" />
+            <Button x:Name="TwoPlayerButton" Style="{StaticResource MenuButton}" Content="Two player" Click="TwoPlayerButton_Click" Margin="5" />
+            <Button x:Name="OnlineGameButton" Style="{StaticResource MenuButton}" Content="Online game" Click="OnlineGameButton_Click" Margin="5" />
+            <Button x:Name="QuitButton" Style="{StaticResource MenuButton}" Content="Quit" Click="QuitButton_Click" Margin="5" />
+        </StackPanel>
     </Grid>
 </Page>
