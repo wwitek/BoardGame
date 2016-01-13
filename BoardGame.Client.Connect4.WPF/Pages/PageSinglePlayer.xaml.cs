@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BoardGame.API;
+using BoardGame.Domain.Enums;
 
 namespace BoardGame.Client.Connect4.WPF.Pages
 {
@@ -20,27 +22,29 @@ namespace BoardGame.Client.Connect4.WPF.Pages
     /// </summary>
     public partial class PageSinglePlayer : Page
     {
-        private Frame mainFrame;
+        private readonly Frame mainFrame;
+        private readonly IGameAPI gameAPI;
 
-        public PageSinglePlayer(Frame mainFrame)
+        public PageSinglePlayer(Frame mainFrame, IGameAPI gameAPI = null)
         {
             InitializeComponent();
             this.mainFrame = mainFrame;
+            this.gameAPI = gameAPI;
         }
         
         private void EasyButton_Click(object sender, RoutedEventArgs e)
         {
-            mainFrame.Content = new PageGame(mainFrame);
+            mainFrame.Content = new PageGame(mainFrame, GameType.SinglePlayer, "Easy", gameAPI);
         }
 
         private void MediumButton_Click(object sender, RoutedEventArgs e)
         {
-            mainFrame.Content = new PageGame(mainFrame);
+            mainFrame.Content = new PageGame(mainFrame, GameType.SinglePlayer, "Medium", gameAPI);
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            mainFrame.Content = new PageStart(mainFrame);
+            mainFrame.GoBack();
         }
     }
 }

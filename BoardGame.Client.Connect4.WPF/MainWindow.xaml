@@ -5,7 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF"
         mc:Ignorable="d"
-        Title="Connect Four" Height="450" Width="400" AllowsTransparency="True" WindowStyle="None" Opacity="0.95" Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" BorderThickness="3">
+        Title="Connect Four" 
+        Height="450" Width="400" 
+        AllowsTransparency="True" 
+        WindowStyle="None" 
+        Opacity="0.95" 
+        Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" 
+        BorderThickness="3">
     <Window.BorderBrush>
         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.DesktopColorKey}}"/>
     </Window.BorderBrush>

@@ -10,7 +10,8 @@
       Title="PageGame">
 
     <Grid>
-        <customControls:GameBoard BorderStrokeThickness="5"
+        <customControls:GameBoard x:Name="GameBoard"
+                                  BorderStrokeThickness="5"
                                   Margin="10,110,10,10"
                                   MouseDown="UIElement_OnMouseDown" />
         <Button x:Name="QuitButton" Style="{StaticResource NavigationButton}" 

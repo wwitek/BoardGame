@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BoardGame.API;
+using BoardGame.Domain.Enums;
 
 namespace BoardGame.Client.Connect4.WPF.Pages
 {
@@ -20,27 +22,29 @@ namespace BoardGame.Client.Connect4.WPF.Pages
     /// </summary>
     public partial class PageStart : Page
     {
-        private Frame mainFrame;
+        private readonly Frame mainFrame;
+        private readonly IGameAPI gameAPI;
 
-        public PageStart(Frame mainFrame)
+        public PageStart(Frame mainFrame, IGameAPI gameAPI = null)
         {
             InitializeComponent();
             this.mainFrame = mainFrame;
+            this.gameAPI = gameAPI;
         }
 
         private void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
         {
-            this.mainFrame.Content = new PageSinglePlayer(mainFrame);
+            this.mainFrame.Content = new PageSinglePlayer(mainFrame, gameAPI);
         }
 
         private void TwoPlayerButton_Click(object sender, RoutedEventArgs e)
         {
-            this.mainFrame.Content = new PageGame(mainFrame);
+            mainFrame.Navigate(new PageGame(mainFrame, GameType.TwoPlayers, "", gameAPI));
         }
 
         private void OnlineGameButton_Click(object sender, RoutedEventArgs e)
         {
-            this.mainFrame.Content = new PageGame(mainFrame);
+            mainFrame.Navigate(new PageGame(mainFrame, GameType.Online, "", gameAPI));
         }
 
         private void QuitButton_Click(object sender, RoutedEventArgs e)

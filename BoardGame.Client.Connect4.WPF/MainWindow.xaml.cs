@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BoardGame.API;
 using BoardGame.Client.Connect4.WPF.Pages;
 
 namespace BoardGame.Client.Connect4.WPF
@@ -21,10 +22,14 @@ namespace BoardGame.Client.Connect4.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private IGameAPI gameAPI;
+
+        public MainWindow(IGameAPI gameAPI = null)
         {
             InitializeComponent();
-            MainFrame.Content = new PageStart(MainFrame);
+
+            this.gameAPI = gameAPI;
+            MainFrame.Content = new PageStart(MainFrame, this.gameAPI);
         }
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)

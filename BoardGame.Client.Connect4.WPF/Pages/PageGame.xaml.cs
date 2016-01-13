@@ -13,7 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BoardGame.API;
 using BoardGame.Client.Connect4.WPF.CustomControls;
+using BoardGame.Domain.Enums;
+using BoardGame.Domain.Interfaces;
 
 namespace BoardGame.Client.Connect4.WPF.Pages
 {
@@ -22,25 +25,39 @@ namespace BoardGame.Client.Connect4.WPF.Pages
     /// </summary>
     public partial class PageGame : Page
     {
-        private Frame mainFrame;
-        int playerId = 1;
+        private readonly Frame mainFrame;
+        private readonly IGameAPI gameAPI;
 
-        public PageGame(Frame mainFrame)
+        public PageGame(Frame mainFrame, GameType type, string level = "", IGameAPI gameAPI = null)
         {
             InitializeComponent();
             this.mainFrame = mainFrame;
+            this.gameAPI = gameAPI;
+            if (gameAPI != null)
+                gameAPI.OnMoveReceived += (s, e) => AnimateMove(e.Move);
+            this.gameAPI?.StartGame(type, level);
+        }
+
+        private void AnimateMove(IMove result)
+        {
+            if (result != null && result.Row >= 0)
+            {
+                GameBoard.AnimateMove(result.PlayerId, result.Row, result.Column);
+                if (result.IsConnected) MessageBox.Show("Success! Player " + result.PlayerId + " won!");
+            }
+            if (result != null && result.IsTie) MessageBox.Show("Game Over!");
         }
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             GameBoard board = sender as GameBoard;
-            board?.AnimateMove(playerId, 5, board.ColumnClicked);
-            playerId = (playerId == 1) ? 2 : 1;
+            if (gameAPI == null || board == null) return;
+            gameAPI.NextMove(0, board.ColumnClicked);
         }
 
         private void QuitButton_Click(object sender, RoutedEventArgs e)
         {
-            this.mainFrame.Content = new PageStart(mainFrame);
+            mainFrame.GoBack();
         }
     }
 }

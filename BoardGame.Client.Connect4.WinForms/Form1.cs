@@ -102,8 +102,6 @@ namespace BoardGame.Client.Connect4.WinForms
 
                 if (result.IsConnected)
                 {
-                    Color connectColor = (result.PlayerId == 1) ? Color.Purple : Color.Brown;
-
                     MessageBox.Show("Success! Player " + result.PlayerId.ToString() + " won!");
                 }
             }
@@ -111,7 +109,6 @@ namespace BoardGame.Client.Connect4.WinForms
             if (result != null && result.IsTie)
             {
                 MessageBox.Show("Game Over!");
-                return;
             }
         }
 
