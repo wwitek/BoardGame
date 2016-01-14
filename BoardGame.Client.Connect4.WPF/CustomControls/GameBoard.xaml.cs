@@ -43,9 +43,9 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
             InitializeComponent();
         }
 
-        public void AnimateMove(int player, int row, int column, bool temp)
+        public async Task<bool> AnimateMove(int player, int row, int column, bool temp)
         {
-            if (resetInProgress) return;
+            if (resetInProgress) return false;
 
             int firstStepTime = 50 + 50 * Math.Abs(column - 3);
             int secondStepTime = 750;
@@ -94,7 +94,9 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
             Storyboard sb = new Storyboard();
             sb.Children.Add(animationX);
             sb.Children.Add(animationY);
-            sb.Begin();
+
+            await sb.BeginAsync();
+            return true;
         }
 
         public async Task<bool> AnimateReset()

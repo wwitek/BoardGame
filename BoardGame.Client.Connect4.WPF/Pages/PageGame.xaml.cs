@@ -17,12 +17,11 @@ namespace BoardGame.Client.Connect4.WPF.Pages
     /// </summary>
     public partial class PageGame : Page
     {
-        private static readonly object lockObject = new object();
         private readonly Frame mainFrame;
         private readonly IGameAPI gameAPI;
         private readonly GameType type;
         private readonly string level;
-        private static readonly Stopwatch moveStopwatch = new Stopwatch();
+        private static readonly Stopwatch MoveStopwatch = new Stopwatch();
         private bool isAnimating;
 
         public PageGame(Frame mainFrame, GameType type, string level = "", IGameAPI gameAPI = null)
@@ -46,28 +45,29 @@ namespace BoardGame.Client.Connect4.WPF.Pages
         private async void GameAPIOnOnMoveReceived(object sender, MoveEventArgs moveEventArgs)
         {
             isAnimating = true;
-            if (moveStopwatch.IsRunning && moveEventArgs.Move.IsBot)
+            if (MoveStopwatch.IsRunning && moveEventArgs.Move.IsBot)
             {
-                int elapsed = (int)moveStopwatch.ElapsedMilliseconds;
+                int elapsed = (int)MoveStopwatch.ElapsedMilliseconds;
                 if (elapsed < 1000)
                 {
                     await Task.Delay(1500 - elapsed);
                 }
             }
-            moveStopwatch.Reset();
-            moveStopwatch.Start();
-            AnimateMove(moveEventArgs.Move);
+            MoveStopwatch.Reset();
+            MoveStopwatch.Start();
+            await AnimateMove(moveEventArgs.Move);
             isAnimating = false;
         }
 
-        private void AnimateMove(IMove result)
+        private async Task<bool> AnimateMove(IMove result)
         {
             if (result != null && result.Row >= 0)
             {
-                GameBoard.AnimateMove(result.PlayerId, result.Row, result.Column, result.IsBot);
+                await GameBoard.AnimateMove(result.PlayerId, result.Row, result.Column, result.IsBot);
                 if (result.IsConnected) MessageBox.Show("Success! Player " + result.PlayerId + " won!");
             }
             if (result != null && result.IsTie) MessageBox.Show("Game Over!");
+            return true;
         }
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
