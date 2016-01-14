@@ -105,7 +105,7 @@ namespace BoardGame.Server.Services
             Logger.Info("Player{0} is waiting for the rival's first move..", playerId);
             IGame game = Logic.GetGameByPlayerId(playerId);
 
-            bool timeout = game.WaitForNextPlayer(5 * 60 * 1000);
+            bool timeout = game.WaitForNextPlayer(1 * 10 * 1000);
 
             response = new MoveResponse(game.Board.LastMove, timeout);
             if (!timeout)
@@ -133,7 +133,7 @@ namespace BoardGame.Server.Services
             else
             {
                 bool timeout = game.WaitForNextPlayer(1 * 10 * 1000);
-                if (!timeout) Logger.Info("Timeout! Player{0} move timed out!", playerId);
+                if (!timeout) Logger.Info("Timeout! Player{0} move timed out!", game.NextPlayer.OnlineId);
                 response = new MoveResponse(game.Board.LastMove, timeout);
             }
             return await Task.Factory.StartNew(() => response);

@@ -13,6 +13,7 @@ using BoardGame.Domain.Enums;
 using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Proxies;
+using BoardGame.Server.Contracts;
 
 namespace BoardGame.Client.Connect4.WPF
 {
@@ -36,9 +37,9 @@ namespace BoardGame.Client.Connect4.WPF
                 var gameFactory = new GameFactory(board, bots);
 
                 var playerFactory = new PlayerFactory();
-                //var proxy = new GameProxy();
+                var proxy = new GameProxy();
                 //var logger = new Log4netAdapter("GameAPI");
-                var api = new GameAPI(gameFactory, playerFactory);
+                var api = new GameAPI(gameFactory, playerFactory, proxy);
 
                 MainWindow window = new MainWindow(api);
                 window.Show();
