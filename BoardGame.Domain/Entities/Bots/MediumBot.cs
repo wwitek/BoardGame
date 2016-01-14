@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 
@@ -52,7 +50,10 @@ namespace BoardGame.Domain.Entities.Bots
 
             Random random = new Random();
             int move = moves[random.Next(0, moves.Count)];
-            return game.MakeMove(0, move);
+
+            IMove madeMove = game.MakeMove(-1, move);
+            madeMove.IsBot = true;
+            return madeMove;
         }
 
         private double GetMoveValue(int column)

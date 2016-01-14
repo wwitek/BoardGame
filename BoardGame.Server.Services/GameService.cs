@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.ServiceModel;
 using BoardGame.Server.Contracts;
 using BoardGame.Server.BusinessLogic.Interfaces;
 using BoardGame.Server.Contracts.Responses;
@@ -11,7 +9,6 @@ using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 using System.Threading;
 using System.ComponentModel;
-using System.Diagnostics;
 using BoardGame.Domain.Logger;
 
 namespace BoardGame.Server.Services

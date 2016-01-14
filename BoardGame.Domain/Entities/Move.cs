@@ -23,6 +23,8 @@ namespace BoardGame.Domain.Entities
         [DataMember]
         public int PlayerId { get; set; }
 
+        public bool IsBot { get; set; }
+
         [DataMember]
         public List<IField> ConnectionVertical { get; set; }
 

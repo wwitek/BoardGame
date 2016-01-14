@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 
@@ -19,9 +16,11 @@ namespace BoardGame.Domain.Entities.Bots
             while (true)
             {
                 int move = random.Next(0, game.Board.Width);
-                if (game.Board.IsMoveValid(0, move, botId))
+                if (game.Board.IsMoveValid(-1, move, botId))
                 {
-                    return game.MakeMove(0, move);
+                    IMove madeMove = game.MakeMove(-1, move);
+                    madeMove.IsBot = true;
+                    return madeMove;
                 }
             }
         }

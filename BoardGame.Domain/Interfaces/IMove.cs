@@ -7,6 +7,7 @@ namespace BoardGame.Domain.Interfaces
         int Row { get; set; }
         int Column { get; set; }
         int PlayerId { get; set; }
+        bool IsBot { get; set; }
 
         List<IField> ConnectionVertical { get; set; }
         List<IField> ConnectionHorizontal { get; set; }

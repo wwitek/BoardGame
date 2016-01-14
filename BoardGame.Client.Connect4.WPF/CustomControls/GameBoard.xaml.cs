@@ -43,9 +43,12 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
             InitializeComponent();
         }
 
-        public bool AnimateMove(int player, int row, int column)
+        public void AnimateMove(int player, int row, int column, bool temp)
         {
-            if (resetInProgress) return false;
+            if (resetInProgress) return;
+
+            int firstStepTime = 50 + 50 * Math.Abs(column - 3);
+            int secondStepTime = 750;
 
             double chipHeight = VerticalStep * 0.84;
             double chipWidth = HorizontalStep * 0.84;
@@ -65,7 +68,7 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
             BoardGrid.Children.Insert(0, chipEllipse);
 
             EasingDoubleKeyFrame initFrameX = new EasingDoubleKeyFrame();
-            initFrameX.KeyTime = KeyTime.FromTimeSpan(new TimeSpan(0, 0, 0, 0, 500));
+            initFrameX.KeyTime = KeyTime.FromTimeSpan(new TimeSpan(0, 0, 0, 0, firstStepTime));
             initFrameX.Value = ((column - 3) * HorizontalStep);
             DoubleAnimationUsingKeyFrames animationX = new DoubleAnimationUsingKeyFrames();
             animationX.KeyFrames.Add(initFrameX);
@@ -74,10 +77,10 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
             Storyboard.SetTargetProperty(animationX, new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.X)"));
 
             EasingDoubleKeyFrame initFrameY = new EasingDoubleKeyFrame();
-            initFrameY.KeyTime = KeyTime.FromTimeSpan(new TimeSpan(0, 0, 0, 0, 500));
+            initFrameY.KeyTime = KeyTime.FromTimeSpan(new TimeSpan(0, 0, 0, 0, firstStepTime));
             initFrameY.Value = firstStepDown;
             EasingDoubleKeyFrame dropDownFrameY = new EasingDoubleKeyFrame();
-            dropDownFrameY.KeyTime = KeyTime.FromTimeSpan(new TimeSpan(0, 0, 0, 1, 500));
+            dropDownFrameY.KeyTime = KeyTime.FromTimeSpan(new TimeSpan(0, 0, 0, 0, secondStepTime));
             dropDownFrameY.Value = (row * VerticalStep) + firstRowOffset;
             dropDownFrameY.EasingFunction = new BounceEase() { Bounces = 2, Bounciness = 3, EasingMode = EasingMode.EaseOut };
 
@@ -92,20 +95,19 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
             sb.Children.Add(animationX);
             sb.Children.Add(animationY);
             sb.Begin();
-
-            return true;
         }
 
-        public void AnimateReset()
+        public async Task<bool> AnimateReset()
         {
             resetInProgress = true;
-
+            int dropTime = 1000;
             List<Ellipse> chips = BoardGrid.Children.OfType<Ellipse>().ToList();
-            int chipsCompleted = 0;
+
+            int chipsDeleted = 0;
             foreach (var ellipse in chips)
             {
                 EasingDoubleKeyFrame dropDownFrameY = new EasingDoubleKeyFrame();
-                dropDownFrameY.KeyTime = KeyTime.FromTimeSpan(new TimeSpan(0, 0, 0, 1));
+                dropDownFrameY.KeyTime = KeyTime.FromTimeSpan(new TimeSpan(0, 0, 0, 0, dropTime));
                 dropDownFrameY.Value = ActualHeight + 2 * HorizontalStep;
                 dropDownFrameY.EasingFunction = new BounceEase() { Bounces = 3, Bounciness = 4, EasingMode = EasingMode.EaseIn };
 
@@ -117,9 +119,16 @@ namespace BoardGame.Client.Connect4.WPF.CustomControls
 
                 Storyboard sb = new Storyboard();
                 sb.Children.Add(animationY);
-                sb.Completed += (o, e) => { if (chipsCompleted++.Equals(chips.Count - 1)) Reset(); };
-                sb.Begin();
+                if (!chipsDeleted++.Equals(chips.Count - 1))
+                {
+                    sb.Begin();
+                    continue;    
+                }
+
+                await sb.BeginAsync();
+                Reset();
             }
+            return true;
         }
 
         public void Reset()

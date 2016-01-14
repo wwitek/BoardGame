@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BoardGame.API;
 using BoardGame.Client.Connect4.WPF.Pages;
+using BoardGame.Domain.Enums;
 
 namespace BoardGame.Client.Connect4.WPF
 {
@@ -22,14 +23,18 @@ namespace BoardGame.Client.Connect4.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IGameAPI gameAPI;
-
         public MainWindow(IGameAPI gameAPI = null)
         {
             InitializeComponent();
 
-            this.gameAPI = gameAPI;
-            MainFrame.Content = new PageStart(MainFrame, this.gameAPI);
+            INavigationController navigation = new NavigationController(MainFrame);
+            navigation.Pages.Add("singlePlayerPage", new PageSinglePlayer(navigation));
+            navigation.Pages.Add("twoPlayersPage", new PageGame(MainFrame, GameType.TwoPlayers, "", gameAPI));
+            navigation.Pages.Add("onlineGamePage", new PageGame(MainFrame, GameType.Online, "", gameAPI));
+            navigation.Pages.Add("easyPage", new PageGame(MainFrame, GameType.SinglePlayer, "Easy", gameAPI));
+            navigation.Pages.Add("mediumPage", new PageGame(MainFrame, GameType.SinglePlayer, "Medium", gameAPI));
+
+            MainFrame.Content = new PageStart(navigation);
         }
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
