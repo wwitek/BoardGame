@@ -43,9 +43,19 @@ namespace BoardGame.Client.Connect4.WPF.Pages
             gameAPI?.StartGame(type, level);
         }
 
-        private void GameAPIOnOnMoveReceived(object sender, MoveEventArgs moveEventArgs)
+        private async void GameAPIOnOnMoveReceived(object sender, MoveEventArgs moveEventArgs)
         {
             isAnimating = true;
+            if (moveStopwatch.IsRunning && moveEventArgs.Move.IsBot)
+            {
+                int elapsed = (int)moveStopwatch.ElapsedMilliseconds;
+                if (elapsed < 1000)
+                {
+                    await Task.Delay(1500 - elapsed);
+                }
+            }
+            moveStopwatch.Reset();
+            moveStopwatch.Start();
             AnimateMove(moveEventArgs.Move);
             isAnimating = false;
         }

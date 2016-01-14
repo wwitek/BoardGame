@@ -9,6 +9,7 @@ using BoardGame.Server.Contracts;
 using BoardGame.Server.Contracts.Responses;
 using BoardGame.Domain.Logger;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using BoardGame.API.Exceptions;
 
 namespace BoardGame.API
@@ -207,8 +208,9 @@ namespace BoardGame.API
                             throw new InvalidOperationException(
                                 StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
                         }
-                        IMove move = CurrentGame.Bot.GenerateMove(CurrentGame);
-                        SendMove(move);
+
+                        await Task.Run(() => CurrentGame.Bot.GenerateMove(CurrentGame))
+                            .ContinueWith(task => SendMove(task.Result), TaskScheduler.FromCurrentSynchronizationContext());
                     }
                     else if (CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))
                     {
