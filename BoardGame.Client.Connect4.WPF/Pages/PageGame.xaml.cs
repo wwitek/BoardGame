@@ -23,6 +23,7 @@ namespace BoardGame.Client.Connect4.WPF.Pages
         private readonly string level;
         private static readonly Stopwatch MoveStopwatch = new Stopwatch();
         private bool isAnimating;
+        private bool isLastMoveMine;
 
         public PageGame(Frame mainFrame, GameType type, string level = "", IGameAPI gameAPI = null)
         {
@@ -53,9 +54,11 @@ namespace BoardGame.Client.Connect4.WPF.Pages
                     await Task.Delay(1500 - elapsed);
                 }
             }
+
+            isLastMoveMine = !moveEventArgs.Move.IsBot && type.Equals(GameType.SinglePlayer);
             MoveStopwatch.Reset();
             MoveStopwatch.Start();
-            await AnimateMove(moveEventArgs.Move);
+            if (await AnimateMove(moveEventArgs.Move)) isLastMoveMine = false;
             isAnimating = false;
         }
 
@@ -64,16 +67,24 @@ namespace BoardGame.Client.Connect4.WPF.Pages
             if (result != null && result.Row >= 0)
             {
                 await GameBoard.AnimateMove(result.PlayerId, result.Row, result.Column, result.IsBot);
-                if (result.IsConnected) MessageBox.Show("Success! Player " + result.PlayerId + " won!");
+                if (result.IsConnected)
+                {
+                    MessageBox.Show("Success! Player " + result.PlayerId + " won!");
+                    return true;
+                }
             }
-            if (result != null && result.IsTie) MessageBox.Show("Game Over!");
-            return true;
+            if (result != null && result.IsTie)
+            {
+                MessageBox.Show("Game Over!");
+                return true;
+            }
+            return false;
         }
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             GameBoard board = sender as GameBoard;
-            if (gameAPI == null || board == null || isAnimating) return;
+            if (gameAPI == null || board == null || isAnimating || isLastMoveMine) return;
             gameAPI.NextMove(0, board.ColumnClicked);
         }
 
