@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BoardGame.Server.Contracts;
-using BoardGame.Server.BusinessLogic.Interfaces;
-using BoardGame.Server.Contracts.Responses;
+using BoardGame.Contracts;
+using BoardGame.Server.Business.Interfaces;
+using BoardGame.Contracts.Responses;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Interfaces;
 using System.Threading;

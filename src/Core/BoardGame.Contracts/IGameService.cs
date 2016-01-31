@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ServiceModel;
-using BoardGame.Server.Contracts.Responses;
+using BoardGame.Contracts.Responses;
 
-namespace BoardGame.Server.Contracts
+namespace BoardGame.Contracts
 {
     [ServiceContract]
     public interface IGameService

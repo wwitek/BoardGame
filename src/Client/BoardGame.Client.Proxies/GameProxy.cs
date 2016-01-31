@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ServiceModel;
-using BoardGame.Server.Contracts;
+using BoardGame.Contracts;
 using System.Threading.Tasks;
-using BoardGame.Server.Contracts.Responses;
+using BoardGame.Contracts.Responses;
 
 namespace BoardGame.Client.Proxies
 {

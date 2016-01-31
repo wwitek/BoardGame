@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoardGame.Server.BusinessLogic
+namespace BoardGame.Server.Business
 {
     [Serializable]
     public class GameServerException : Exception

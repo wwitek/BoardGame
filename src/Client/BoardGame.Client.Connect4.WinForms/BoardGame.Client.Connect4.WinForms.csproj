@@ -104,9 +104,9 @@
       <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
       <Name>BoardGame.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Core\BoardGame.Server.Contracts\BoardGame.Server.Contracts.csproj">
+    <ProjectReference Include="..\..\Core\BoardGame.Contracts\BoardGame.Contracts.csproj">
       <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
-      <Name>BoardGame.Server.Contracts</Name>
+      <Name>BoardGame.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\BoardGame.Client.Proxies\BoardGame.Client.Proxies.csproj">
       <Project>{666cc2b7-1ddc-45a6-8ff2-ec3bacd62ccb}</Project>

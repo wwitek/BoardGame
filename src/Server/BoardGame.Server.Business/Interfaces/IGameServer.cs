@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoardGame.Server.BusinessLogic.Interfaces
+namespace BoardGame.Server.Business.Interfaces
 {
     public interface IGameServer
     {

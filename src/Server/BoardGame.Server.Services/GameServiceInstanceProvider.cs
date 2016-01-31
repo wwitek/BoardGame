@@ -1,5 +1,5 @@
 ﻿using BoardGame.Domain.Logger;
-using BoardGame.Server.BusinessLogic.Interfaces;
+using BoardGame.Server.Business.Interfaces;
 using System;
 using System.ServiceModel;
 using System.ServiceModel.Channels;

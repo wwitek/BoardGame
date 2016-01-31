@@ -54,13 +54,13 @@
       <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
       <Name>BoardGame.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BoardGame.Server.BusinessLogic\BoardGame.Server.BusinessLogic.csproj">
-      <Project>{d89450ae-4420-4747-bca0-e6c2c419c215}</Project>
-      <Name>BoardGame.Server.BusinessLogic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\BoardGame.Server.Contracts\BoardGame.Server.Contracts.csproj">
+    <ProjectReference Include="..\..\Core\BoardGame.Contracts\BoardGame.Contracts.csproj">
       <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
-      <Name>BoardGame.Server.Contracts</Name>
+      <Name>BoardGame.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BoardGame.Server.Business\BoardGame.Server.Business.csproj">
+      <Project>{d89450ae-4420-4747-bca0-e6c2c419c215}</Project>
+      <Name>BoardGame.Server.Business</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

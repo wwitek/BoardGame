@@ -1,8 +1,8 @@
 ﻿using BoardGame.Domain.Entities;
 using BoardGame.Domain.Factories;
 using BoardGame.Domain.Logger;
-using BoardGame.Server.BusinessLogic;
-using BoardGame.Server.BusinessLogic.Interfaces;
+using BoardGame.Server.Business;
+using BoardGame.Server.Business.Interfaces;
 using BoardGame.Server.Services;
 using System;
 using System.ServiceModel;

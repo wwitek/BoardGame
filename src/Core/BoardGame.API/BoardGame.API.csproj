@@ -39,9 +39,9 @@
       <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
       <Name>BoardGame.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BoardGame.Server.Contracts\BoardGame.Server.Contracts.csproj">
+    <ProjectReference Include="..\BoardGame.Contracts\BoardGame.Contracts.csproj">
       <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
-      <Name>BoardGame.Server.Contracts</Name>
+      <Name>BoardGame.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{DA1AF8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Tests", "tests\BoardGame.Tests\BoardGame.Tests.csproj", "{7E6FFEA4-4B0B-4D8A-A5D3-F9B3754176CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Server.BusinessLogic", "src\Server\BoardGame.Server.BusinessLogic\BoardGame.Server.BusinessLogic.csproj", "{D89450AE-4420-4747-BCA0-E6C2C419C215}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Server.Business", "src\Server\BoardGame.Server.Business\BoardGame.Server.Business.csproj", "{D89450AE-4420-4747-BCA0-E6C2C419C215}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Server.Host.ConsoleApplication", "src\Server\BoardGame.Server.Host.ConsoleApplication\BoardGame.Server.Host.ConsoleApplication.csproj", "{A7DAA50A-8F73-4CB7-80DC-DEA68C0E2730}"
 EndProject
@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.API", "src\Core\B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Domain", "src\Core\BoardGame.Domain\BoardGame.Domain.csproj", "{A1D7547A-11C9-45A9-8379-378F646EA309}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Server.Contracts", "src\Core\BoardGame.Server.Contracts\BoardGame.Server.Contracts.csproj", "{E02D7577-AD7B-42DF-B38B-96D41919260D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Contracts", "src\Core\BoardGame.Contracts\BoardGame.Contracts.csproj", "{E02D7577-AD7B-42DF-B38B-96D41919260D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Connect4.WinForms", "src\Client\BoardGame.Client.Connect4.WinForms\BoardGame.Client.Connect4.WinForms.csproj", "{F5411A3D-8121-4CD0-A1FF-D6548735291E}"
 EndProject

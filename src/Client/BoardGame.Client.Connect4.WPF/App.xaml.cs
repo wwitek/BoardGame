@@ -13,7 +13,7 @@ using BoardGame.Domain.Enums;
 using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Client.Proxies;
-using BoardGame.Server.Contracts;
+using BoardGame.Contracts;
 
 namespace BoardGame.Client.Connect4.WPF
 {

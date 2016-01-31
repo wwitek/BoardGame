@@ -2,13 +2,13 @@
 using System.Linq;
 using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
-using BoardGame.Server.BusinessLogic.Interfaces;
+using BoardGame.Server.Business.Interfaces;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Helpers;
 using BoardGame.Domain.Logger;
 using System;
 
-namespace BoardGame.Server.BusinessLogic
+namespace BoardGame.Server.Business
 {
     public class GameServer : IGameServer
     {

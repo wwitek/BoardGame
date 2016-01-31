@@ -7,8 +7,8 @@
     <ProjectGuid>{D89450AE-4420-4747-BCA0-E6C2C419C215}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BoardGame.Server.BusinessLogic</RootNamespace>
-    <AssemblyName>BoardGame.Server.BusinessLogic</AssemblyName>
+    <RootNamespace>BoardGame.Server.Business</RootNamespace>
+    <AssemblyName>BoardGame.Server.Business</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
