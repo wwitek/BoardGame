@@ -8,8 +8,8 @@
     <ProjectGuid>{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BoardGame.Proxies</RootNamespace>
-    <AssemblyName>BoardGame.Proxies</AssemblyName>
+    <RootNamespace>BoardGame.Client.Proxies</RootNamespace>
+    <AssemblyName>BoardGame.Client.Proxies</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

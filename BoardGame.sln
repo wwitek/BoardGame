@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Connect4.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Connect4.WPF", "src\Client\BoardGame.Client.Connect4.WPF\BoardGame.Client.Connect4.WPF.csproj", "{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Proxies", "src\Client\BoardGame.Proxies\BoardGame.Proxies.csproj", "{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Proxies", "src\Client\BoardGame.Client.Proxies\BoardGame.Client.Proxies.csproj", "{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

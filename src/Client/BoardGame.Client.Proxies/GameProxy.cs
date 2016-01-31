@@ -7,7 +7,7 @@ using BoardGame.Server.Contracts;
 using System.Threading.Tasks;
 using BoardGame.Server.Contracts.Responses;
 
-namespace BoardGame.Proxies
+namespace BoardGame.Client.Proxies
 {
     public class GameProxy : ClientBase<IGameService>, IGameService
     {

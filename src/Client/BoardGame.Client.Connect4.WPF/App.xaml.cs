@@ -12,7 +12,7 @@ using BoardGame.Domain.Entities.Bots;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
-using BoardGame.Proxies;
+using BoardGame.Client.Proxies;
 using BoardGame.Server.Contracts;
 
 namespace BoardGame.Client.Connect4.WPF

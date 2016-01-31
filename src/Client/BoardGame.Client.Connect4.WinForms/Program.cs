@@ -2,7 +2,7 @@
 using BoardGame.Domain.Entities;
 using BoardGame.Domain.Factories;
 using BoardGame.Domain.Logger;
-using BoardGame.Proxies;
+using BoardGame.Client.Proxies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
