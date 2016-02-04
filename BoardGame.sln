@@ -33,9 +33,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Contracts", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Connect4.WinForms", "src\Client\BoardGame.Client.Connect4.WinForms\BoardGame.Client.Connect4.WinForms.csproj", "{F5411A3D-8121-4CD0-A1FF-D6548735291E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Connect4.WPF", "src\Client\BoardGame.Client.Connect4.WPF\BoardGame.Client.Connect4.WPF.csproj", "{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Proxies", "src\Client\BoardGame.Client.Proxies\BoardGame.Client.Proxies.csproj", "{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Connect4.ViewModels", "src\Client\BoardGame.Client.Connect4.ViewModels\BoardGame.Client.Connect4.ViewModels.csproj", "{492BDAA1-A4D8-4879-BC81-70D2BF936683}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGame.Client.Connect4.WPF", "src\Client\BoardGame.Client.Connect4.WPF\BoardGame.Client.Connect4.WPF.csproj", "{C4F1E1BA-B5A0-41DE-AA5A-8F61DBCA568F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,14 +85,18 @@ Global
 		{F5411A3D-8121-4CD0-A1FF-D6548735291E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5411A3D-8121-4CD0-A1FF-D6548735291E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5411A3D-8121-4CD0-A1FF-D6548735291E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{492BDAA1-A4D8-4879-BC81-70D2BF936683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{492BDAA1-A4D8-4879-BC81-70D2BF936683}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{492BDAA1-A4D8-4879-BC81-70D2BF936683}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{492BDAA1-A4D8-4879-BC81-70D2BF936683}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4F1E1BA-B5A0-41DE-AA5A-8F61DBCA568F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4F1E1BA-B5A0-41DE-AA5A-8F61DBCA568F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4F1E1BA-B5A0-41DE-AA5A-8F61DBCA568F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4F1E1BA-B5A0-41DE-AA5A-8F61DBCA568F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,7 +112,8 @@ Global
 		{A1D7547A-11C9-45A9-8379-378F646EA309} = {537A4F6D-3D81-4F84-83EF-8836FD80284E}
 		{E02D7577-AD7B-42DF-B38B-96D41919260D} = {537A4F6D-3D81-4F84-83EF-8836FD80284E}
 		{F5411A3D-8121-4CD0-A1FF-D6548735291E} = {893E82F4-2101-4238-A29A-16D8E08FA2FA}
-		{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D} = {893E82F4-2101-4238-A29A-16D8E08FA2FA}
 		{666CC2B7-1DDC-45A6-8FF2-EC3BACD62CCB} = {893E82F4-2101-4238-A29A-16D8E08FA2FA}
+		{492BDAA1-A4D8-4879-BC81-70D2BF936683} = {893E82F4-2101-4238-A29A-16D8E08FA2FA}
+		{C4F1E1BA-B5A0-41DE-AA5A-8F61DBCA568F} = {893E82F4-2101-4238-A29A-16D8E08FA2FA}
 	EndGlobalSection
 EndGlobal

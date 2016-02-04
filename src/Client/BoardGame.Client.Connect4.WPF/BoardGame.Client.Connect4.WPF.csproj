@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4D71EFCF-ACDB-41C8-9F9A-DA91BEF8769D}</ProjectGuid>
+    <ProjectGuid>{C4F1E1BA-B5A0-41DE-AA5A-8F61DBCA568F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BoardGame.Client.Connect4.WPF</RootNamespace>
@@ -35,11 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -58,63 +56,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="StoryboardExtensions.cs" />
-    <Page Include="Pages\PageSinglePlayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Styles\ButtonStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CustomControls\GameBoard.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CustomControls\GameBoard.xaml.cs">
-      <DependentUpon>GameBoard.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="INavigationController.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="NavigationService.cs" />
+    <Compile Include="ViewModelLocator.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
-    <Page Include="Pages\PageGame.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\PageStart.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\Theme.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\TitleStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="Views\Pages\GamePage.xaml.cs">
+      <DependentUpon>GamePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\SinglePlayerPage.xaml.cs">
+      <DependentUpon>SinglePlayerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\StartPage.xaml.cs">
+      <DependentUpon>StartPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\BoardUserControl.xaml.cs">
+      <DependentUpon>BoardUserControl.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NavigationController.cs" />
-    <Compile Include="Pages\PageGame.xaml.cs">
-      <DependentUpon>PageGame.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\PageSinglePlayer.xaml.cs">
-      <DependentUpon>PageSinglePlayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\PageStart.xaml.cs">
-      <DependentUpon>PageStart.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -142,22 +106,61 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\BoardGame.API\BoardGame.API.csproj">
-      <Project>{8869155f-bcf6-460c-8e05-67f77b2778ee}</Project>
-      <Name>BoardGame.API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\BoardGame.Domain\BoardGame.Domain.csproj">
-      <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
-      <Name>BoardGame.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\BoardGame.Contracts\BoardGame.Contracts.csproj">
-      <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
-      <Name>BoardGame.Contracts</Name>
+    <ProjectReference Include="..\BoardGame.Client.Connect4.ViewModels\BoardGame.Client.Connect4.ViewModels.csproj">
+      <Project>{492bdaa1-a4d8-4879-bc81-70d2bf936683}</Project>
+      <Name>BoardGame.Client.Connect4.ViewModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\BoardGame.Client.Proxies\BoardGame.Client.Proxies.csproj">
       <Project>{666cc2b7-1ddc-45a6-8ff2-ec3bacd62ccb}</Project>
       <Name>BoardGame.Client.Proxies</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\BoardGame.API\BoardGame.API.csproj">
+      <Project>{8869155f-bcf6-460c-8e05-67f77b2778ee}</Project>
+      <Name>BoardGame.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\BoardGame.Contracts\BoardGame.Contracts.csproj">
+      <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
+      <Name>BoardGame.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\BoardGame.Domain\BoardGame.Domain.csproj">
+      <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
+      <Name>BoardGame.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Styles\ButtonStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\TitleStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\GamePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\SinglePlayerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\StartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\BoardUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
