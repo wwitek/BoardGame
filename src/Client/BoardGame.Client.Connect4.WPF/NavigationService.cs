@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using BoardGame.Client.Connect4.ViewModels.Interfaces;
+using BoardGame.Client.Connect4.ViewModels.Pages;
 
 namespace BoardGame.Client.Connect4.WPF
 {
@@ -46,6 +47,18 @@ namespace BoardGame.Client.Connect4.WPF
             if (type == null) return false;
 
             var src = Activator.CreateInstance(type);
+            return frame.Navigate(src);
+        }
+
+        public bool Navigate(BasePageViewModel pageViewModel)
+        {
+            string viewModel = pageViewModel.GetType().Name;
+            string pageName = viewModel.Substring(0, viewModel.IndexOf("ViewModel", StringComparison.Ordinal));
+
+            var type = Assembly.GetExecutingAssembly().GetTypes().SingleOrDefault(a => a.Name.Equals(pageName));
+            if (type == null) return false;
+
+            var src = Activator.CreateInstance(type, pageViewModel);
             return frame.Navigate(src);
         }
     }

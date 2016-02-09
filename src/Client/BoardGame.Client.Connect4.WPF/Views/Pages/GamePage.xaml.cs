@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BoardGame.Client.Connect4.ViewModels.Pages;
 
 namespace BoardGame.Client.Connect4.WPF.Views.Pages
 {
@@ -23,6 +24,12 @@ namespace BoardGame.Client.Connect4.WPF.Views.Pages
         public GamePage()
         {
             InitializeComponent();
+        }
+
+        public GamePage(BasePageViewModel viewModel)
+        {
+            InitializeComponent();
+            DataContext = viewModel;
         }
     }
 }
