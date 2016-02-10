@@ -48,6 +48,7 @@
     <Compile Include="Common\ActionCommand.cs" />
     <Compile Include="Common\ObservableObject.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
+    <Compile Include="Interfaces\IPageViewModel.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Pages\BasePageViewModel.cs" />
     <Compile Include="Pages\GamePageViewModel.cs" />

@@ -11,7 +11,7 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
 {
     public class GamePageViewModel : BasePageViewModel
     {
-        public GamePageViewModel(INavigationService navigationService, GameType type, string level = "", IGameAPI gameAPI = null) 
+        public GamePageViewModel(INavigationService navigationService, GameType type, string level = "") 
             : base(navigationService)
         {
         }

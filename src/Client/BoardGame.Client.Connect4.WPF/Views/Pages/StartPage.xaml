@@ -4,10 +4,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF.Views.Pages"
+      xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels"
       mc:Ignorable="d" 
       d:DesignHeight="430" d:DesignWidth="380"
-      Title="StartPage"
-      DataContext="{Binding StartPageViewModel, Source={StaticResource ViewModelLocator}}">
+      Title="StartPage">
+    <Page.DataContext>
+        <pages:BasePageViewModel />
+    </Page.DataContext>
     <Grid>
         <StackPanel VerticalAlignment="top">
             <Label Style="{StaticResource TitleStyle}"></Label>
@@ -18,11 +21,11 @@
 
             <Button Content="Two player" Margin="5"
                     Style="{StaticResource MenuButton}" 
-                    Command="{Binding StartTwoPlayerCommand}" />
+                    Command="{Binding StartTwoPlayerGameCommand}" />
 
             <Button Content="Online game" Margin="5"
                     Style="{StaticResource MenuButton}" 
-                    Command="{Binding StartTwoPlayerCommand}" />
+                    Command="{Binding StartOnlineGameCommand}" />
 
             <Button Content="Quit" Margin="5"
                     Style="{StaticResource MenuButton}" />

@@ -4,9 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF.Views.UserControls"
+             xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-             DataContext="{Binding BoardUserControlViewModel, Source={StaticResource ViewModelLocator}}">
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <pages:BasePageViewModel />
+    </UserControl.DataContext>
     <Grid>
             
     </Grid>

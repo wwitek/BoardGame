@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using BoardGame.API;
+using BoardGame.Client.Connect4.ViewModels.Interfaces;
+using BoardGame.Client.Connect4.ViewModels.Pages;
 using BoardGame.Client.Connect4.WPF.Properties;
 using BoardGame.Client.Connect4.WPF.Views;
 using BoardGame.Client.Connect4.WPF.Views.Pages;
@@ -15,6 +17,8 @@ using BoardGame.Domain.Entities;
 using BoardGame.Domain.Entities.Bots;
 using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
+using Ninject;
+using Ninject.Modules;
 
 namespace BoardGame.Client.Connect4.WPF
 {
@@ -42,20 +46,24 @@ namespace BoardGame.Client.Connect4.WPF
                 //var logger = new Log4netAdapter("GameAPI");
                 var api = new GameAPI(gameFactory, playerFactory, proxy);
 
-                ViewModelLocator locator = Resources.MergedDictionaries
-                    .FirstOrDefault(k => k.Values.OfType<ViewModelLocator>().Any())?
-                    .Values.OfType<ViewModelLocator>().FirstOrDefault() ??
-                                           Resources.Values.OfType<ViewModelLocator>().FirstOrDefault();
+                IKernel kernel = new StandardKernel();
+                var modules = new List<INinjectModule>
+                {
+                    new GameModule()
+                };
+                kernel.Load(modules);
 
-                if (locator == null) throw new NoNullAllowedException("ViewModelLocator cannot be null.");
+                MainWindow mainWindow = kernel.Get<MainWindow>();
+                INavigationService navigation = kernel.Get<INavigationService>();
 
-                MainWindow mainWindow = new MainWindow();
-                var navigation = new NavigationService(mainWindow.MainFrame);
+                navigation.InjectPage("StartPage", kernel.Get<StartPageViewModel>());
+                navigation.InjectPage("SinglePlayerPage", kernel.Get<SinglePlayerPageViewModel>());
+                navigation.InjectPage("TwoPlayerGamePage", kernel.Get<GamePageViewModel>());
+                navigation.InjectPage("OnlineGamePage", kernel.Get<GamePageViewModel>());
+                navigation.InjectPage("EasyGamePage", kernel.Get<GamePageViewModel>());
+                navigation.InjectPage("MediumGamePage", kernel.Get<GamePageViewModel>());
 
-                locator.SetGameAPI(api);
-                locator.SetNavigationService(navigation);
-                navigation.Navigate<StartPage>();
-
+                navigation.Navigate("StartPage");
                 mainWindow.Show();
             }
             catch (Exception ex)

@@ -4,18 +4,33 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF.Views.Pages"
+      xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels"
       mc:Ignorable="d" 
       d:DesignHeight="430" d:DesignWidth="380"
-      Title="SinglePlayerPage"
-      DataContext="{Binding SinglePlayerPageViewModel, Source={StaticResource ViewModelLocator}}">
-
+      Title="SinglePlayerPage">
+    <Page.DataContext>
+        <pages:BasePageViewModel />
+    </Page.DataContext>
     <StackPanel VerticalAlignment="top">
         <Label Style="{StaticResource TitleStyle}"></Label>
-        <Button x:Name="SinglePlayerButton" Style="{StaticResource MenuButtonJustCaption}" Content="Single player" Margin="5" />
-        <Button x:Name="EasyButton" Style="{StaticResource MenuButton}" Content="Easy" Margin="5" />
-        <Button x:Name="MediumButton" Style="{StaticResource MenuButton}" Content="Medium" Margin="5" />
-        <Button x:Name="HardButton" Style="{StaticResource MenuButton}" Content="Hard" Margin="5" IsEnabled="False" />
-        <Button x:Name="BackButton" Style="{StaticResource MenuButton}" Content="Back" Margin="5" 
-                Command="{Binding GoBack}"/>
+        
+        <Button Content="Single player" Margin="5"
+                Style="{StaticResource MenuButtonJustCaption}" />
+
+        <Button Content="Easy" Margin="5" 
+                Style="{StaticResource MenuButton}"
+                Command="{Binding StartEasyGameCommand}" />
+
+        <Button Content="Medium" Margin="5"
+                Style="{StaticResource MenuButton}" 
+                Command="{Binding StartMediumGameCommand}" />
+
+        <Button Content="Hard" Margin="5" 
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False" />
+
+        <Button Content="Back" Margin="5"
+                Style="{StaticResource MenuButton}" 
+                Command="{Binding GoBack}" />
     </StackPanel>
 </Page>

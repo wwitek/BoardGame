@@ -13,10 +13,16 @@ namespace BoardGame.Client.Connect4.WPF
     public class NavigationService : INavigationService
     {
         readonly Frame frame;
+        private readonly Dictionary<string, IPageViewModel> pages = new Dictionary<string, IPageViewModel>();
 
         public NavigationService(Frame frame)
         {
             this.frame = frame;
+        }
+
+        public void InjectPage(string pageKey, IPageViewModel viewModel)
+        {
+            pages.Add(pageKey, viewModel);
         }
 
         public void GoBack()
@@ -29,28 +35,7 @@ namespace BoardGame.Client.Connect4.WPF
             frame.GoForward();
         }
 
-        public bool Navigate<T>(object parameter = null)
-        {
-            var type = typeof(T);
-            return Navigate(type, parameter);
-        }
-
-        public bool Navigate(Type source, object parameter = null)
-        {
-            var src = Activator.CreateInstance(source);
-            return frame.Navigate(src, parameter);
-        }
-
-        public bool Navigate(string page)
-        {
-            var type = Assembly.GetExecutingAssembly().GetTypes().SingleOrDefault(a => a.Name.Equals(page));
-            if (type == null) return false;
-
-            var src = Activator.CreateInstance(type);
-            return frame.Navigate(src);
-        }
-
-        public bool Navigate(BasePageViewModel pageViewModel)
+        public bool Navigate(IPageViewModel pageViewModel)
         {
             string viewModel = pageViewModel.GetType().Name;
             string pageName = viewModel.Substring(0, viewModel.IndexOf("ViewModel", StringComparison.Ordinal));
@@ -60,6 +45,16 @@ namespace BoardGame.Client.Connect4.WPF
 
             var src = Activator.CreateInstance(type, pageViewModel);
             return frame.Navigate(src);
+        }
+
+        public bool Navigate(string pageKey)
+        {
+            IPageViewModel viewModel;
+            if (pages.TryGetValue(pageKey, out viewModel))
+            {
+                return Navigate(viewModel);
+            }
+            return false;
         }
     }
 }

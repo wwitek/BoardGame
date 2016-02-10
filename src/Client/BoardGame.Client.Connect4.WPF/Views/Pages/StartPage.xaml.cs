@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BoardGame.Client.Connect4.ViewModels.Interfaces;
 
 namespace BoardGame.Client.Connect4.WPF.Views.Pages
 {
@@ -22,7 +24,15 @@ namespace BoardGame.Client.Connect4.WPF.Views.Pages
     {
         public StartPage()
         {
+            Debug.WriteLine("Parameterless " + GetType().Name + " created.");
             InitializeComponent();
+        }
+
+        public StartPage(IPageViewModel viewModel)
+        {
+            Debug.WriteLine(GetType().Name + " created.");
+            InitializeComponent();
+            DataContext = viewModel;
         }
     }
 }
