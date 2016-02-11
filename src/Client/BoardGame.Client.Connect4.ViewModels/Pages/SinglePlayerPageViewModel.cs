@@ -16,20 +16,7 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
         {
         }
 
-        public new ICommand StartEasyGameCommand
-        {
-            get
-            {
-                return new ActionCommand(x => NavigationService.Navigate("EasyGamePage"));
-            }
-        }
-
-        public new ICommand StartMediumGameCommand
-        {
-            get
-            {
-                return new ActionCommand(x => NavigationService.Navigate("MediumGamePage"));
-            }
-        }
+        public new ICommand StartEasyGameCommand => new ActionCommand(x => NavigationService.Navigate("EasyGamePage"));
+        public new ICommand StartMediumGameCommand => new ActionCommand(x => NavigationService.Navigate("MediumGamePage"));
     }
 }

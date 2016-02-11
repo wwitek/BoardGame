@@ -23,15 +23,8 @@ namespace BoardGame.Client.Connect4.WPF.Views.Pages
     /// </summary>
     public partial class GamePage : Page
     {
-        public GamePage()
-        {
-            Debug.WriteLine("Parameterless " + GetType().Name + " created.");
-            InitializeComponent();
-        }
-
         public GamePage(IPageViewModel viewModel)
         {
-            Debug.WriteLine(GetType().Name + " created.");
             InitializeComponent();
             DataContext = viewModel;
         }

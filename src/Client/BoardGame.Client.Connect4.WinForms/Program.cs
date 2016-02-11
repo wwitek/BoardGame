@@ -32,7 +32,7 @@ namespace BoardGame.Client.Connect4.WinForms
 
                 var fieldFactory = new FieldFactory();
                 var board = new Board(7, 6, fieldFactory);
-                var gameFactory = new GameFactory(board, bots);
+                var gameFactory = new GameFactory(board, bots.ToArray());
 
                 var playerFactory = new PlayerFactory();
                 var proxy = new GameProxy();

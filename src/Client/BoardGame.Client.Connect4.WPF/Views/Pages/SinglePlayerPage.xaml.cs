@@ -22,15 +22,8 @@ namespace BoardGame.Client.Connect4.WPF.Views.Pages
     /// </summary>
     public partial class SinglePlayerPage : Page
     {
-        public SinglePlayerPage()
-        {
-            Debug.WriteLine("Parameterless " + GetType().Name + " created.");
-            InitializeComponent();
-        }
-
         public SinglePlayerPage(IPageViewModel viewModel)
         {
-            Debug.WriteLine(GetType().Name + " created.");
             InitializeComponent();
             DataContext = viewModel;
         }

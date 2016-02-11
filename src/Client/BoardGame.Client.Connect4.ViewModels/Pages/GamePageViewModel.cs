@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,16 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
 {
     public class GamePageViewModel : BasePageViewModel
     {
-        public GamePageViewModel(INavigationService navigationService, GameType type, string level = "") 
+        private readonly GameAPI api;
+        private readonly GameType type;
+        private readonly string level;
+
+        public GamePageViewModel(INavigationService navigationService, GameAPI api, GameType type, string level = null)
             : base(navigationService)
         {
+            this.api = api;
+            this.type = type;
+            this.level = level;
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Windows;
 using BoardGame.API;
 using BoardGame.Client.Connect4.ViewModels.Interfaces;
 using BoardGame.Client.Connect4.ViewModels.Pages;
+using BoardGame.Client.Connect4.WPF.NinjectModules;
 using BoardGame.Client.Connect4.WPF.Properties;
 using BoardGame.Client.Connect4.WPF.Views;
 using BoardGame.Client.Connect4.WPF.Views.Pages;
@@ -32,36 +33,24 @@ namespace BoardGame.Client.Connect4.WPF
             base.OnStartup(e);
             try
             {
-                var bots = new List<IBot>
-                {
-                    new MediumBot(),
-                    new EasyBot()
-                };
-                var fieldFactory = new FieldFactory();
-                var board = new Board(7, 6, fieldFactory);
-                var gameFactory = new GameFactory(board, bots);
-
-                var playerFactory = new PlayerFactory();
-                var proxy = new GameProxy();
-                //var logger = new Log4netAdapter("GameAPI");
-                var api = new GameAPI(gameFactory, playerFactory, proxy);
-
                 IKernel kernel = new StandardKernel();
                 var modules = new List<INinjectModule>
                 {
-                    new GameModule()
+                    new GameModule(),
+                    new NavigationModule()
                 };
                 kernel.Load(modules);
 
+                GameAPI api = kernel.Get<GameAPI>();
                 MainWindow mainWindow = kernel.Get<MainWindow>();
                 INavigationService navigation = kernel.Get<INavigationService>();
 
                 navigation.InjectPage("StartPage", kernel.Get<StartPageViewModel>());
                 navigation.InjectPage("SinglePlayerPage", kernel.Get<SinglePlayerPageViewModel>());
-                navigation.InjectPage("TwoPlayerGamePage", kernel.Get<GamePageViewModel>());
-                navigation.InjectPage("OnlineGamePage", kernel.Get<GamePageViewModel>());
-                navigation.InjectPage("EasyGamePage", kernel.Get<GamePageViewModel>());
-                navigation.InjectPage("MediumGamePage", kernel.Get<GamePageViewModel>());
+                navigation.InjectPage("EasyGamePage", kernel.Get<GamePageViewModel>("EasyGamePage"));
+                navigation.InjectPage("MediumGamePage", kernel.Get<GamePageViewModel>("MediumGamePage"));
+                navigation.InjectPage("TwoPlayerGamePage", kernel.Get<GamePageViewModel>("TwoPlayerGamePage"));
+                navigation.InjectPage("OnlineGamePage", kernel.Get<GamePageViewModel>("OnlineGamePage"));
 
                 navigation.Navigate("StartPage");
                 mainWindow.Show();

@@ -64,7 +64,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GameModule.cs" />
+    <Compile Include="NinjectModules\GameModule.cs" />
+    <Compile Include="NinjectModules\NavigationModule.cs" />
     <Compile Include="NavigationService.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

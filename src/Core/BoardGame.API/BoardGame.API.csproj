@@ -48,7 +48,6 @@
     <Compile Include="Exceptions\GameServerException.cs" />
     <Compile Include="MoveEventArgs.cs" />
     <Compile Include="GameAPI.cs" />
-    <Compile Include="IGameAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requires.cs" />
     <Compile Include="StringResources.cs" />

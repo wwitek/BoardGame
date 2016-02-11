@@ -15,31 +15,10 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
         public StartPageViewModel(INavigationService navigationService) 
             : base(navigationService)
         {
-
         }
 
-        public new ICommand StartSinglePlayerCommand
-        {
-            get
-            {
-                return new ActionCommand(x => NavigationService.Navigate("SinglePlayerPage"));
-            }
-        }
-
-        public new ICommand StartTwoPlayerGameCommand
-        {
-            get
-            {
-                return new ActionCommand(x => NavigationService.Navigate("TwoPlayerGamePage"));
-            }
-        }
-
-        public new ICommand StartOnlineGameCommand
-        {
-            get
-            {
-                return new ActionCommand(x => NavigationService.Navigate("OnlineGamePage"));
-            }
-        }
+        public new ICommand StartSinglePlayerCommand => new ActionCommand(x => NavigationService.Navigate("SinglePlayerPage"));
+        public new ICommand StartTwoPlayerGameCommand => new ActionCommand(x => NavigationService.Navigate("TwoPlayerGamePage"));
+        public new ICommand StartOnlineGameCommand => new ActionCommand(x => NavigationService.Navigate("OnlineGamePage"));
     }
 }

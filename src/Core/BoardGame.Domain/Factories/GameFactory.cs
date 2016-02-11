@@ -15,7 +15,7 @@ namespace BoardGame.Domain.Factories
         private readonly IBoard board;
         private readonly IList<IBot> bots;
 
-        public GameFactory(IBoard board, IList<IBot> bots = null)
+        public GameFactory(IBoard board, IBot[] bots = null)
         {
             this.board = board;
             this.bots = bots;

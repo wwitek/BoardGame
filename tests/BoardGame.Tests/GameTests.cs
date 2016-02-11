@@ -176,7 +176,6 @@ namespace BoardGame.Tests
         [Test]
         public void NextPlayerTest()
         {
-            //TODO
             IGame game = TestHelper.CreateGame(PlayerType.Human, PlayerType.Human);
 
             var player1 = game.NextPlayer;

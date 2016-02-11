@@ -27,7 +27,6 @@ namespace BoardGame.Client.Connect4.ViewModels.Common
 
         public bool CanExecute(object parameter)
         {
-            Debug.WriteLine("Can Execute?");
             if (predicate == null)
             {
                 return true;
@@ -37,7 +36,6 @@ namespace BoardGame.Client.Connect4.ViewModels.Common
 
         public void Execute(object parameter = null)
         {
-            Debug.WriteLine("Will execute!");
             action(parameter);
         }
     }

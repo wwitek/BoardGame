@@ -23,7 +23,6 @@ namespace BoardGame.Client.Connect4.WPF.Views
     {
         public MainWindow()
         {
-            Debug.WriteLine(GetType().Name + " created.");
             InitializeComponent();
         }
 

@@ -7,9 +7,6 @@
              xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.DataContext>
-        <pages:BasePageViewModel />
-    </UserControl.DataContext>
     <Grid>
             
     </Grid>

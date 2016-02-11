@@ -14,7 +14,7 @@ using BoardGame.API.Exceptions;
 
 namespace BoardGame.API
 {
-    public class GameAPI : IGameAPI
+    public class GameAPI
     {
         private IGame CurrentGame { get; set; }
         private readonly IGameFactory gameFactory;
@@ -23,6 +23,18 @@ namespace BoardGame.API
         private readonly ILogger logger;
 
         public event EventHandler<MoveEventArgs> OnMoveReceived;
+
+        public GameAPI(IGameFactory gameFactory,
+            IPlayerFactory playerFactory,
+            IGameService proxy = null)
+        {
+            Requires.IsNotNull(gameFactory, "gameFactory");
+            Requires.IsNotNull(playerFactory, "playerFactory");
+
+            this.gameFactory = gameFactory;
+            this.playerFactory = playerFactory;
+            this.proxy = proxy;
+        }
 
         public GameAPI(IGameFactory gameFactory, 
                        IPlayerFactory playerFactory,

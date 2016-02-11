@@ -16,24 +16,14 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
 
         public BasePageViewModel()
         {
-            Debug.WriteLine("Parameterless " + GetType().Name + " created.");
         }
-
         public BasePageViewModel(INavigationService navigationService)
         {
-            Debug.WriteLine(GetType().Name + " created.");
             NavigationService = navigationService;
         }
 
-        public ActionCommand GoBack
-        {
-            get { return new ActionCommand(x => NavigationService.GoBack()); }
-        }
-        public ActionCommand GoForward
-        {
-            get { return new ActionCommand(x => NavigationService.GoForward()); }
-        }
-
+        public ICommand GoBack => new ActionCommand(x => NavigationService.GoBack());
+        public ICommand GoForward => new ActionCommand(x => NavigationService.GoForward());
         public ICommand StartSinglePlayerCommand => null;
         public ICommand StartTwoPlayerGameCommand => null;
         public ICommand StartOnlineGameCommand => null;

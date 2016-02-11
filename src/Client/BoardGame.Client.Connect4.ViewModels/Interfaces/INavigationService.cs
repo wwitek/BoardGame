@@ -8,6 +8,5 @@ namespace BoardGame.Client.Connect4.ViewModels.Interfaces
         void GoForward();
         void GoBack();
         bool Navigate(string pageKey);
-        bool Navigate(IPageViewModel pageViewModel);
     }
 }

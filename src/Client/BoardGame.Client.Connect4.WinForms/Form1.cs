@@ -16,7 +16,7 @@ namespace BoardGame.Client.Connect4.WinForms
 {
     public partial class Form1 : Form
     {
-        private IGameAPI GameAPI;
+        private GameAPI GameAPI;
 
         public Form1(GameAPI gameAPI = null)
         {
