@@ -123,7 +123,7 @@ namespace BoardGame.Server.Services
 
             Logger.Info("Player{0} moved in column {1}", playerId, column);
             IGame game = Logic.GetGameByPlayerId(playerId);
-            game.MakeMove(row, column);
+            game.MakeMove(column);
             if (game.Board.LastMove.IsConnected)
             {
                 Logger.Info("Player{0} won!", playerId);

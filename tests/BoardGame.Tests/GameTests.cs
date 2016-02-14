@@ -51,20 +51,7 @@ namespace BoardGame.Tests
         public void IsMoveValid_OnTopTest(int column)
         {
             IGame game = TestHelper.CreateGame(PlayerType.Human);
-            Assert.IsTrue(game.IsMoveValid(-1, column));
-        }
-
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
-        public void IsMoveValid_LastRowTest(int column)
-        {
-            IGame game = TestHelper.CreateGame(PlayerType.Human);
-            Assert.IsTrue(game.IsMoveValid(5, column));
+            Assert.IsTrue(game.IsMoveValid(column));
         }
 
         [TestCase(0)]
@@ -79,7 +66,7 @@ namespace BoardGame.Tests
             IGame game = TestHelper.CreateGame(PlayerType.Human);
             for (int i = 0; i < 5; i++)
             {
-                Assert.IsFalse(game.IsMoveValid(i, column));
+                Assert.IsFalse(game.IsMoveValid(column));
             }
         }
 
@@ -94,7 +81,7 @@ namespace BoardGame.Tests
         {
             IBot bot = TestHelper.CreateBot();
             IGame game = TestHelper.CreateGame(PlayerType.Bot, PlayerType.Human, bot);
-            Assert.IsFalse(game.IsMoveValid(-1, column));
+            Assert.IsFalse(game.IsMoveValid(column));
         }
 
         [Test]
@@ -114,7 +101,7 @@ namespace BoardGame.Tests
         public void GameStateRunningAfterMoveTest(int column)
         {
             IGame game = TestHelper.CreateGame(PlayerType.Human, PlayerType.Human);
-            game.MakeMove(-1, column);
+            game.MakeMove(column);
             Assert.AreEqual(GameState.Running, game.State);
         }
 
@@ -149,7 +136,7 @@ namespace BoardGame.Tests
             Task.Run(() =>
             {
                 Thread.Sleep(10);
-                game.MakeMove(-1, 0);
+                game.MakeMove(0);
             });
 
             bool timeout = game.WaitForNextPlayer(500);
@@ -172,7 +159,7 @@ namespace BoardGame.Tests
             IGame game = TestHelper.CreateGame(PlayerType.Human, PlayerType.Human);
 
             var player1 = game.NextPlayer;
-            game.MakeMove(-1, 0);
+            game.MakeMove(0);
             var player2 = game.NextPlayer;
             Assert.AreNotEqual(player1.OnlineId,player2.OnlineId);
         }

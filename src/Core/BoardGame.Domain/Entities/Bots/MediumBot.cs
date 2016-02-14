@@ -39,7 +39,7 @@ namespace BoardGame.Domain.Entities.Bots
 
             for (int i = 0; i < board.Width; i++)
             {
-                if (board.IsMoveValid(-1, i, botId))
+                if (board.IsColumnValid(i))
                 {
                     double value = GetMoveValue(i);
                     Debug.WriteLine("Move {0}: {1}", i, value);
@@ -60,14 +60,14 @@ namespace BoardGame.Domain.Entities.Bots
             Random random = new Random();
             int move = moves[random.Next(0, moves.Count)];
 
-            IMove madeMove = game.MakeMove(-1, move);
+            IMove madeMove = game.MakeMove(move);
             madeMove.IsBot = true;
             return madeMove;
         }
 
         private double GetMoveValue(int column)
         {
-            board.InsertChip(column, botId);
+            board.InsertInColumn(column, botId);
             double value = AlfaBeta(false, MaxDepth, int.MinValue, int.MaxValue);
             board.RemoveChip(column);
             return value;
@@ -95,9 +95,9 @@ namespace BoardGame.Domain.Entities.Bots
             {
                 for (int i = 0; i < board.Width; i++)
                 {
-                    if (board.IsMoveValid(-1, i, botId))
+                    if (board.IsColumnValid(i))
                     {
-                        board.InsertChip(i, botId);
+                        board.InsertInColumn(i, botId);
                         double alfabeta = AlfaBeta(false, depth - 1, alfa, beta);
                         alfa = Math.Max(alfa, alfabeta);
                         board.RemoveChip(i);
@@ -110,9 +110,9 @@ namespace BoardGame.Domain.Entities.Bots
             {
                 for (int i = 0; i < board.Width; i++)
                 {
-                    if (board.IsMoveValid(-1, i, humanId))
+                    if (board.IsColumnValid(i))
                     {
-                        board.InsertChip(i, humanId);
+                        board.InsertInColumn(i, humanId);
                         double alfabeta = AlfaBeta(true, depth - 1, alfa, beta);
                         beta = Math.Min(beta, alfabeta);
                         board.RemoveChip(i);

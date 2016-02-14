@@ -67,18 +67,18 @@ namespace BoardGame.Domain.Entities
             }
         }
 
-        public bool IsMoveValid(int row, int column)
+        public bool IsMoveValid(int column)
         {
             if (Players[currentPlayerIndex - 1].Type.Equals(PlayerType.Human))
             {
-                return Board.IsMoveValid(row, column, currentPlayerIndex);
+                return Board.IsColumnValid(column);
             }
             return false;
         }
 
-        public IMove MakeMove(int row, int column)
+        public IMove MakeMove(int column)
         {
-            IMove move = Board.InsertChip(column, currentPlayerIndex);
+            IMove move = Board.InsertInColumn(column, currentPlayerIndex);
             SetNextPlayer();
 
             State = (move.IsConnected || move.IsTie) ? GameState.Finished : GameState.Running;

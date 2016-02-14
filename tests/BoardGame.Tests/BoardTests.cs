@@ -29,34 +29,17 @@ namespace BoardGame.Tests
         [Test]
         public void IsMoveValidTest()
         {
-            for (int j = 0; j < board.Width; j++)
+            for (int c = 0; c < board.Width; c++)
             {
-                Assert.IsTrue(board.IsMoveValid(board.Height - 1, j, 1));
+                Assert.IsTrue(board.IsColumnValid(c));
             }
-
-            for (int i = 0; i < board.Height - 1; i++)
-            {
-                for (int j = 0; j < board.Width; j++)
-                {
-                    Assert.IsFalse(board.IsMoveValid(i, j, 1));
-                }
-            }
-        }
-
-        [Test, Description("Insert chip into full cell")]
-        public void InsertChipIntoFullCell_IsMoveValidTest()
-        {
-            int lastRow = board.Height - 1;
-            board.InsertChip(0, 1);
-            Assert.IsFalse(board.IsMoveValid(lastRow, 0, 1));
         }
 
         [Test, Description("Board with chip on the bottom. Insert chip into the same column")]
         public void InsertChipOnTheTop_IsMoveValidTest()
         {
-            int lastRow = board.Height - 1;
-            board.InsertChip(0, 1);
-            Assert.IsTrue(board.IsMoveValid(-1, 0, 1));
+            board.InsertInColumn(0, 1);
+            Assert.IsTrue(board.IsColumnValid(0));
         }
 
         [Test, Description("Insert chip into full column")]
@@ -66,9 +49,9 @@ namespace BoardGame.Tests
             for (int row = lastRow; row >= 0; row--)
             {
                 int playerId = (row%2 == 0) ? 1 : 2;
-                board.InsertChip(0, playerId);
+                board.InsertInColumn(0, playerId);
             }
-            Assert.IsFalse(board.IsMoveValid(-1, 0, 1));
+            Assert.IsFalse(board.IsColumnValid(0));
         }
 
         [TestCase(0)]
@@ -80,7 +63,7 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void InsertFirstChipTest(int column)
         {
-            IMove result = board.InsertChip(column, 1);
+            IMove result = board.InsertInColumn(column, 1);
 
             Assert.AreEqual(1, result.ConnectionHorizontal.Count);
             Assert.AreEqual(1, result.ConnectionVertical.Count);
@@ -116,10 +99,10 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void InsertFourWinningVerticalChipsTest(int column)
         {
-            board.InsertChip(column, 1);
-            board.InsertChip(column, 1);
-            board.InsertChip(column, 1);
-            IMove result = board.InsertChip(column, 1);
+            board.InsertInColumn(column, 1);
+            board.InsertInColumn(column, 1);
+            board.InsertInColumn(column, 1);
+            IMove result = board.InsertInColumn(column, 1);
 
             Assert.AreEqual(4, result.ConnectionVertical.Count);
         }
@@ -130,10 +113,10 @@ namespace BoardGame.Tests
         [TestCase(3)]
         public void InsertFourWinningHorizontalChipsTest(int columnOffset)
         {
-            board.InsertChip(0 + columnOffset, 1);
-            board.InsertChip(1 + columnOffset, 1);
-            board.InsertChip(2 + columnOffset, 1);
-            IMove result = board.InsertChip(3 + columnOffset, 1);
+            board.InsertInColumn(0 + columnOffset, 1);
+            board.InsertInColumn(1 + columnOffset, 1);
+            board.InsertInColumn(2 + columnOffset, 1);
+            IMove result = board.InsertInColumn(3 + columnOffset, 1);
 
             Assert.AreEqual(4, result.ConnectionHorizontal.Count);
         }
@@ -147,7 +130,7 @@ namespace BoardGame.Tests
             IMove result = null;
             for (int col = start; col < start + 4; col++)
             {
-                result = board.InsertChip(col, 1);
+                result = board.InsertInColumn(col, 1);
             }
             Assert.AreEqual(4, result.ConnectionDescendingDiagonal.Count);
         }
@@ -161,7 +144,7 @@ namespace BoardGame.Tests
             IMove result = null;
             for (int col = start; col < start + 4; col++)
             {
-                result = board.InsertChip(col, 1);
+                result = board.InsertInColumn(col, 1);
             }
             Assert.AreEqual(4, result.ConnectionAscendingDiagonal.Count);
         }
@@ -170,7 +153,7 @@ namespace BoardGame.Tests
         public void AllDirectionsConnectedTest(IBoard input)
         {
             board = input;
-            IMove result = board.InsertChip(3, 1);
+            IMove result = board.InsertInColumn(3, 1);
 
             Assert.AreEqual(7, result.ConnectionHorizontal.Count);
             Assert.AreEqual(4, result.ConnectionVertical.Count);
@@ -187,10 +170,10 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void IsConnectedTest(int column)
         {
-            board.InsertChip(column, 1);
-            board.InsertChip(column, 1);
-            board.InsertChip(column, 1);
-            IMove result = board.InsertChip(column, 1);
+            board.InsertInColumn(column, 1);
+            board.InsertInColumn(column, 1);
+            board.InsertInColumn(column, 1);
+            IMove result = board.InsertInColumn(column, 1);
 
             Assert.IsTrue(result.IsConnected);
         }
@@ -204,9 +187,9 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void IsNotConnectedTest(int column)
         {
-            board.InsertChip(column, 1);
-            board.InsertChip(column, 1);
-            IMove result = board.InsertChip(column, 1);
+            board.InsertInColumn(column, 1);
+            board.InsertInColumn(column, 1);
+            IMove result = board.InsertInColumn(column, 1);
 
             Assert.IsFalse(result.IsConnected);
         }
@@ -216,15 +199,15 @@ namespace BoardGame.Tests
         {
             board = TestHelper.CreateBoard(new int[,]
             {
-                {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0},
+                {1, 0, 0, 0, 0, 0, 0},
+                {1, 0, 0, 0, 0, 0, 0},
+                {1, 0, 0, 0, 0, 0, 0},
+                {1, 0, 0, 0, 0, 0, 0},
+                {1, 0, 0, 0, 0, 0, 0},
                 {1, 0, 0, 0, 0, 0, 0}
             });
             board.RemoveChip(0);
-            Assert.IsTrue(board.IsMoveValid(5, 0, 1));
+            Assert.IsTrue(board.IsColumnValid(0));
         }
 
         // Source

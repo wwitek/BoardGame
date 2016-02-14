@@ -23,9 +23,9 @@ namespace BoardGame.Domain.Entities.Bots
             while (true)
             {
                 int move = random.Next(0, game.Board.Width);
-                if (game.Board.IsMoveValid(-1, move, botId))
+                if (game.Board.IsColumnValid(move))
                 {
-                    IMove madeMove = game.MakeMove(-1, move);
+                    IMove madeMove = game.MakeMove(move);
                     madeMove.IsBot = true;
                     return madeMove;
                 }

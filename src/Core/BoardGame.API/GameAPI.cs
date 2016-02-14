@@ -197,10 +197,10 @@ namespace BoardGame.API
                         StringResources.CanNotPerformTheMoveBecauseGameIsNull());
                 }
 
-                if (CurrentGame.IsMoveValid(-1, clickedColumn) && 
+                if (CurrentGame.IsMoveValid(clickedColumn) && 
                     (CurrentGame.State != GameState.Finished || CurrentGame.State != GameState.Aborted))
                 {
-                    SendMove(CurrentGame.MakeMove(0, clickedColumn));
+                    SendMove(CurrentGame.MakeMove(clickedColumn));
 
                     if (CurrentGame.NextPlayer == null)
                     {

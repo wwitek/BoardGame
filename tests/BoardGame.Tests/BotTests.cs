@@ -19,7 +19,7 @@ namespace BoardGame.Tests
         {
             IBot bot = new EasyBot();
             IGame game = TestHelper.CreateGame(PlayerType.Bot, bot);
-            game.MakeMove(-1, 1);
+            game.MakeMove(1);
 
             IMove move = bot.GenerateMove(game);
         }
@@ -29,7 +29,7 @@ namespace BoardGame.Tests
         {
             IBot bot = new MediumBot();
             IGame game = TestHelper.CreateGame(PlayerType.Bot, bot);
-            game.MakeMove(-1, 1);
+            game.MakeMove(1);
 
             //TODO Make it faster
             //IMove move = bot.GenerateMove(game);

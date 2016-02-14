@@ -40,32 +40,21 @@ namespace BoardGame.Domain.Entities
             }
         }
 
-        public bool IsMoveValid(int row, int column, int playerId)
+        public bool IsColumnValid(int column)
         {
-            if (row > -1)
+            if (column < 0 || column >= Width)
             {
-                if (fields[row, column].PlayerId == 0)
-                {
-                    for (int r = row + 1; r < Height; r++)
-                    {
-                        if (fields[r, column].PlayerId == 0)
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
                 return false;
             }
             return fields.Cast<IField>().Take(7).ToList()[column].PlayerId == 0 && WinnerId == 0;
         }
 
-        public IMove InsertChip(int column, int playerId)
+        public IMove InsertInColumn(int column, int playerId)
         {
             if (column < 0 || column >= Width)
             {
                 throw new InvalidColumnException(
-                    StringResources.ColumnOutsideTheScope("InsertChip", column));
+                    StringResources.ColumnOutsideTheScope("InsertInColumn", column));
             }
 
             for (int i = Height - 1; i >= 0; i--)
@@ -78,7 +67,7 @@ namespace BoardGame.Domain.Entities
             }
 
             throw new InvalidColumnException(
-                StringResources.ColumnIsFull("InsertChip", column));
+                StringResources.ColumnIsFull("InsertInColumn", column));
         }
 
         public void ApplyMove(IMove move)
@@ -88,7 +77,7 @@ namespace BoardGame.Domain.Entities
             if (move.Column < 0 || move.Column >= Width)
             {
                 throw new InvalidColumnException(
-                    StringResources.ColumnOutsideTheScope("InsertChip", move.Column));
+                    StringResources.ColumnOutsideTheScope("ApplyMove", move.Column));
             }
 
             if (fields[move.Row, move.Column].PlayerId == 0)
@@ -99,7 +88,7 @@ namespace BoardGame.Domain.Entities
             }
 
             throw new InvalidColumnException(
-                StringResources.ColumnIsFull("InsertChip", move.Column));
+                StringResources.ColumnIsFull("ApplyMove", move.Column));
         }
 
         public void RemoveChip(int column)

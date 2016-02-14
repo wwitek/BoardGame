@@ -15,12 +15,9 @@ namespace BoardGame.Domain.Interfaces
 
         void Reset();
 
-        bool IsMoveValid(int row, int column, int playerId);
-
-        IMove InsertChip(int column, int playerId);
-
+        bool IsColumnValid(int column);
+        IMove InsertInColumn(int column, int playerId);
         void RemoveChip(int column);
-
         void ApplyMove(IMove move);
     }
 }
