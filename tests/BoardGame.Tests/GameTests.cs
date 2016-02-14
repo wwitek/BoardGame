@@ -54,20 +54,14 @@ namespace BoardGame.Tests
             Assert.IsTrue(game.IsMoveValid(column));
         }
 
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
+        [TestCase(-1)]
+        [TestCase(7)]
+        [TestCase(-100)]
+        [TestCase(100)]
         public void IsMoveValid_InvalidTest(int column)
         {
             IGame game = TestHelper.CreateGame(PlayerType.Human);
-            for (int i = 0; i < 5; i++)
-            {
-                Assert.IsFalse(game.IsMoveValid(column));
-            }
+            Assert.IsFalse(game.IsMoveValid(column));
         }
 
         [TestCase(0)]
