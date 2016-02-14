@@ -27,5 +27,10 @@ namespace BoardGame.Client.Connect4.WPF.Views.Pages
             InitializeComponent();
             DataContext = viewModel;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }

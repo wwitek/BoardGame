@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF.Views.Pages"
       xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels"
+      xmlns:userControls="clr-namespace:BoardGame.Client.Connect4.WPF.Views.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="430" d:DesignWidth="380"
       Title="GamePage">
@@ -12,6 +13,7 @@
         <pages:BasePageViewModel />
     </Page.DataContext>
     <Grid>
+        <userControls:BoardUserControl x:Name="GameBoard" Margin="10,110,10,10" BorderStrokeThickness="5"/>
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Horizontal">
             <Button x:Name="ResetButton" Style="{StaticResource NavigationButton}" 
                 Content="Reset"

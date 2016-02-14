@@ -20,6 +20,15 @@ namespace BoardGame.Client.Connect4.WPF.Views.UserControls
     /// </summary>
     public partial class BoardUserControl : UserControl
     {
+        public static readonly DependencyProperty StrokeThicknessProperty =
+            DependencyProperty.Register("BorderStrokeThickness", typeof(int), typeof(BoardUserControl));
+
+        public int BorderStrokeThickness
+        {
+            get { return (int)GetValue(StrokeThicknessProperty); }
+            set { SetValue(StrokeThicknessProperty, value); }
+        }
+
         public BoardUserControl()
         {
             InitializeComponent();

@@ -28,7 +28,7 @@
                     Command="{Binding StartOnlineGameCommand}" />
 
             <Button Content="Quit" Margin="5"
-                    Style="{StaticResource MenuButton}" />
+                    Style="{StaticResource MenuButton}" Click="Button_Click" />
         </StackPanel>
     </Grid>
 </Page>
