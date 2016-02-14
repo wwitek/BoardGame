@@ -117,7 +117,7 @@ namespace BoardGame.Server.Services
             return await Task.Factory.StartNew(() => response);
         }
 
-        public async Task<MoveResponse> MakeMove(int playerId, int row, int column)
+        public async Task<MoveResponse> MakeMove(int playerId, int column)
         {
             MoveResponse response;
 

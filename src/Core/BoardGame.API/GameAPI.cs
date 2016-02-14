@@ -235,7 +235,7 @@ namespace BoardGame.API
                         }
 
                         int myId = CurrentGame.Players.First(p => p.Type.Equals(PlayerType.Human)).OnlineId;
-                        MoveResponse moveResponse = await proxy.MakeMove(myId, 0, clickedColumn);
+                        MoveResponse moveResponse = await proxy.MakeMove(myId, clickedColumn);
                         if (moveResponse?.MoveMade != null)
                         {
                             CurrentGame.MakeMove(moveResponse.MoveMade);

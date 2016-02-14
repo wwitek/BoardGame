@@ -18,7 +18,7 @@ namespace BoardGame.Contracts
         Task<StartGameResponse> ConfirmToPlay(int playerId);
 
         [OperationContract]
-        Task<MoveResponse> MakeMove(int playerId, int row, int column);
+        Task<MoveResponse> MakeMove(int playerId, int column);
 
         [OperationContract]
         Task<MoveResponse> GetFirstMove(int playerId);
