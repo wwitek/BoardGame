@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using BoardGame.Domain.Enums;
+using BoardGame.Domain.Exceptions;
 using BoardGame.Domain.Interfaces;
 
 namespace BoardGame.Domain.Entities.Bots
@@ -22,6 +24,12 @@ namespace BoardGame.Domain.Entities.Bots
 
         public IMove GenerateMove(IGame game)
         {
+            if (!game.NextPlayer.Type.Equals(PlayerType.Bot))
+            {
+                throw new GenerateMoveException(
+                    StringResources.CannotGenerateMoveNextPlayerIsNotBot());
+            }
+
             board = game.Board;
             humanId = game.Players.SingleOrDefault(p => p.Type.Equals(PlayerType.Human)).OnlineId;
             botId = game.Players.SingleOrDefault(p => p.Type.Equals(PlayerType.Bot)).OnlineId;
@@ -35,6 +43,7 @@ namespace BoardGame.Domain.Entities.Bots
                 {
                     double value = GetMoveValue(i);
                     Debug.WriteLine("Move {0}: {1}", i, value);
+
                     if (value > max)
                     {
                         max = value;
@@ -58,9 +67,9 @@ namespace BoardGame.Domain.Entities.Bots
 
         private double GetMoveValue(int column)
         {
-            IMove result = board.InsertChip(0, column, botId);
+            board.InsertChip(0, column, botId);
             double value = AlfaBeta(false, MaxDepth, int.MinValue, int.MaxValue);
-            board.RemoveChip(0, column);
+            board.RemoveChipFromTheTop(column);
             return value;
         }
 
@@ -88,10 +97,10 @@ namespace BoardGame.Domain.Entities.Bots
                 {
                     if (board.IsMoveValid(-1, i, botId))
                     {
-                        IMove result = board.InsertChip(0, i, botId);
+                        board.InsertChip(0, i, botId);
                         double alfabeta = AlfaBeta(false, depth - 1, alfa, beta);
                         alfa = Math.Max(alfa, alfabeta);
-                        board.RemoveChip(0, i);
+                        board.RemoveChipFromTheTop(i);
                         if (beta <= alfa) break;
                     }
                 }
@@ -103,10 +112,10 @@ namespace BoardGame.Domain.Entities.Bots
                 {
                     if (board.IsMoveValid(-1, i, humanId))
                     {
-                        IMove result = board.InsertChip(0, i, humanId);
+                        board.InsertChip(0, i, humanId);
                         double alfabeta = AlfaBeta(true, depth - 1, alfa, beta);
                         beta = Math.Min(beta, alfabeta);
-                        board.RemoveChip(0, i);
+                        board.RemoveChipFromTheTop(i);
                         if (beta <= alfa) break;
                     }
                 }

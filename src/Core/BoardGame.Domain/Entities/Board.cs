@@ -102,7 +102,7 @@ namespace BoardGame.Domain.Entities
                 StringResources.ColumnIsFull("InsertChip", move.Column));
         }
 
-        public void RemoveChip(int row, int column)
+        public void RemoveChipFromTheTop(int column)
         {
             if (column < 0 || column >= Width)
             {
@@ -117,6 +117,18 @@ namespace BoardGame.Domain.Entities
                 LastMove = null;
                 return;
             }
+        }
+
+        public void RemoveChip(int row, int column)
+        {
+            if (column < 0 || column >= Width)
+            {
+                throw new InvalidColumnException(
+                    StringResources.ColumnOutsideTheScope("RemoveChip", column));
+            }
+
+            fields[row, column].PlayerId = 0;
+            LastMove = null;
         }
 
         private IMove PerformMove(int row, int column, int playerId, int needToWin = 0)
@@ -189,5 +201,19 @@ namespace BoardGame.Domain.Entities
             return result;
         }
 
+        public override string ToString()
+        {
+            string output = string.Empty;
+            for (int i = 0; i < Height; i++)
+            {
+                string line = "";
+                for (int j = 0; j < Width; j++)
+                {
+                    line += fields[i, j].PlayerId + " ";
+                }
+                output += line + Environment.NewLine;
+            }
+            return output;
+        }
     }
 }

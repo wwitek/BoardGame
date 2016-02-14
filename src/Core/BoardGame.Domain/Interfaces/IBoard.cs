@@ -14,9 +14,14 @@ namespace BoardGame.Domain.Interfaces
         IMove LastMove { get; }
 
         void Reset();
+
         bool IsMoveValid(int row, int column, int playerId);
+
         IMove InsertChip(int row, int column, int playerId);
+
+        void RemoveChipFromTheTop(int column);
         void RemoveChip(int row, int column);
+
         void ApplyMove(IMove move);
     }
 }

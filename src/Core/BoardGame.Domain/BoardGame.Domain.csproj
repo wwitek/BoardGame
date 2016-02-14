@@ -48,6 +48,7 @@
     <Compile Include="Enums\GameType.cs" />
     <Compile Include="Enums\LoggingEventType.cs" />
     <Compile Include="Enums\PlayerType.cs" />
+    <Compile Include="Exceptions\GenerateMoveException.cs" />
     <Compile Include="Exceptions\PlayerCreateException.cs" />
     <Compile Include="Exceptions\GameCreateException.cs" />
     <Compile Include="Exceptions\BotNotRegisteredException.cs" />

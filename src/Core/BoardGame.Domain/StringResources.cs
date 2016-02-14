@@ -63,5 +63,11 @@ namespace BoardGame.Domain
                      @"Cannot perform {0}. The column ({1}) is full already.", action, column);
         }
 
+        internal static string CannotGenerateMoveNextPlayerIsNotBot()
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                     @"Cannot generate a move, because next player is not type of Bot");
+        }
+
     }
 }

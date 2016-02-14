@@ -78,12 +78,9 @@ namespace BoardGame.Tests
             return players;
         }
 
-        internal static IBot CreateBot(IGame game)
+        internal static IBot CreateBot()
         {
-            var bot = Substitute.For<IBot>();
-            bot.GenerateMove(game).Returns(x => null);
-
-            return bot;
+            return Substitute.For<IBot>();
         }
 
         internal static IMove CreateMove(int row, int column, int playerId)

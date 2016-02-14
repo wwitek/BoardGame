@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BoardGame.Domain.Interfaces;
 using NUnit.Framework;
@@ -64,7 +65,8 @@ namespace BoardGame.Tests
             int lastRow = board.Height - 1;
             for (int row = lastRow; row >= 0; row--)
             {
-                board.InsertChip(row, 0, (row%2 == 0) ? 1 : 2);
+                int playerId = (row%2 == 0) ? 1 : 2;
+                board.InsertChip(row, 0, playerId);
             }
             Assert.IsFalse(board.IsMoveValid(-1, 0, 1));
         }
@@ -210,7 +212,7 @@ namespace BoardGame.Tests
         }
 
         [Test]
-        public void RemoveChipTest()
+        public void RemoveTopChipTest()
         {
             board = TestHelper.CreateBoard(new int[,]
             {
@@ -221,9 +223,7 @@ namespace BoardGame.Tests
                 {0, 0, 0, 0, 0, 0, 0},
                 {1, 0, 0, 0, 0, 0, 0}
             });
-
             board.RemoveChip(5, 0);
-
             Assert.IsTrue(board.IsMoveValid(5, 0, 1));
         }
 

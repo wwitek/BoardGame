@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using BoardGame.Domain.Entities;
 using BoardGame.Domain.Enums;
 using BoardGame.Domain.Exceptions;
-using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace BoardGame.Tests
@@ -31,14 +24,14 @@ namespace BoardGame.Tests
         [Test]
         public void BotNotRegisteredException_TwoBotsTest()
         {
-            IBot bot = TestHelper.CreateBot(null);
+            IBot bot = TestHelper.CreateBot();
             Assert.Throws<GameCreateException>(() => TestHelper.CreateGame(PlayerType.Bot, PlayerType.Bot, bot));
         }
 
         [Test]
         public void BotDoesNotThrowNotRegisteredExceptionTest()
         {
-            IBot bot = TestHelper.CreateBot(null);
+            IBot bot = TestHelper.CreateBot();
             Assert.DoesNotThrow(() => TestHelper.CreateGame(PlayerType.Bot, bot));
         }
 
@@ -99,7 +92,7 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void IsMoveValid_NotHumanMoveTest(int column)
         {
-            IBot bot = TestHelper.CreateBot(null);
+            IBot bot = TestHelper.CreateBot();
             IGame game = TestHelper.CreateGame(PlayerType.Bot, PlayerType.Human, bot);
             Assert.IsFalse(game.IsMoveValid(-1, column));
         }
