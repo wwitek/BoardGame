@@ -47,7 +47,7 @@ namespace BoardGame.Tests
         public void InsertChipIntoFullCell_IsMoveValidTest()
         {
             int lastRow = board.Height - 1;
-            board.InsertChip(lastRow, 0, 1);
+            board.InsertChip(0, 1);
             Assert.IsFalse(board.IsMoveValid(lastRow, 0, 1));
         }
 
@@ -55,7 +55,7 @@ namespace BoardGame.Tests
         public void InsertChipOnTheTop_IsMoveValidTest()
         {
             int lastRow = board.Height - 1;
-            board.InsertChip(lastRow, 0, 1);
+            board.InsertChip(0, 1);
             Assert.IsTrue(board.IsMoveValid(-1, 0, 1));
         }
 
@@ -66,7 +66,7 @@ namespace BoardGame.Tests
             for (int row = lastRow; row >= 0; row--)
             {
                 int playerId = (row%2 == 0) ? 1 : 2;
-                board.InsertChip(row, 0, playerId);
+                board.InsertChip(0, playerId);
             }
             Assert.IsFalse(board.IsMoveValid(-1, 0, 1));
         }
@@ -80,7 +80,7 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void InsertFirstChipTest(int column)
         {
-            IMove result = board.InsertChip(-1, column, 1);
+            IMove result = board.InsertChip(column, 1);
 
             Assert.AreEqual(1, result.ConnectionHorizontal.Count);
             Assert.AreEqual(1, result.ConnectionVertical.Count);
@@ -116,10 +116,10 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void InsertFourWinningVerticalChipsTest(int column)
         {
-            board.InsertChip(-1, column, 1);
-            board.InsertChip(-1, column, 1);
-            board.InsertChip(-1, column, 1);
-            IMove result = board.InsertChip(-1, column, 1);
+            board.InsertChip(column, 1);
+            board.InsertChip(column, 1);
+            board.InsertChip(column, 1);
+            IMove result = board.InsertChip(column, 1);
 
             Assert.AreEqual(4, result.ConnectionVertical.Count);
         }
@@ -130,10 +130,10 @@ namespace BoardGame.Tests
         [TestCase(3)]
         public void InsertFourWinningHorizontalChipsTest(int columnOffset)
         {
-            board.InsertChip(-1, 0 + columnOffset, 1);
-            board.InsertChip(-1, 1 + columnOffset, 1);
-            board.InsertChip(-1, 2 + columnOffset, 1);
-            IMove result = board.InsertChip(-1, 3 + columnOffset, 1);
+            board.InsertChip(0 + columnOffset, 1);
+            board.InsertChip(1 + columnOffset, 1);
+            board.InsertChip(2 + columnOffset, 1);
+            IMove result = board.InsertChip(3 + columnOffset, 1);
 
             Assert.AreEqual(4, result.ConnectionHorizontal.Count);
         }
@@ -147,7 +147,7 @@ namespace BoardGame.Tests
             IMove result = null;
             for (int col = start; col < start + 4; col++)
             {
-                result = board.InsertChip(-1, col, 1);
+                result = board.InsertChip(col, 1);
             }
             Assert.AreEqual(4, result.ConnectionDescendingDiagonal.Count);
         }
@@ -161,7 +161,7 @@ namespace BoardGame.Tests
             IMove result = null;
             for (int col = start; col < start + 4; col++)
             {
-                result = board.InsertChip(-1, col, 1);
+                result = board.InsertChip(col, 1);
             }
             Assert.AreEqual(4, result.ConnectionAscendingDiagonal.Count);
         }
@@ -170,7 +170,7 @@ namespace BoardGame.Tests
         public void AllDirectionsConnectedTest(IBoard input)
         {
             board = input;
-            IMove result = board.InsertChip(2, 3, 1);
+            IMove result = board.InsertChip(3, 1);
 
             Assert.AreEqual(7, result.ConnectionHorizontal.Count);
             Assert.AreEqual(4, result.ConnectionVertical.Count);
@@ -187,10 +187,10 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void IsConnectedTest(int column)
         {
-            board.InsertChip(-1, column, 1);
-            board.InsertChip(-1, column, 1);
-            board.InsertChip(-1, column, 1);
-            IMove result = board.InsertChip(-1, column, 1);
+            board.InsertChip(column, 1);
+            board.InsertChip(column, 1);
+            board.InsertChip(column, 1);
+            IMove result = board.InsertChip(column, 1);
 
             Assert.IsTrue(result.IsConnected);
         }
@@ -204,9 +204,9 @@ namespace BoardGame.Tests
         [TestCase(6)]
         public void IsNotConnectedTest(int column)
         {
-            board.InsertChip(-1, column, 1);
-            board.InsertChip(-1, column, 1);
-            IMove result = board.InsertChip(-1, column, 1);
+            board.InsertChip(column, 1);
+            board.InsertChip(column, 1);
+            IMove result = board.InsertChip(column, 1);
 
             Assert.IsFalse(result.IsConnected);
         }
@@ -223,7 +223,7 @@ namespace BoardGame.Tests
                 {0, 0, 0, 0, 0, 0, 0},
                 {1, 0, 0, 0, 0, 0, 0}
             });
-            board.RemoveChip(5, 0);
+            board.RemoveChip(0);
             Assert.IsTrue(board.IsMoveValid(5, 0, 1));
         }
 

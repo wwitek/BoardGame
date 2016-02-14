@@ -67,9 +67,9 @@ namespace BoardGame.Domain.Entities.Bots
 
         private double GetMoveValue(int column)
         {
-            board.InsertChip(0, column, botId);
+            board.InsertChip(column, botId);
             double value = AlfaBeta(false, MaxDepth, int.MinValue, int.MaxValue);
-            board.RemoveChipFromTheTop(column);
+            board.RemoveChip(column);
             return value;
         }
 
@@ -97,10 +97,10 @@ namespace BoardGame.Domain.Entities.Bots
                 {
                     if (board.IsMoveValid(-1, i, botId))
                     {
-                        board.InsertChip(0, i, botId);
+                        board.InsertChip(i, botId);
                         double alfabeta = AlfaBeta(false, depth - 1, alfa, beta);
                         alfa = Math.Max(alfa, alfabeta);
-                        board.RemoveChipFromTheTop(i);
+                        board.RemoveChip(i);
                         if (beta <= alfa) break;
                     }
                 }
@@ -112,10 +112,10 @@ namespace BoardGame.Domain.Entities.Bots
                 {
                     if (board.IsMoveValid(-1, i, humanId))
                     {
-                        board.InsertChip(0, i, humanId);
+                        board.InsertChip(i, humanId);
                         double alfabeta = AlfaBeta(true, depth - 1, alfa, beta);
                         beta = Math.Min(beta, alfabeta);
-                        board.RemoveChipFromTheTop(i);
+                        board.RemoveChip(i);
                         if (beta <= alfa) break;
                     }
                 }

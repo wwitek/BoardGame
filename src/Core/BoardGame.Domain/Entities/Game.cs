@@ -78,7 +78,7 @@ namespace BoardGame.Domain.Entities
 
         public IMove MakeMove(int row, int column)
         {
-            IMove move = Board.InsertChip(row, column, currentPlayerIndex);
+            IMove move = Board.InsertChip(column, currentPlayerIndex);
             SetNextPlayer();
 
             State = (move.IsConnected || move.IsTie) ? GameState.Finished : GameState.Running;
