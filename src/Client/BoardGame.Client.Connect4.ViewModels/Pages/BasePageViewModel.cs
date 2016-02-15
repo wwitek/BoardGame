@@ -29,5 +29,7 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
         public ICommand StartOnlineGameCommand => null;
         public ICommand StartEasyGameCommand => null;
         public ICommand StartMediumGameCommand => null;
+
+        public ICommand LoadedCommand => null;
     }
 }
