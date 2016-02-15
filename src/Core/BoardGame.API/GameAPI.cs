@@ -22,7 +22,7 @@ namespace BoardGame.API
         private readonly IGameService proxy;
         private readonly ILogger logger;
 
-        public event EventHandler<MoveEventArgs> OnMoveReceived;
+        public event EventHandler<MoveEventArgs> MoveReceived;
 
         public GameAPI(IGameFactory gameFactory,
             IPlayerFactory playerFactory,
@@ -52,20 +52,20 @@ namespace BoardGame.API
 
         private void SendMove(IMove move)
         {
-            Requires.IsNotNull(OnMoveReceived, "OnMoveReceived");
+            Requires.IsNotNull(MoveReceived, "MoveReceived");
 
-            OnMoveReceived?.Invoke(this, new MoveEventArgs { Move = move });
+            MoveReceived?.Invoke(this, new MoveEventArgs { Move = move });
         }
 
         public async void StartGame(GameType type, string level = "")
         {
             try
             { 
-                if (OnMoveReceived == null)
+                if (MoveReceived == null)
                 {
-                    logger?.Error("InvalidOperationException: " + StringResources.TheGameCanNotBeStartedBecauseOfOnMoveReceivedIsNull());
+                    logger?.Error("InvalidOperationException: " + StringResources.TheGameCanNotBeStartedBecauseOfMoveReceivedIsNull());
                     throw new InvalidOperationException(
-                        StringResources.TheGameCanNotBeStartedBecauseOfOnMoveReceivedIsNull());
+                        StringResources.TheGameCanNotBeStartedBecauseOfMoveReceivedIsNull());
                 }
 
                 var players = new List<IPlayer>();

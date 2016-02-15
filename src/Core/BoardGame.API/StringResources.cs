@@ -9,11 +9,11 @@ namespace BoardGame.API
 {
     internal static class StringResources
     {
-        internal static string TheGameCanNotBeStartedBecauseOfOnMoveReceivedIsNull()
+        internal static string TheGameCanNotBeStartedBecauseOfMoveReceivedIsNull()
         {
-            return @"The Game cannot be started, because OnMoveReceived event handler 
+            return @"The Game cannot be started, because MoveReceived event handler 
                      has not been set to an instance of an object. Please make sure 
-                     the OnMoveReceived handler is registered in UI.";
+                     the MoveReceived handler is registered in UI.";
         }
 
         internal static string TheGameCanNotBeStartedBecauseOfProxyIsNull()

@@ -22,7 +22,7 @@ namespace BoardGame.Client.Connect4.WinForms
         {
             GameAPI = gameAPI;
             if (GameAPI != null)
-                GameAPI.OnMoveReceived += (s, e) => MakeMove(e.Move);
+                GameAPI.MoveReceived += (s, e) => MakeMove(e.Move);
 
             InitializeComponent();
             InitializeBoard();
