@@ -30,7 +30,6 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
         }
 
         public new ICommand LoadedCommand => new ActionCommand(x => StartGame());
-
         private void StartGame()
         {
             api?.StartGame(type, level);
@@ -38,6 +37,12 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
 
         private void OnMoveReceived(object sender, MoveEventArgs e)
         {
+        }
+
+        public new ICommand BoardClickCommand => new ActionCommand(x => BoardClick());
+        private void BoardClick()
+        {
+            Debug.WriteLine("BoardClick");
         }
     }
 }
