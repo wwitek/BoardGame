@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF.Views.Pages"
       xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels"
       xmlns:userControls="clr-namespace:BoardGame.Client.Connect4.WPF.Views.UserControls"
+      xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
       mc:Ignorable="d" 
       d:DesignHeight="430" d:DesignWidth="380"
@@ -15,11 +16,19 @@
     </Page.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+            <cmd:EventToCommand Command="{Binding Mode=OneWay, Path=LoadedCommand}" 
+                                        PassEventArgsToCommand="True" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <userControls:BoardUserControl x:Name="GameBoard" Margin="10,110,10,10" BorderStrokeThickness="5"/>
+        <userControls:BoardUserControl x:Name="GameBoard" Margin="10,110,10,10" BorderStrokeThickness="5">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="BoardClick">
+                    <cmd:EventToCommand Command="{Binding Mode=OneWay, Path=ClickCommand}" 
+                                        PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </userControls:BoardUserControl>
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Horizontal">
             <Button x:Name="ResetButton" Style="{StaticResource NavigationButton}" 
                 Content="Reset"
