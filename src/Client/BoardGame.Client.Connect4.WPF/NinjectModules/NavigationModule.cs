@@ -10,6 +10,8 @@ using BoardGame.Client.Connect4.WPF.Views;
 using BoardGame.Domain.Enums;
 using Ninject;
 using Ninject.Modules;
+using INavigationService = BoardGame.Client.Connect4.ViewModels.Interfaces.INavigationService;
+using NavigationService = BoardGame.Client.Connect4.WPF.NavigationService;
 
 namespace BoardGame.Client.Connect4.WPF.NinjectModules
 {

@@ -9,6 +9,8 @@ using BoardGame.API;
 using BoardGame.Client.Connect4.ViewModels.Common;
 using BoardGame.Client.Connect4.ViewModels.Interfaces;
 using BoardGame.Domain.Enums;
+using GalaSoft.MvvmLight.Command;
+using INavigationService = BoardGame.Client.Connect4.ViewModels.Interfaces.INavigationService;
 
 namespace BoardGame.Client.Connect4.ViewModels.Pages
 {
@@ -29,7 +31,7 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
                 this.api.MoveReceived += OnMoveReceived;
         }
 
-        public new ICommand LoadedCommand => new ActionCommand(x => StartGame());
+        public new ICommand LoadedCommand => new RelayCommand(StartGame);
 
         private void StartGame()
         {

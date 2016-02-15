@@ -20,6 +20,7 @@ using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
 using Ninject;
 using Ninject.Modules;
+using INavigationService = BoardGame.Client.Connect4.ViewModels.Interfaces.INavigationService;
 
 namespace BoardGame.Client.Connect4.WPF
 {

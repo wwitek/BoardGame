@@ -9,23 +9,27 @@ using System.Threading.Tasks;
 
 namespace BoardGame.Client.Connect4.ViewModels.Common
 {
-    public class ObservableObject : INotifyPropertyChanged
+    public class Foo
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public bool Set<T>(ref T oldValue, T newValue, [CallerMemberName] String propertyName = null)
-        {
-            if (Equals(oldValue, newValue))
-                return false;
-
-            oldValue = newValue;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            return true;
-        }
+        
     }
+    //public class ObservableObject : INotifyPropertyChanged
+    //{
+    //    public event PropertyChangedEventHandler PropertyChanged;
+
+    //    private void OnPropertyChanged(string propertyName)
+    //    {
+    //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    //    }
+
+    //    public bool Set<T>(ref T oldValue, T newValue, [CallerMemberName] String propertyName = null)
+    //    {
+    //        if (Equals(oldValue, newValue))
+    //            return false;
+
+    //        oldValue = newValue;
+    //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    //        return true;
+    //    }
+    //}
 }
