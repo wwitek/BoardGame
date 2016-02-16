@@ -6,13 +6,20 @@
       xmlns:local="clr-namespace:BoardGame.Client.Connect4.WPF.Views.Pages"
       xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels"
       xmlns:userControls="clr-namespace:BoardGame.Client.Connect4.WPF.Views.UserControls"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:cmd="http://www.galasoft.ch/mvvmlight"
       mc:Ignorable="d" 
       d:DesignHeight="430" d:DesignWidth="380"
       Title="GamePage">
     <Page.DataContext>
         <pages:BasePageViewModel />
     </Page.DataContext>
-    <Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <cmd:EventToCommand Command="{Binding Mode=OneWay, Path=LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid >
         <userControls:BoardUserControl x:Name="GameBoard" Margin="10,110,10,10" BorderStrokeThickness="5"/>
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Horizontal">
             <Button x:Name="ResetButton" Style="{StaticResource NavigationButton}" 

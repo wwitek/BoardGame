@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using BoardGame.API;
 using BoardGame.Client.Connect4.ViewModels.Interfaces;
 using BoardGame.Domain.Enums;
+using GalaSoft.MvvmLight.Command;
 
 namespace BoardGame.Client.Connect4.ViewModels.Pages
 {
@@ -22,6 +24,12 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
             this.api = api;
             this.type = type;
             this.level = level;
+        }
+
+        public new ICommand LoadedCommand => new RelayCommand(Loaded);
+        private void Loaded()
+        {
+            Debug.WriteLine("Loaded");
         }
     }
 }
