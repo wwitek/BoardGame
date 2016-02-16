@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BoardGame.Client.Connect4.ViewModels.Common;
 using BoardGame.Client.Connect4.ViewModels.Interfaces;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 
 namespace BoardGame.Client.Connect4.ViewModels.Pages
 {
@@ -22,8 +23,8 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
             NavigationService = navigationService;
         }
 
-        public ICommand GoBack => new ActionCommand(x => NavigationService.GoBack());
-        public ICommand GoForward => new ActionCommand(x => NavigationService.GoForward());
+        public ICommand GoBack => new RelayCommand(() => NavigationService.GoBack());
+        public ICommand GoForward => new RelayCommand(() => NavigationService.GoForward());
         public ICommand StartSinglePlayerCommand => null;
         public ICommand StartTwoPlayerGameCommand => null;
         public ICommand StartOnlineGameCommand => null;
