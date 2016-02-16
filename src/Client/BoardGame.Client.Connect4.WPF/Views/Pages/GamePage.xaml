@@ -20,7 +20,13 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid >
-        <userControls:BoardUserControl x:Name="GameBoard" Margin="10,110,10,10" BorderStrokeThickness="5"/>
+        <userControls:BoardUserControl x:Name="GameBoard" Margin="10,110,10,10" BorderStrokeThickness="5">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="BoardClick">
+                    <cmd:EventToCommand Command="{Binding ClickedCommand}" PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </userControls:BoardUserControl>
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Horizontal">
             <Button x:Name="ResetButton" Style="{StaticResource NavigationButton}" 
                 Content="Reset"

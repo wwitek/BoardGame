@@ -45,6 +45,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventArguments\BoardEventArgs.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
     <Compile Include="Interfaces\IPageViewModel.cs" />
     <Compile Include="MainWindowViewModel.cs" />
