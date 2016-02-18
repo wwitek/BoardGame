@@ -6,10 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BoardGame.API;
-using BoardGame.Client.Connect4.ViewModels.EventArguments;
+using BoardGame.Client.Connect4.ViewModels.EventArguments.Views;
+using BoardGame.Client.Connect4.ViewModels.EventArguments.ViewModels;
 using BoardGame.Client.Connect4.ViewModels.Interfaces;
 using BoardGame.Domain.Enums;
 using GalaSoft.MvvmLight.Command;
+using BoardGame.Domain.Interfaces;
 
 namespace BoardGame.Client.Connect4.ViewModels.Pages
 {
@@ -18,6 +20,36 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
         private readonly GameAPI api;
         private readonly GameType type;
         private readonly string level;
+        private EventHandler<MoveReceivedEventArgs> moveReceived;
+        private EventHandler<BoardResetEventArgs> boardReset;
+
+
+        public new ICommand LoadedCommand => new RelayCommand(Load);
+        public new ICommand ClickedCommand => new RelayCommand<BoardClickEventArgs>(o => Click(o.ColumnClicked));
+        public event EventHandler<MoveReceivedEventArgs> MoveReceived
+        {
+            add
+            {
+                if (moveReceived == null)
+                    moveReceived += value;
+            }
+            remove
+            {
+                moveReceived -= value;
+            }
+        }
+        public event EventHandler<BoardResetEventArgs> BoardReset
+        {
+            add
+            {
+                if (boardReset == null)
+                    boardReset += value;
+            }
+            remove
+            {
+                boardReset -= value;
+            }
+        }
 
         public GamePageViewModel(INavigationService navigationService, GameAPI api, GameType type, string level = null)
             : base(navigationService)
@@ -27,16 +59,30 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
             this.level = level;
         }
 
-        public new ICommand LoadedCommand => new RelayCommand(Loaded);
-        private void Loaded()
+        private void Load()
         {
-            Debug.WriteLine("Loaded");
+            TriggerBoardReset();
+
+            Debug.WriteLine("VM: Loaded");
         }
 
-        public new ICommand ClickedCommand => new RelayCommand<BoardEventArgs>(o => Clicked(o.ColumnClicked));
-        private void Clicked(int c)
+        private void Click(int c)
         {
-            Debug.WriteLine("Clicked: " + c);
+            Debug.WriteLine("VM: Clicked: " + c);
+
+            TriggerMove(null);
+        }
+
+        private void TriggerMove(IMove move)
+        {
+            MoveReceivedEventArgs args = new MoveReceivedEventArgs { MoveMade = move };
+            moveReceived?.Invoke(this, args);
+        }
+
+        private void TriggerBoardReset(bool isAnimate = false)
+        {
+            BoardResetEventArgs args = new BoardResetEventArgs { IsAnimate = isAnimate };
+            boardReset?.Invoke(this, args);
         }
     }
 }
