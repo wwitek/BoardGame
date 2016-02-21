@@ -34,18 +34,6 @@ namespace BoardGame.API
             this.playerFactory = playerFactory;
         }
 
-        public GameAPI(IGameFactory gameFactory,
-            IPlayerFactory playerFactory,
-            IGameService proxy = null)
-        {
-            Requires.IsNotNull(gameFactory, "gameFactory");
-            Requires.IsNotNull(playerFactory, "playerFactory");
-
-            this.gameFactory = gameFactory;
-            this.playerFactory = playerFactory;
-            this.proxy = proxy;
-        }
-
         public GameAPI(IGameFactory gameFactory, 
                        IPlayerFactory playerFactory,
                        IGameService proxy = null,
