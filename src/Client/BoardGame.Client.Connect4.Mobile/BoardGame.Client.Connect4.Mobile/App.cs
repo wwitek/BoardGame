@@ -1,4 +1,8 @@
-﻿using BoardGame.Client.Connect4.Mobile.Views;
+﻿using BoardGame.API;
+using BoardGame.Client.Connect4.Mobile.NinjectModules;
+using BoardGame.Client.Connect4.Mobile.Views;
+using Ninject;
+using Ninject.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +16,19 @@ namespace BoardGame.Client.Connect4.Mobile
     {
         public App()
         {
-            // The root page of your application
             MainPage = new StartPage();
         }
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            IKernel kernel = new StandardKernel();
+            var modules = new List<INinjectModule>
+                {
+                    new GameModule()
+                };
+            kernel.Load(modules);
+
+            GameAPI api = kernel.Get<GameAPI>();
         }
 
         protected override void OnSleep()

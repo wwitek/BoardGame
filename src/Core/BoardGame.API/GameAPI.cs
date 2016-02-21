@@ -25,6 +25,16 @@ namespace BoardGame.API
         public event EventHandler<MoveEventArgs> MoveReceived;
 
         public GameAPI(IGameFactory gameFactory,
+            IPlayerFactory playerFactory)
+        {
+            Requires.IsNotNull(gameFactory, "gameFactory");
+            Requires.IsNotNull(playerFactory, "playerFactory");
+
+            this.gameFactory = gameFactory;
+            this.playerFactory = playerFactory;
+        }
+
+        public GameAPI(IGameFactory gameFactory,
             IPlayerFactory playerFactory,
             IGameService proxy = null)
         {
