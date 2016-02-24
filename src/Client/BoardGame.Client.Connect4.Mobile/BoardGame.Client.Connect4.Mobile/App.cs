@@ -5,9 +5,10 @@ using Ninject;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace BoardGame.Client.Connect4.Mobile
@@ -29,6 +30,11 @@ namespace BoardGame.Client.Connect4.Mobile
             kernel.Load(modules);
 
             GameAPI api = kernel.Get<GameAPI>();
+            api.MoveReceived += (s, e) => Debug.WriteLine("Received");
+            Debug.WriteLine("Module loaded");
+            Wait();
+            Debug.WriteLine("Connecting...");
+            api.StartGame(Domain.Enums.GameType.Online);
         }
 
         protected override void OnSleep()
@@ -39,6 +45,11 @@ namespace BoardGame.Client.Connect4.Mobile
         protected override void OnResume()
         {
             // Handle when your app resumes
+        }
+
+        public async void Wait()
+        {
+            await Task.Delay(2000);
         }
     }
 }

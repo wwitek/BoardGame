@@ -18,6 +18,9 @@ namespace BoardGame.Server.Host.ConsoleApplication
         {
             try
             {
+                var httpAddress = "http://localhost:9002/GameService";
+                var nettcpAddress = "net.tcp://localhost:8002";
+
                 var fieldFactory = new FieldFactory();
                 var board = new Board(7, 6, fieldFactory);
                 var playerFactory = new PlayerFactory();
@@ -29,7 +32,7 @@ namespace BoardGame.Server.Host.ConsoleApplication
                 IGameServer serverLogic = new GameServer(gameFactory, playerFactory, serverLogicLogger);
                 IContractBehavior contractBehavior = new GameServiceInstanceProvider(serverLogic, gameServiceLogger);
                 IErrorHandler errorHandler = new GameServiceErrorHandler(gameServiceLogger);
-                ServiceHost host = new GameServiceHost(contractBehavior, errorHandler, typeof(GameService), new Uri("net.tcp://localhost:8002"));
+                ServiceHost host = new GameServiceHost(contractBehavior, errorHandler, typeof(GameService), new Uri(httpAddress));
                 host.Open();
 
                 Console.WriteLine("Running... Press key to stop");

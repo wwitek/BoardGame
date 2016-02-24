@@ -36,8 +36,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="Contracts\IGameService.cs" />
+    <Compile Include="Contracts\Responses\MoveResponse.cs" />
+    <Compile Include="Contracts\Responses\OnlineGameResponse.cs" />
+    <Compile Include="Contracts\Responses\StartGameResponse.cs" />
     <Compile Include="NinjectModules\GameModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Proxies\GameProxyHttp.cs" />
     <Compile Include="Views\SinglePlayerPage.xaml.cs">
       <DependentUpon>SinglePlayerPage.xaml</DependentUpon>
     </Compile>
@@ -85,10 +90,6 @@
       <Project>{8869155f-bcf6-460c-8e05-67f77b2778ee}</Project>
       <Name>BoardGame.API</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\BoardGame.Contracts\BoardGame.Contracts.csproj">
-      <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
-      <Name>BoardGame.Contracts</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Core\BoardGame.Domain\BoardGame.Domain.csproj">
       <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
       <Name>BoardGame.Domain</Name>
@@ -96,10 +97,6 @@
     <ProjectReference Include="..\..\BoardGame.Client.Connect4.ViewModels\BoardGame.Client.Connect4.ViewModels.csproj">
       <Project>{492bdaa1-a4d8-4879-bc81-70d2bf936683}</Project>
       <Name>BoardGame.Client.Connect4.ViewModels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\BoardGame.Client.Proxies\BoardGame.Client.Proxies.csproj">
-      <Project>{666cc2b7-1ddc-45a6-8ff2-ec3bacd62ccb}</Project>
-      <Name>BoardGame.Client.Proxies</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

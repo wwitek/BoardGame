@@ -1,6 +1,6 @@
 ﻿using BoardGame.API;
-using BoardGame.Client.Proxies;
-using BoardGame.Contracts;
+using BoardGame.Client.Connect4.Mobile.Contracts;
+using BoardGame.Client.Connect4.Mobile.Proxies;
 using BoardGame.Domain.Entities;
 using BoardGame.Domain.Entities.Bots;
 using BoardGame.Domain.Factories;
