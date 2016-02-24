@@ -268,7 +268,6 @@ namespace BoardGame.API
         public void Close()
         {
             logger?.Info("Closing GameAPI. Server connection will be aborted");
-            ((ICommunicationObject) proxy).Abort();
         }
     }
 }

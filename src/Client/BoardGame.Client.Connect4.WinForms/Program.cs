@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BoardGame.Domain.Entities.Bots;
 using BoardGame.Domain.Interfaces;
+using System.ServiceModel;
+using BoardGame.Contracts;
 
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
 namespace BoardGame.Client.Connect4.WinForms
@@ -35,7 +37,10 @@ namespace BoardGame.Client.Connect4.WinForms
                 var gameFactory = new GameFactory(board, bots.ToArray());
 
                 var playerFactory = new PlayerFactory();
-                var proxy = new GameProxy();
+                //var proxy = new GameProxy(); // Nettcp
+
+                var proxy = new GameProxyHttp();
+
                 var logger = new Log4netAdapter("GameAPI");
                 var api = new GameAPI(gameFactory, playerFactory, proxy, logger);
 

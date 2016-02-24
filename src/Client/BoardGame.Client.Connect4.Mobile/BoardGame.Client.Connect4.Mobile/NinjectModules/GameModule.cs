@@ -25,8 +25,9 @@ namespace BoardGame.Client.Connect4.Mobile.NinjectModules
 
             Bind<IGameFactory>().To<GameFactory>();
             Bind<IPlayerFactory>().To<PlayerFactory>();
-            //Bind<IGameService>().To<GameProxy>().WhenInjectedExactlyInto<GameAPI>();
-            //Bind<ILogger>().To<WpfTempLogger>();
+            Bind<IGameService>().To<GameProxyHttp>().
+                WhenInjectedExactlyInto<GameAPI>();
+            Bind<ILogger>().To<WpfTempLogger>();
 
             Bind<GameAPI>().ToSelf();
         }
