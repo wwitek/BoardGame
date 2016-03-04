@@ -13,6 +13,7 @@ using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
 using BoardGame.Domain.Logger;
 using Ninject.Modules;
+using BoardGame.API.Interfaces;
 
 namespace BoardGame.Client.Connect4.WPF.NinjectModules
 {
@@ -30,7 +31,7 @@ namespace BoardGame.Client.Connect4.WPF.NinjectModules
 
             Bind<IGameFactory>().To<GameFactory>();
             Bind<IPlayerFactory>().To<PlayerFactory>();
-            Bind<IGameService>().To<GameProxy>().WhenInjectedExactlyInto<GameAPI>();
+            Bind<IGameProxy>().To<GameProxy>().WhenInjectedExactlyInto<GameAPI>();
             Bind<ILogger>().To<WpfTempLogger>();
 
             Bind<GameAPI>().ToSelf();

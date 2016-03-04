@@ -1,4 +1,5 @@
 ﻿using BoardGame.API;
+using BoardGame.API.Interfaces;
 using BoardGame.Client.Proxies;
 using BoardGame.Contracts;
 using BoardGame.Domain.Entities;
@@ -25,7 +26,7 @@ namespace BoardGame.Client.Connect4.Mobile.NinjectModules
 
             Bind<IGameFactory>().To<GameFactory>();
             Bind<IPlayerFactory>().To<PlayerFactory>();
-            Bind<IGameService>().To<GameProxyHttp>().
+            Bind<IGameProxy>().To<GameProxy>().
                 WhenInjectedExactlyInto<GameAPI>();
             Bind<ILogger>().To<WpfTempLogger>();
 

@@ -37,12 +37,10 @@ namespace BoardGame.Client.Connect4.WinForms
                 var gameFactory = new GameFactory(board, bots.ToArray());
 
                 var playerFactory = new PlayerFactory();
-                //var proxy = new GameProxy(); // Nettcp
-
-                var proxy = new GameProxyHttp();
+                var proxy = new GameProxy();
 
                 var logger = new Log4netAdapter("GameAPI");
-                var api = new GameAPI(gameFactory, playerFactory, proxy, logger);
+                var api = new GameAPI(gameFactory, playerFactory, logger, proxy);
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);

@@ -35,14 +35,18 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\..\Core\BoardGame.API\BoardGame.API.csproj">
+      <Project>{8869155f-bcf6-460c-8e05-67f77b2778ee}</Project>
+      <Name>BoardGame.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\BoardGame.Contracts\BoardGame.Contracts.csproj">
       <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
       <Name>BoardGame.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameClient.cs" />
     <Compile Include="GameProxy.cs" />
-    <Compile Include="GameProxyHttp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

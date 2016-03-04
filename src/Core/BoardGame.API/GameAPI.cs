@@ -11,6 +11,7 @@ using BoardGame.Domain.Logger;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using BoardGame.API.Exceptions;
+using BoardGame.API.Interfaces;
 
 namespace BoardGame.API
 {
@@ -19,13 +20,13 @@ namespace BoardGame.API
         private IGame CurrentGame { get; set; }
         private readonly IGameFactory gameFactory;
         private readonly IPlayerFactory playerFactory;
-        private readonly IGameService proxy;
+        private readonly IGameProxy proxy;
         private readonly ILogger logger;
 
         public event EventHandler<MoveEventArgs> MoveReceived;
 
         public GameAPI(IGameFactory gameFactory,
-            IPlayerFactory playerFactory)
+                       IPlayerFactory playerFactory)
         {
             Requires.IsNotNull(gameFactory, "gameFactory");
             Requires.IsNotNull(playerFactory, "playerFactory");
@@ -34,10 +35,22 @@ namespace BoardGame.API
             this.playerFactory = playerFactory;
         }
 
+        public GameAPI(IGameFactory gameFactory,
+                       IPlayerFactory playerFactory,
+                       ILogger logger)
+        {
+            Requires.IsNotNull(gameFactory, "gameFactory");
+            Requires.IsNotNull(playerFactory, "playerFactory");
+
+            this.gameFactory = gameFactory;
+            this.playerFactory = playerFactory;
+            this.logger = logger;
+        }
+
         public GameAPI(IGameFactory gameFactory, 
                        IPlayerFactory playerFactory,
-                       IGameService proxy = null,
-                       ILogger logger = null)
+                       ILogger logger,
+                       IGameProxy proxy)
         {
             Requires.IsNotNull(gameFactory, "gameFactory");
             Requires.IsNotNull(playerFactory, "playerFactory");
