@@ -46,7 +46,7 @@
     <Compile Include="GameServiceErrorHandler.cs" />
     <Compile Include="GameServiceHost.cs" />
     <Compile Include="GameServiceInstanceProvider.cs" />
-    <Compile Include="GameService.cs" />
+    <Compile Include="GameServiceAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,17 +13,17 @@ using BoardGame.Domain.Logger;
 
 namespace BoardGame.Server.Services
 {
-    public class GameService : IGameServiceAsync
+    public class GameServiceAsync : IGameServiceAsync
     {
         private IGameServer Logic { get; }
         private ILogger Logger { get; }
         private Random RandomGenerator { get; } = new Random();
 
-        public GameService(IGameServer logic, ILogger logger)
+        public GameServiceAsync(IGameServer logic, ILogger logger)
         {
             Logic = logic;
             Logger = logger;
-            Logger.Info("GameService created.");
+            Logger.Info("GameServiceAsync created.");
         }
 
         public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)

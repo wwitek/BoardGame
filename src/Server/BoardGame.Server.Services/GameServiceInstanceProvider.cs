@@ -12,8 +12,9 @@ namespace BoardGame.Server.Services
     {
         private readonly IGameServer gameServer;
         private readonly ILogger logger;
+        private readonly Type serviceType;
 
-        public GameServiceInstanceProvider(IGameServer gameServer, ILogger logger)
+        public GameServiceInstanceProvider(Type serviceType, IGameServer gameServer, ILogger logger)
         {
             if (gameServer == null)
             {
@@ -21,6 +22,7 @@ namespace BoardGame.Server.Services
             }
             this.gameServer = gameServer;
             this.logger = logger;
+            this.serviceType = serviceType;
         }
 
         #region IInstanceProvider Members
@@ -32,7 +34,7 @@ namespace BoardGame.Server.Services
 
         public object GetInstance(InstanceContext instanceContext)
         {
-            return new GameService(gameServer, logger);
+            return Activator.CreateInstance(serviceType, gameServer, logger);
         }
 
         public void ReleaseInstance(InstanceContext instanceContext, object instance)
