@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BoardGame.API;
 using BoardGame.Client.Proxies;
-using BoardGame.Contracts;
 using BoardGame.Domain.Entities;
 using BoardGame.Domain.Entities.Bots;
 using BoardGame.Domain.Factories;

@@ -13,7 +13,7 @@ using BoardGame.Domain.Logger;
 
 namespace BoardGame.Server.Services
 {
-    public class GameService : IGameService
+    public class GameService : IGameServiceAsync
     {
         private IGameServer Logic { get; }
         private ILogger Logger { get; }

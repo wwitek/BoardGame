@@ -9,7 +9,7 @@ using BoardGame.Contracts.Responses;
 
 namespace BoardGame.Client.Proxies
 {
-    public class GameClient : ClientBase<IGameService>, IGameService
+    public class GameClient : ClientBase<IGameServiceAsync>, IGameServiceAsync
     {
         public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)
         {

@@ -129,7 +129,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BoardGame.Client.Connect4.ViewModels\BoardGame.Client.Connect4.ViewModels.csproj">
@@ -143,10 +145,6 @@
     <ProjectReference Include="..\..\Core\BoardGame.API\BoardGame.API.csproj">
       <Project>{8869155f-bcf6-460c-8e05-67f77b2778ee}</Project>
       <Name>BoardGame.API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\BoardGame.Contracts\BoardGame.Contracts.csproj">
-      <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
-      <Name>BoardGame.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\BoardGame.Domain\BoardGame.Domain.csproj">
       <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>

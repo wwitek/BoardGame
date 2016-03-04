@@ -9,7 +9,7 @@ using BoardGame.Contracts.Responses;
 namespace BoardGame.Contracts
 {
     [ServiceContract]
-    public interface IGameService
+    public interface IGameServiceAsync
     {
         [OperationContract]
         Task<OnlineGameResponse> OnlineGameRequest(int playerId);

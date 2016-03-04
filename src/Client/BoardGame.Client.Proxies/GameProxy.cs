@@ -12,7 +12,7 @@ namespace BoardGame.Client.Proxies
 {
     public class GameProxy : IGameProxy
     {
-        private IGameService proxy = null;
+        private IGameServiceAsync proxy = null;
 
         public GameProxy()
         {
@@ -20,7 +20,7 @@ namespace BoardGame.Client.Proxies
             Uri addressBase = new Uri(address);
             EndpointAddress endpoint = new EndpointAddress(address);
             BasicHttpBinding bHttp = new BasicHttpBinding();
-            ChannelFactory<IGameService>  channel = new ChannelFactory<IGameService>(bHttp, endpoint);
+            ChannelFactory<IGameServiceAsync>  channel = new ChannelFactory<IGameServiceAsync>(bHttp, endpoint);
             proxy = channel.CreateChannel(endpoint);
         }
 

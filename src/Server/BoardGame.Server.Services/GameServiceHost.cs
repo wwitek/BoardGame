@@ -18,7 +18,7 @@ namespace BoardGame.Server.Services
         {
             this.errorHandler = errorHandler;
             ImplementedContracts.Values
-                .First(c => c.Name == "IGameService")
+                .First(c => c.Name == "IGameServiceAsync")
                 .ContractBehaviors.Add(contractBehavior);
         }
 

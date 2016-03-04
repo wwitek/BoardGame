@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using BoardGame.Domain.Entities.Bots;
 using BoardGame.Domain.Interfaces;
 using System.ServiceModel;
-using BoardGame.Contracts;
 
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
 namespace BoardGame.Client.Connect4.WinForms
