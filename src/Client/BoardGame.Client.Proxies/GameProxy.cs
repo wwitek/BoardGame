@@ -12,36 +12,36 @@ namespace BoardGame.Client.Proxies
 {
     public class GameProxy : IGameProxy
     {
-        private IGameServiceAsync proxy = null;
+        private IGameService proxy = null;
 
         public GameProxy()
         {
-            string address = "http://localhost:9002/GameService";
+            string address = "http://localhost:9003/GameService";
             Uri addressBase = new Uri(address);
             EndpointAddress endpoint = new EndpointAddress(address);
             BasicHttpBinding bHttp = new BasicHttpBinding();
-            ChannelFactory<IGameServiceAsync>  channel = new ChannelFactory<IGameServiceAsync>(bHttp, endpoint);
+            ChannelFactory<IGameService> channel = new ChannelFactory<IGameService>(bHttp, endpoint);
             proxy = channel.CreateChannel(endpoint);
         }
 
         public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)
         {
-            return await proxy.OnlineGameRequest(playerId);
+            return await new TaskFactory().FromAsync(proxy.BeginOnlineGameRequest, proxy.EndOnlineGameRequest, playerId, null, TaskCreationOptions.None);
         }
 
         public async Task<StartGameResponse> ConfirmToPlay(int playerId)
         {
-            return await proxy.ConfirmToPlay(playerId);
+            return await new TaskFactory().FromAsync(proxy.BeginConfirmToPlay, proxy.EndConfirmToPlay, playerId, null, TaskCreationOptions.None);
         }
 
         public async Task<MoveResponse> MakeMove(int playerId, int column)
         {
-            return await proxy.MakeMove(playerId, column);
+            return await new TaskFactory().FromAsync(proxy.BeginMakeMove, proxy.EndMakeMove, playerId, column, null, TaskCreationOptions.None);
         }
 
         public async Task<MoveResponse> GetFirstMove(int playerId)
         {
-            return await proxy.GetFirstMove(playerId);
+            return await new TaskFactory().FromAsync(proxy.BeginGetFirstMove, proxy.EndGetFirstMove, playerId, null, TaskCreationOptions.None);
         }
     }
 }

@@ -13,12 +13,12 @@ namespace BoardGame.Server.Services
     {
         private readonly IErrorHandler errorHandler;
 
-        public GameServiceHost(IContractBehavior contractBehavior, IErrorHandler errorHandler, Type serviceType, params Uri[] baseAddresses)
+        public GameServiceHost(IContractBehavior contractBehavior, IErrorHandler errorHandler, string contractName, Type serviceType, params Uri[] baseAddresses)
             : base(serviceType, baseAddresses)
         {
             this.errorHandler = errorHandler;
             ImplementedContracts.Values
-                .First(c => c.Name == "IGameServiceAsync")
+                .First(c => c.Name == contractName)
                 .ContractBehaviors.Add(contractBehavior);
         }
 
@@ -63,6 +63,5 @@ namespace BoardGame.Server.Services
             {
             }
         }
-
     }
 }

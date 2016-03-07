@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameService.cs" />
     <Compile Include="GameServiceErrorHandler.cs" />
     <Compile Include="GameServiceHost.cs" />
     <Compile Include="GameServiceInstanceProvider.cs" />

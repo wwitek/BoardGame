@@ -18,7 +18,10 @@ namespace BoardGame.Server.Host.ConsoleApplication
         {
             try
             {
-                Uri address = new Uri("net.tcp://localhost:8002");
+                //Uri address = new Uri("net.tcp://localhost:8002");
+                Uri address = new Uri("http://localhost:9003/GameService");
+                Uri addressAsync = new Uri("http://localhost:9004/GameService");
+
                 var fieldFactory = new FieldFactory();
                 var board = new Board(7, 6, fieldFactory);
                 var playerFactory = new PlayerFactory();
@@ -26,13 +29,16 @@ namespace BoardGame.Server.Host.ConsoleApplication
 
                 ILogger serverLogicLogger = new Log4netAdapter("GameServer");
                 ILogger gameServiceLogger = new Log4netAdapter("GameService");
-
                 IGameServer serverLogic = new GameServer(gameFactory, playerFactory, serverLogicLogger);
-                IContractBehavior contractBehavior = new GameServiceInstanceProvider(typeof(GameServiceAsync), serverLogic, gameServiceLogger);
-                IErrorHandler errorHandler = new GameServiceErrorHandler(gameServiceLogger);
 
-                ServiceHost host = new GameServiceHost(contractBehavior, errorHandler, typeof(GameServiceAsync), address);
+                IContractBehavior contractBehavior = new GameServiceInstanceProvider(typeof(GameService), serverLogic, gameServiceLogger);
+                IErrorHandler errorHandler = new GameServiceErrorHandler(gameServiceLogger);
+                ServiceHost host = new GameServiceHost(contractBehavior, errorHandler, "IGameService", typeof(GameService), address);
                 host.Open();
+
+                IContractBehavior contractBehaviorAsync = new GameServiceInstanceProvider(typeof(GameServiceAsync), serverLogic, gameServiceLogger);
+                ServiceHost hostAsync = new GameServiceHost(contractBehaviorAsync, errorHandler, "IGameServiceAsync", typeof(GameServiceAsync), addressAsync);
+                hostAsync.Open();
 
                 Console.WriteLine("Running... Press key to stop");
                 Console.ReadKey();

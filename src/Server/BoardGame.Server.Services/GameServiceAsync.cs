@@ -19,6 +19,10 @@ namespace BoardGame.Server.Services
         private ILogger Logger { get; }
         private Random RandomGenerator { get; } = new Random();
 
+        public GameServiceAsync()
+        {
+        }
+
         public GameServiceAsync(IGameServer logic, ILogger logger)
         {
             Logic = logic;
