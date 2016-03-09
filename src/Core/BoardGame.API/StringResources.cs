@@ -63,5 +63,11 @@ namespace BoardGame.API
             return string.Format(CultureInfo.InvariantCulture,
                 @"TimeoutException occured in GameAPI's {0} method. Exception: {1}.", where, exceptionMessage);
         }
+
+        internal static string VerifyConnectionFailed(string exceptionMessage)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                @"Verify connection failed in GameAPI. Exception: {0}.", exceptionMessage);
+        }
     }
 }

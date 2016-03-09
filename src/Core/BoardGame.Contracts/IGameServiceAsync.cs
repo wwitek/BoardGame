@@ -12,6 +12,9 @@ namespace BoardGame.Contracts
     public interface IGameServiceAsync
     {
         [OperationContract]
+        Task<int> VerifyConnection(int testNumber);
+
+        [OperationContract]
         Task<OnlineGameResponse> OnlineGameRequest(int playerId);
 
         [OperationContract]

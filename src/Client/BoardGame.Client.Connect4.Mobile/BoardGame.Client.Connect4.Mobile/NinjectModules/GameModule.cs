@@ -8,6 +8,7 @@ using BoardGame.Domain.Interfaces;
 using BoardGame.Domain.Logger;
 using Ninject.Modules;
 using System;
+using System.Diagnostics;
 
 namespace BoardGame.Client.Connect4.Mobile.NinjectModules
 {
@@ -37,7 +38,7 @@ namespace BoardGame.Client.Connect4.Mobile.NinjectModules
     {
         public void Log(LogEntry entry)
         {
-            throw new NotImplementedException();
+            Debug.WriteLine(entry.Message);
         }
     }
 }

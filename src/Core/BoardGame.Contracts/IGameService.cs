@@ -12,6 +12,10 @@ namespace BoardGame.Contracts
     public interface IGameService
     {
         [OperationContract(AsyncPattern = true)]
+        IAsyncResult BeginVerifyConnection(int testNumber, AsyncCallback callback, object state);
+        int EndVerifyConnection(IAsyncResult asyncResult);
+
+        [OperationContract(AsyncPattern = true)]
         IAsyncResult BeginOnlineGameRequest(int playerId, AsyncCallback callback, object state);
         OnlineGameResponse EndOnlineGameRequest(IAsyncResult asyncResult);
 

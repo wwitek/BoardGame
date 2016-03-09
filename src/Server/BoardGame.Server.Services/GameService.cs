@@ -26,6 +26,36 @@ namespace BoardGame.Server.Services
             logger.Info("GameService created.");
         }
 
+        public IAsyncResult BeginVerifyConnection(int testNumber, AsyncCallback callback, object state)
+        {
+            var tcs = new TaskCompletionSource<int>(state);
+            var task = VerifyConnection(testNumber);
+            task.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                    tcs.TrySetException(t.Exception.InnerExceptions);
+                else if (t.IsCanceled)
+                    tcs.TrySetCanceled();
+                else
+                    tcs.TrySetResult(t.Result);
+
+                if (callback != null)
+                    callback(tcs.Task);
+            });
+            return tcs.Task;
+        }
+        public int EndVerifyConnection(IAsyncResult asyncResult)
+        {
+            try
+            {
+                return ((Task<int>)asyncResult).Result;
+            }
+            catch (AggregateException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
         public IAsyncResult BeginOnlineGameRequest(int playerId, AsyncCallback callback, object state)
         {
             var tcs = new TaskCompletionSource<OnlineGameResponse>(state);

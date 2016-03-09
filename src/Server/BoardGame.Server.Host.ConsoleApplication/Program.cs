@@ -37,11 +37,14 @@ namespace BoardGame.Server.Host.ConsoleApplication
                 host.Open();
 
                 IContractBehavior contractBehaviorAsync = new GameServiceInstanceProvider(typeof(GameServiceAsync), serverLogic, gameServiceLogger);
-                ServiceHost hostAsync = new GameServiceHost(contractBehaviorAsync, errorHandler, "IGameServiceAsync", typeof(GameServiceAsync), addressAsync);
-                hostAsync.Open();
+                using (ServiceHost hostAsync =
+                    new GameServiceHost(contractBehaviorAsync, errorHandler, "IGameServiceAsync", typeof(GameServiceAsync), addressAsync))
+                {
+                    hostAsync.Open();
 
-                Console.WriteLine("Running... Press key to stop");
-                Console.ReadKey();
+                    Console.WriteLine("Running... Press key to stop");
+                    Console.ReadKey();
+                }
             }
             catch(Exception ex)
             {

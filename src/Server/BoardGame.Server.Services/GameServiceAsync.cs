@@ -30,6 +30,11 @@ namespace BoardGame.Server.Services
             Logger.Info("GameServiceAsync created.");
         }
 
+        public async Task<int> VerifyConnection(int testNumber)
+        {
+            return await Task.Factory.StartNew(() => testNumber);
+        }
+
         public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)
         {
             OnlineGameResponse response;

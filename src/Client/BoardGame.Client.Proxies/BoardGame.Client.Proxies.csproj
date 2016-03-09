@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameClient.cs" />
+    <Compile Include="GameClientAsync.cs" />
     <Compile Include="GameProxy.cs" />
     <Compile Include="GameProxyAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

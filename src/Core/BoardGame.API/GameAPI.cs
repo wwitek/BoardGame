@@ -61,6 +61,23 @@ namespace BoardGame.API
             this.logger = logger;
         }
 
+        public async Task<bool> VerifyConnection()
+        {
+            try
+            {
+                if (await proxy?.VerifyConnection(123) == 123)
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger?.Error(StringResources.VerifyConnectionFailed(ex.Message));
+                logger?.Error(ex);
+            }
+            return false;
+        }
+
         private void SendMove(IMove move)
         {
             Requires.IsNotNull(MoveReceived, "MoveReceived");

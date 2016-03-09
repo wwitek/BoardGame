@@ -24,6 +24,11 @@ namespace BoardGame.Client.Proxies
             proxy = channel.CreateChannel(endpoint);
         }
 
+        public async Task<int> VerifyConnection(int testNumber)
+        {
+            return await new TaskFactory().FromAsync(proxy.BeginVerifyConnection, proxy.EndVerifyConnection, testNumber, null, TaskCreationOptions.None);
+        }
+
         public async Task<OnlineGameResponse> OnlineGameRequest(int playerId)
         {
             return await new TaskFactory().FromAsync(proxy.BeginOnlineGameRequest, proxy.EndOnlineGameRequest, playerId, null, TaskCreationOptions.None);
