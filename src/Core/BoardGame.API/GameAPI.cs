@@ -20,9 +20,10 @@ namespace BoardGame.API
         private IGame CurrentGame { get; set; }
         private readonly IGameFactory gameFactory;
         private readonly IPlayerFactory playerFactory;
-        private readonly IGameProxy proxy;
+        private IGameProxy proxy;
         private readonly ILogger logger;
 
+        public bool IsOnlineAvailable => proxy != null;
         public event EventHandler<MoveEventArgs> MoveReceived;
 
         public GameAPI(IGameFactory gameFactory,
@@ -75,14 +76,8 @@ namespace BoardGame.API
                 logger?.Error(StringResources.VerifyConnectionFailed(ex.Message));
                 logger?.Error(ex);
             }
+            proxy = null;
             return false;
-        }
-
-        private void SendMove(IMove move)
-        {
-            Requires.IsNotNull(MoveReceived, "MoveReceived");
-
-            MoveReceived?.Invoke(this, new MoveEventArgs { Move = move });
         }
 
         public async void StartGame(GameType type, string level = "")
@@ -180,40 +175,6 @@ namespace BoardGame.API
             }
         }
 
-        private async void GetFirstMove(int playerId)
-        {
-            try
-            {
-                MoveResponse moveResponse = await proxy.GetFirstMove(playerId);
-                if (moveResponse?.MoveMade != null)
-                {
-                    CurrentGame.MakeMove(moveResponse.MoveMade);
-                    SendMove(moveResponse.MoveMade);
-                }
-            }
-            catch (TimeoutException ex)
-            {
-                string exceptionMessage = StringResources.TimeoutExceptionOccured("GetFirstMove", ex.Message);
-                logger?.Error(exceptionMessage);
-
-                throw new GameServerException(exceptionMessage, ex);
-            }
-            catch (FaultException ex)
-            {
-                string exceptionMessage = StringResources.ExceptionOccuredOnServerSide("GetFirstMove", ex.Message);
-                logger?.Error(exceptionMessage);
-
-                throw new GameServerException(exceptionMessage, ex);
-            }
-            catch (CommunicationException ex)
-            {
-                string exceptionMessage = StringResources.CommunicationProblemOccured("GetFirstMove", ex.Message);
-                logger?.Error(exceptionMessage);
-
-                throw new GameServerException(exceptionMessage, ex);
-            }
-        }
-
         public async void NextMove(int clickedRow, int clickedColumn)
         {
             try
@@ -298,6 +259,47 @@ namespace BoardGame.API
         public void Close()
         {
             logger?.Info("Closing GameAPI. Server connection will be aborted");
+        }
+
+        private void SendMove(IMove move)
+        {
+            Requires.IsNotNull(MoveReceived, "MoveReceived");
+
+            MoveReceived?.Invoke(this, new MoveEventArgs { Move = move });
+        }
+
+        private async void GetFirstMove(int playerId)
+        {
+            try
+            {
+                MoveResponse moveResponse = await proxy.GetFirstMove(playerId);
+                if (moveResponse?.MoveMade != null)
+                {
+                    CurrentGame.MakeMove(moveResponse.MoveMade);
+                    SendMove(moveResponse.MoveMade);
+                }
+            }
+            catch (TimeoutException ex)
+            {
+                string exceptionMessage = StringResources.TimeoutExceptionOccured("GetFirstMove", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
+            }
+            catch (FaultException ex)
+            {
+                string exceptionMessage = StringResources.ExceptionOccuredOnServerSide("GetFirstMove", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
+            }
+            catch (CommunicationException ex)
+            {
+                string exceptionMessage = StringResources.CommunicationProblemOccured("GetFirstMove", ex.Message);
+                logger?.Error(exceptionMessage);
+
+                throw new GameServerException(exceptionMessage, ex);
+            }
         }
     }
 }
