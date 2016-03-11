@@ -1,8 +1,6 @@
 ﻿using BoardGame.API;
 using BoardGame.Client.Connect4.Mobile.NinjectModules;
 using BoardGame.Client.Connect4.Mobile.Views;
-using BoardGame.Client.Proxies;
-using BoardGame.Contracts;
 using Ninject;
 using Ninject.Modules;
 using System;
@@ -11,16 +9,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Xamarin.Forms;
 
 namespace BoardGame.Client.Connect4.Mobile
 {
-    public class App : Application
+    public partial class App : Application
     {
         private readonly GameAPI api;
 
         public App()
         {
+            InitializeComponent();
+
             IKernel kernel = new StandardKernel();
             var modules = new List<INinjectModule>
                 {
