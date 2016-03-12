@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BoardGame.Client.Connect4.Mobile.Views.StartPage">
+             x:Class="BoardGame.Client.Connect4.Mobile.Views.StartPage"
+             xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels">
   <StackLayout>
     <Label Text="Start page" Style="{DynamicResource TitleStyle}" />
     <Button x:Name="bTest" Text="Test" TextColor="Gray" Style="{DynamicResource MenuButton}"/>
