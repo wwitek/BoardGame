@@ -32,7 +32,8 @@
                 Content="Reset"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
-                Margin="0,63,10,0" />
+                Margin="0,63,10,0" 
+                Command="{Binding ResetCommand}" />
             <Button x:Name="QuitButton" Style="{StaticResource NavigationButton}" 
                 Content="Quit"
                 HorizontalAlignment="Center"

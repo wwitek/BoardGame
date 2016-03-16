@@ -10,7 +10,7 @@ namespace BoardGame.Domain.Entities.Bots
     {
         public string DisplayName => "Easy";
 
-        public IMove GenerateMove(IGame game)
+        public int GenerateMove(IGame game)
         {
             if (!game.NextPlayer.Type.Equals(PlayerType.Bot))
             {
@@ -23,12 +23,7 @@ namespace BoardGame.Domain.Entities.Bots
             while (true)
             {
                 int move = random.Next(0, game.Board.Width);
-                if (game.Board.IsColumnValid(move))
-                {
-                    IMove madeMove = game.MakeMove(move);
-                    madeMove.IsBot = true;
-                    return madeMove;
-                }
+                return move;
             }
         }
     }

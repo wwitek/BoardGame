@@ -12,6 +12,7 @@ using BoardGame.Client.Connect4.ViewModels.Interfaces;
 using BoardGame.Domain.Enums;
 using GalaSoft.MvvmLight.Command;
 using BoardGame.Domain.Interfaces;
+using BoardGame.Domain.Entities;
 
 namespace BoardGame.Client.Connect4.ViewModels.Pages
 {
@@ -23,9 +24,10 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
         private EventHandler<MoveReceivedEventArgs> moveReceived;
         private EventHandler<BoardResetEventArgs> boardReset;
 
-
         public new ICommand LoadedCommand => new RelayCommand(Load);
         public new ICommand ClickedCommand => new RelayCommand<BoardClickEventArgs>(o => Click(o.ColumnClicked));
+        public new ICommand ResetCommand => new RelayCommand(Reset);
+
         public event EventHandler<MoveReceivedEventArgs> MoveReceived
         {
             add
@@ -55,6 +57,7 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
             : base(navigationService)
         {
             this.api = api;
+            this.api.MoveReceived += Api_MoveReceived;
             this.type = type;
             this.level = level;
         }
@@ -62,15 +65,27 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
         private void Load()
         {
             TriggerBoardReset();
-
             Debug.WriteLine("VM: Loaded");
+            api?.StartGame(type, level);
         }
 
-        private void Click(int c)
+        private async void Click(int c)
         {
             Debug.WriteLine("VM: Clicked: " + c);
+            bool isGameFinished = await api?.NextMove(0, c);
+            if (isGameFinished) Reset();
+        }
 
-            TriggerMove(null);
+        private void Reset()
+        {
+            TriggerBoardReset(true);
+            api?.StartGame(type, level);
+        }
+
+        private void Api_MoveReceived(object sender, MoveEventArgs e)
+        {
+            Debug.WriteLine("VM: Api_MoveReceived");
+            TriggerMove(e.Move);
         }
 
         private void TriggerMove(IMove move)

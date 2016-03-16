@@ -87,6 +87,7 @@
     <Compile Include="NinjectModules\GameModule.cs" />
     <Compile Include="NinjectModules\NavigationModule.cs" />
     <Compile Include="NavigationService.cs" />
+    <Compile Include="StoryboardExtensions.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

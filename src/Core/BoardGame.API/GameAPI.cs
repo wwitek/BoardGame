@@ -175,7 +175,7 @@ namespace BoardGame.API
             }
         }
 
-        public async void NextMove(int clickedRow, int clickedColumn)
+        public async Task<bool> NextMove(int clickedRow, int clickedColumn)
         {
             try
             {
@@ -186,8 +186,12 @@ namespace BoardGame.API
                         StringResources.CanNotPerformTheMoveBecauseGameIsNull());
                 }
 
-                if (CurrentGame.IsMoveValid(clickedColumn) && 
-                    (CurrentGame.State != GameState.Finished || CurrentGame.State != GameState.Aborted))
+                if (CurrentGame.State == GameState.Finished || CurrentGame.State == GameState.Aborted)
+                {
+                    return true;
+                }
+
+                if (CurrentGame.IsMoveValid(clickedColumn))
                 {
                     SendMove(CurrentGame.MakeMove(clickedColumn));
 
@@ -210,8 +214,19 @@ namespace BoardGame.API
                                 StringResources.CanNotPerformBotsMoveBecauseBotWasNotDefined());
                         }
 
-                        await Task.Run(() => CurrentGame.Bot.GenerateMove(CurrentGame))
-                            .ContinueWith(task => SendMove(task.Result), TaskScheduler.FromCurrentSynchronizationContext());
+                        Stopwatch moveStopwatch = new Stopwatch();
+                        moveStopwatch.Reset();
+                        moveStopwatch.Start();
+
+                        int botMove = CurrentGame.Bot.GenerateMove(CurrentGame);
+
+                        int elapsed = (int)moveStopwatch.ElapsedMilliseconds;
+                        if (elapsed < 750)
+                        {
+                            await Task.Delay(1200 - elapsed);
+                        }
+                        moveStopwatch.Stop();
+                        SendMove(CurrentGame.MakeMove(botMove));
                     }
                     else if (CurrentGame.NextPlayer.Type.Equals(PlayerType.OnlinePlayer))
                     {
@@ -232,6 +247,7 @@ namespace BoardGame.API
                         }
                     }
                 }
+                return false;
             }
             catch (TimeoutException ex)
             {

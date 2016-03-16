@@ -57,5 +57,13 @@
                                              RelativeSource={RelativeSource FindAncestor,
                                              AncestorType=local:BoardUserControl,
                                              AncestorLevel=1}}"/>
+        <Grid x:Name="WinnerGrid" Margin="75,125,75,125" Visibility="Hidden">
+            <Rectangle Stroke="{StaticResource BorderBrush}" 
+                       Fill="{StaticResource FillBrush}" Opacity="0.75" />
+            <TextBlock x:Name="WinnerMessage" VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Foreground="AliceBlue" Margin="2,2,2,2" TextWrapping="Wrap">
+                Player1 won!
+            </TextBlock>
+        </Grid>
     </Grid>
 </UserControl>

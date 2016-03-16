@@ -21,7 +21,7 @@ namespace BoardGame.Tests
             IGame game = TestHelper.CreateGame(PlayerType.Bot, bot);
             game.MakeMove(1);
 
-            IMove move = bot.GenerateMove(game);
+            int move = bot.GenerateMove(game);
         }
 
         [Test]

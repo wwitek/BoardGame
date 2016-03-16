@@ -22,7 +22,7 @@ namespace BoardGame.Domain.Entities.Bots
 
         public string DisplayName => "Medium";
 
-        public IMove GenerateMove(IGame game)
+        public int GenerateMove(IGame game)
         {
             if (!game.NextPlayer.Type.Equals(PlayerType.Bot))
             {
@@ -59,10 +59,7 @@ namespace BoardGame.Domain.Entities.Bots
 
             Random random = new Random();
             int move = moves[random.Next(0, moves.Count)];
-
-            IMove madeMove = game.MakeMove(move);
-            madeMove.IsBot = true;
-            return madeMove;
+            return move;
         }
 
         private double GetMoveValue(int column)

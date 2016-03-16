@@ -3,6 +3,6 @@
     public interface IBot
     {
         string DisplayName { get; }
-        IMove GenerateMove(IGame game);
+        int GenerateMove(IGame game);
     }
 }

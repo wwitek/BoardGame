@@ -10,7 +10,8 @@ namespace BoardGame.Client.Connect4.WPF
     public class NavigationService : INavigationService
     {
         private readonly Frame frame;
-        private readonly Dictionary<string, IPageViewModel> pages = new Dictionary<string, IPageViewModel>();
+        private readonly Dictionary<string, IPageViewModel> pageViewModels = new Dictionary<string, IPageViewModel>();
+        private readonly Dictionary<IPageViewModel, object> pages = new Dictionary<IPageViewModel, object>();
 
         public NavigationService(Frame frame)
         {
@@ -19,6 +20,12 @@ namespace BoardGame.Client.Connect4.WPF
 
         private bool Navigate(IPageViewModel pageViewModel)
         {
+            object page;
+            if (pages.TryGetValue(pageViewModel, out page))
+            {
+                return frame.Navigate(page);
+            }
+
             string viewModel = pageViewModel.GetType().Name;
             string pageName = viewModel.Substring(0, viewModel.IndexOf("ViewModel", StringComparison.Ordinal));
 
@@ -26,13 +33,14 @@ namespace BoardGame.Client.Connect4.WPF
             if (type == null) return false;
 
             var src = Activator.CreateInstance(type, pageViewModel);
+            pages.Add(pageViewModel, src);
             return frame.Navigate(src);
         }
 
         public bool Navigate(string pageKey)
         {
             IPageViewModel viewModel;
-            if (pages.TryGetValue(pageKey, out viewModel))
+            if (pageViewModels.TryGetValue(pageKey, out viewModel))
             {
                 return Navigate(viewModel);
             }
@@ -51,7 +59,7 @@ namespace BoardGame.Client.Connect4.WPF
 
         public void InjectPage(string pageKey, IPageViewModel viewModel)
         {
-            pages.Add(pageKey, viewModel);
+            pageViewModels.Add(pageKey, viewModel);
         }
     }
 }

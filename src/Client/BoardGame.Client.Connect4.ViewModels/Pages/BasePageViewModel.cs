@@ -33,5 +33,6 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
 
         public ICommand LoadedCommand => null;
         public ICommand ClickedCommand => null;
+        public ICommand ResetCommand => null;
     }
 }
