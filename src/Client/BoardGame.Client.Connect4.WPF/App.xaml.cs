@@ -18,9 +18,11 @@ using BoardGame.Domain.Entities;
 using BoardGame.Domain.Entities.Bots;
 using BoardGame.Domain.Factories;
 using BoardGame.Domain.Interfaces;
+using BoardGame.Domain.Logger;
 using Ninject;
 using Ninject.Modules;
 
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 namespace BoardGame.Client.Connect4.WPF
 {
     /// <summary>
@@ -40,8 +42,7 @@ namespace BoardGame.Client.Connect4.WPF
                     new NavigationModule()
                 };
                 kernel.Load(modules);
-
-                GameAPI api = kernel.Get<GameAPI>();
+                
                 MainWindow mainWindow = kernel.Get<MainWindow>();
                 INavigationService navigation = kernel.Get<INavigationService>();
 

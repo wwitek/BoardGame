@@ -82,6 +82,7 @@ namespace BoardGame.API
 
         public async void StartGame(GameType type, string level = "")
         {
+            logger.Info("Game started");
             try
             { 
                 if (MoveReceived == null)

@@ -31,17 +31,11 @@ namespace BoardGame.Client.Connect4.WPF.NinjectModules
             Bind<IGameFactory>().To<GameFactory>();
             Bind<IPlayerFactory>().To<PlayerFactory>();
             Bind<IGameProxy>().To<GameProxy>().WhenInjectedExactlyInto<GameAPI>();
-            Bind<ILogger>().To<WpfTempLogger>();
+            Bind<ILogger>().To<Log4netAdapter>()
+                .InSingletonScope()
+                .WithConstructorArgument("loggerName", "GameAPI");
 
-            Bind<GameAPI>().ToSelf();
-        }
-    }
-
-    public class WpfTempLogger : ILogger
-    {
-        public void Log(LogEntry entry)
-        {
-            throw new NotImplementedException();
+            Bind<GameAPI>().ToSelf().InSingletonScope();
         }
     }
 }
