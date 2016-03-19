@@ -25,6 +25,7 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
         private EventHandler<BoardResetEventArgs> boardReset;
 
         public new ICommand LoadedCommand => new RelayCommand(Load);
+        public new ICommand UnloadedCommand => new RelayCommand(Unload);
         public new ICommand ClickedCommand => new RelayCommand<BoardClickEventArgs>(o => Click(o.ColumnClicked));
         public new ICommand ResetCommand => new RelayCommand(Reset);
 
@@ -67,6 +68,12 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
             TriggerBoardReset();
             Debug.WriteLine("VM: Loaded");
             api?.StartGame(type, level);
+        }
+
+        private void Unload()
+        {
+            Debug.WriteLine("VM: Unload");
+            api?.Close();
         }
 
         private async void Click(int c)

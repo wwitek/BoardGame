@@ -22,8 +22,10 @@ namespace BoardGame.API
         private readonly IPlayerFactory playerFactory;
         private IGameProxy proxy;
         private readonly ILogger logger;
+        private int myOnlineId = 0;
 
         public bool IsOnlineAvailable => proxy != null;
+        public bool IsRequestingOnlineGame = false;
         public event EventHandler<MoveEventArgs> MoveReceived;
 
         public GameAPI(IGameFactory gameFactory,
@@ -104,8 +106,6 @@ namespace BoardGame.API
                         players.Add(playerFactory.Create(PlayerType.Human, 0));
                         break;
                     case GameType.Online:
-                        int myId = 0;
-
                         if (proxy == null)
                         {
                             logger?.Error("InvalidOperationException: " +
@@ -115,10 +115,15 @@ namespace BoardGame.API
                         }
 
                         OnlineGameResponse waitingResponse = new OnlineGameResponse();
-                        while (!waitingResponse.IsReady)
+                        IsRequestingOnlineGame = true;
+                        while (!waitingResponse.IsReady && IsRequestingOnlineGame)
                         {
-                            waitingResponse = await proxy.OnlineGameRequest(myId);
-                            myId = waitingResponse.PlayerId;
+                            waitingResponse = await proxy.OnlineGameRequest(myOnlineId);
+                            myOnlineId = waitingResponse.PlayerId;
+
+                            //Quit requesting online game when RequestingOnlineGame is false 
+                            //(user is not in online game page)
+                            if (!IsRequestingOnlineGame) return;
                             if (waitingResponse.IsReady)
                             {
                                 StartGameResponse startGameResponse =
@@ -182,9 +187,10 @@ namespace BoardGame.API
             {
                 if (CurrentGame == null)
                 {
-                    logger?.Error("InvalidOperationException: " + StringResources.CanNotPerformTheMoveBecauseGameIsNull());
-                    throw new InvalidOperationException(
-                        StringResources.CanNotPerformTheMoveBecauseGameIsNull());
+                    logger?.Warning("InvalidOperationException: " + StringResources.CanNotPerformTheMoveBecauseGameIsNull());
+                    //throw new InvalidOperationException(
+                    //    StringResources.CanNotPerformTheMoveBecauseGameIsNull());
+                    return false;
                 }
 
                 if (CurrentGame.State == GameState.Finished || CurrentGame.State == GameState.Aborted)
@@ -275,6 +281,8 @@ namespace BoardGame.API
 
         public void Close()
         {
+            CurrentGame = null;
+            IsRequestingOnlineGame = false;
             logger?.Info("Closing GameAPI. Server connection will be aborted");
         }
 

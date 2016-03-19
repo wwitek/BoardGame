@@ -18,6 +18,9 @@
         <i:EventTrigger EventName="Loaded">
             <cmd:EventToCommand Command="{Binding Mode=OneWay, Path=LoadedCommand}" PassEventArgsToCommand="True" />
         </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <cmd:EventToCommand Command="{Binding Mode=OneWay, Path=UnloadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid >
         <userControls:BoardUserControl x:Name="GameBoard" Margin="10,110,10,10" BorderStrokeThickness="5">
