@@ -57,6 +57,7 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
         public GamePageViewModel(INavigationService navigationService, GameAPI api, GameType type, string level = null)
             : base(navigationService)
         {
+            Debug.WriteLine("Game created: " + type + level);
             this.api = api;
             this.api.MoveReceived += Api_MoveReceived;
             this.type = type;

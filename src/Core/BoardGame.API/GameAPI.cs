@@ -23,6 +23,7 @@ namespace BoardGame.API
         private IGameProxy proxy;
         private readonly ILogger logger;
         private int myOnlineId = 0;
+        private int requestOnlinePlayerCounter;
 
         public bool IsOnlineAvailable => proxy != null;
         public bool IsRequestingOnlineGame = false;
@@ -68,7 +69,9 @@ namespace BoardGame.API
         {
             try
             {
-                if (await proxy?.VerifyConnection(123) == 123)
+                var sampleTestValue = 123;
+                var verifyConnection = proxy?.VerifyConnection(sampleTestValue);
+                if (verifyConnection != null && await verifyConnection == sampleTestValue)
                 {
                     return true;
                 }
@@ -114,40 +117,9 @@ namespace BoardGame.API
                                 StringResources.TheGameCanNotBeStartedBecauseOfProxyIsNull());
                         }
 
-                        OnlineGameResponse waitingResponse = new OnlineGameResponse();
-                        IsRequestingOnlineGame = true;
-                        while (!waitingResponse.IsReady && IsRequestingOnlineGame)
-                        {
-                            waitingResponse = await proxy.OnlineGameRequest(myOnlineId);
-                            myOnlineId = waitingResponse.PlayerId;
-
-                            //Quit requesting online game when RequestingOnlineGame is false 
-                            //(user is not in online game page)
-                            if (!IsRequestingOnlineGame) return;
-                            if (waitingResponse.IsReady)
-                            {
-                                StartGameResponse startGameResponse =
-                                    await proxy.ConfirmToPlay(waitingResponse.PlayerId);
-                                if (startGameResponse.IsConfirmed)
-                                {
-                                    if (startGameResponse.YourTurn)
-                                    {
-                                        players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                        players.Add(playerFactory.Create(PlayerType.OnlinePlayer, 0));
-                                    }
-                                    else
-                                    {
-                                        players.Add(playerFactory.Create(PlayerType.OnlinePlayer, 0));
-                                        players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                                        GetFirstMove(waitingResponse.PlayerId);
-                                    }
-                                }
-                                else
-                                {
-                                    waitingResponse.IsReady = false;
-                                }
-                            }
-                        }
+                        players = await Task.Factory.StartNew(RequestOnlinePlayer).Result;
+                        if (players.Count == 0) return;
+                        requestOnlinePlayerCounter = 0;
                         break;
                     case GameType.Bluetooth:
                         break;
@@ -156,6 +128,7 @@ namespace BoardGame.API
                     default:
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
+
                 CurrentGame = gameFactory.Create(players, level);
             }
             catch (TimeoutException ex)
@@ -179,6 +152,50 @@ namespace BoardGame.API
 
                 throw new GameServerException(exceptionMessage, ex);
             }
+        }
+
+        private async Task<List<IPlayer>> RequestOnlinePlayer()
+        {
+            var players = new List<IPlayer>();
+            int requestNumber = ++requestOnlinePlayerCounter;
+
+            OnlineGameResponse waitingResponse = new OnlineGameResponse();
+            IsRequestingOnlineGame = true;
+            while (!waitingResponse.IsReady && IsRequestingOnlineGame)
+            {
+                if (requestNumber < requestOnlinePlayerCounter) break;
+
+                waitingResponse = await proxy.OnlineGameRequest(myOnlineId);
+                myOnlineId = waitingResponse.PlayerId;
+
+                //Quit requesting online game when RequestingOnlineGame is false 
+                //(user is not in online game page)
+                if (!IsRequestingOnlineGame) break;
+                if (waitingResponse.IsReady)
+                {
+                    StartGameResponse startGameResponse =
+                        await proxy.ConfirmToPlay(waitingResponse.PlayerId);
+                    if (startGameResponse.IsConfirmed)
+                    {
+                        if (startGameResponse.YourTurn)
+                        {
+                            players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                            players.Add(playerFactory.Create(PlayerType.OnlinePlayer, 0));
+                        }
+                        else
+                        {
+                            players.Add(playerFactory.Create(PlayerType.OnlinePlayer, 0));
+                            players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
+                            GetFirstMove(waitingResponse.PlayerId);
+                        }
+                    }
+                    else
+                    {
+                        waitingResponse.IsReady = false;
+                    }
+                }
+            }
+            return players;
         }
 
         public async Task<bool> NextMove(int clickedRow, int clickedColumn)
