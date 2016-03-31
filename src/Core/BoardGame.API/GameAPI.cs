@@ -22,11 +22,11 @@ namespace BoardGame.API
         private readonly IPlayerFactory playerFactory;
         private IGameProxy proxy;
         private readonly ILogger logger;
-        private int myOnlineId = 0;
-        private int requestOnlinePlayerCounter;
+        private int myOnlineId;
+        private bool isRequestingOnlineGame;
+        private bool isOnlineGameRequestCancelled;
 
         public bool IsOnlineAvailable => proxy != null;
-        public bool IsRequestingOnlineGame = false;
         public event EventHandler<MoveEventArgs> MoveReceived;
 
         public GameAPI(IGameFactory gameFactory,
@@ -116,10 +116,19 @@ namespace BoardGame.API
                             throw new InvalidOperationException(
                                 StringResources.TheGameCanNotBeStartedBecauseOfProxyIsNull());
                         }
+                        isOnlineGameRequestCancelled = false;
 
-                        players = await Task.Factory.StartNew(RequestOnlinePlayer).Result;
-                        if (players.Count == 0) return;
-                        requestOnlinePlayerCounter = 0;
+                        if (!isRequestingOnlineGame)
+                        {
+                            players = await Task.Factory.StartNew(RequestOnlinePlayer).Result;
+                        }
+
+                        if (players.Count != 2) return;
+
+                        if (players[0].Type.Equals(PlayerType.OnlinePlayer))
+                        {
+                            GetFirstMove(myOnlineId);
+                        }
                         break;
                     case GameType.Bluetooth:
                         break;
@@ -128,7 +137,6 @@ namespace BoardGame.API
                     default:
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
-
                 CurrentGame = gameFactory.Create(players, level);
             }
             catch (TimeoutException ex)
@@ -157,20 +165,16 @@ namespace BoardGame.API
         private async Task<List<IPlayer>> RequestOnlinePlayer()
         {
             var players = new List<IPlayer>();
-            int requestNumber = ++requestOnlinePlayerCounter;
-
             OnlineGameResponse waitingResponse = new OnlineGameResponse();
-            IsRequestingOnlineGame = true;
-            while (!waitingResponse.IsReady && IsRequestingOnlineGame)
+            isRequestingOnlineGame = true;
+            while (!waitingResponse.IsReady && !isOnlineGameRequestCancelled)
             {
-                if (requestNumber < requestOnlinePlayerCounter) break;
-
                 waitingResponse = await proxy.OnlineGameRequest(myOnlineId);
                 myOnlineId = waitingResponse.PlayerId;
 
-                //Quit requesting online game when RequestingOnlineGame is false 
+                //Quit requesting online game when isOnlineGameRequestCancelled is true 
                 //(user is not in online game page)
-                if (!IsRequestingOnlineGame) break;
+                if (isOnlineGameRequestCancelled) break;
                 if (waitingResponse.IsReady)
                 {
                     StartGameResponse startGameResponse =
@@ -186,7 +190,6 @@ namespace BoardGame.API
                         {
                             players.Add(playerFactory.Create(PlayerType.OnlinePlayer, 0));
                             players.Add(playerFactory.Create(PlayerType.Human, waitingResponse.PlayerId));
-                            GetFirstMove(waitingResponse.PlayerId);
                         }
                     }
                     else
@@ -195,6 +198,7 @@ namespace BoardGame.API
                     }
                 }
             }
+            isRequestingOnlineGame = false;
             return players;
         }
 
@@ -299,7 +303,7 @@ namespace BoardGame.API
         public void Close()
         {
             CurrentGame = null;
-            IsRequestingOnlineGame = false;
+            isOnlineGameRequestCancelled = true;
             logger?.Info("Closing GameAPI. Server connection will be aborted");
         }
 
