@@ -11,6 +11,8 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
 {
     public class SinglePlayerPageViewModel : BasePageViewModel
     {
+        public string MainText => "Single Player";
+
         public SinglePlayerPageViewModel(INavigationService navigationService) 
             : base(navigationService)
         {

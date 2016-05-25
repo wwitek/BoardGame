@@ -1,4 +1,5 @@
 ﻿using BoardGame.API;
+using BoardGame.Client.Connect4.ViewModels.Interfaces;
 using BoardGame.Contracts;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,20 @@ namespace BoardGame.Client.Connect4.Mobile.Views
         public StartPage()
         {
             InitializeComponent();
+            Debug.WriteLine("StartPage constructor");
+        }
+
+        public StartPage(IPageViewModel viewModel)
+        {
+            InitializeComponent();
+            BindingContext = viewModel;
+            Debug.WriteLine("StartPage constructor 2");
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+            //return base.OnBackButtonPressed();
         }
     }
 }

@@ -12,6 +12,8 @@ namespace BoardGame.Client.Connect4.ViewModels.Pages
 {
     public class StartPageViewModel : BasePageViewModel
     {
+        public string MainText => "Connect 4";
+
         public StartPageViewModel(INavigationService navigationService) 
             : base(navigationService)
         {

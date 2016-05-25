@@ -9,8 +9,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using BoardGame.Client.Connect4.ViewModels.Interfaces;
 using Xamarin.Forms;
+using BoardGame.Client.Connect4.ViewModels.Pages;
 
 namespace BoardGame.Client.Connect4.Mobile
 {
@@ -24,13 +25,25 @@ namespace BoardGame.Client.Connect4.Mobile
 
             IKernel kernel = new StandardKernel();
             var modules = new List<INinjectModule>
-                {
-                    new GameModule()
-                };
-            kernel.Load(modules);
-            api = kernel.Get<GameAPI>();
+            {
+                new GameModule()
+            };
 
-            MainPage = new StartPage();
+            kernel.Bind<StartPage>().ToSelf().InSingletonScope();
+            kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope()
+                .WithConstructorArgument("currentPage", kernel.Get<StartPage>());
+
+            kernel.Bind<StartPageViewModel>().To<StartPageViewModel>();
+            kernel.Bind<SinglePlayerPageViewModel>().To<SinglePlayerPageViewModel>();
+            kernel.Load(modules);
+
+            INavigationService navigation = kernel.Get<INavigationService>();
+            navigation.InjectPage("StartPage", kernel.Get<StartPageViewModel>());
+            navigation.InjectPage("SinglePlayerPage", kernel.Get<SinglePlayerPageViewModel>());
+
+            api = kernel.Get<GameAPI>();
+            MainPage = new NavigationPage(kernel.Get<StartPage>());
+            navigation.Navigate("StartPage");
         }
 
         protected override async void OnStart()

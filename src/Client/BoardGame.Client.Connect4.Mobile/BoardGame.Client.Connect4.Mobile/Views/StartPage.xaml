@@ -2,9 +2,15 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BoardGame.Client.Connect4.Mobile.Views.StartPage"
-             xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels">
+             xmlns:pages="clr-namespace:BoardGame.Client.Connect4.ViewModels.Pages;assembly=BoardGame.Client.Connect4.ViewModels"
+             >
   <StackLayout>
-    <Label Text="Start page" Style="{DynamicResource TitleStyle}" />
-    <Button x:Name="bTest" Text="Test" TextColor="Gray" Style="{DynamicResource MenuButton}"/>
+    <Label Text="{Binding MainText}" Style="{DynamicResource TitleStyle}" />
+    <Button x:Name="bSinglePlayer" Text="Single Player" TextColor="Gray" Style="{DynamicResource MenuButton}"
+            Command="{Binding StartSinglePlayerCommand}"/>
+    <Button x:Name="bTwoPlayers" Text="Two Players" TextColor="Gray" Style="{DynamicResource MenuButton}"
+            Command="{Binding StartTwoPlayerGameCommand}"/>
+    <Button x:Name="bOnlineGame" Text="Online Game" TextColor="Gray" Style="{DynamicResource MenuButton}"
+            Command="{Binding StartOnlineGameCommand}"/>
   </StackLayout>
 </ContentPage>
