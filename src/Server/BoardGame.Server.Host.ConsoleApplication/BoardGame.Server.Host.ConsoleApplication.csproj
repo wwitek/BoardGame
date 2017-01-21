@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin\server\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +27,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\server\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -71,14 +71,6 @@
     <ProjectReference Include="..\..\Core\BoardGame.Domain\BoardGame.Domain.csproj">
       <Project>{a1d7547a-11c9-45a9-8379-378f646ea309}</Project>
       <Name>BoardGame.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\BoardGame.Infrastructure.Data.EF\BoardGame.Infrastructure.Data.EF.csproj">
-      <Project>{3dd80431-e862-4ead-864b-8c468cb07d88}</Project>
-      <Name>BoardGame.Infrastructure.Data.EF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\BoardGame.Infrastructure.Data\BoardGame.Infrastructure.Data.csproj">
-      <Project>{48bf557d-0160-433e-b049-8ba752e2451f}</Project>
-      <Name>BoardGame.Infrastructure.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\BoardGame.Contracts\BoardGame.Contracts.csproj">
       <Project>{e02d7577-ad7b-42df-b38b-96d41919260d}</Project>
